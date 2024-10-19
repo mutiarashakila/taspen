@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html data-bs-theme="light" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Login - Taspen</title>
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+    <style>
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(-20deg, #2b5876 0%, #4e4376 100%);
+            margin: 0px;
+            padding: 0;
+            padding-bottom: 100px;
+        }
+        
+        .login-container {
+            width: 420px;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .logo {
+            width: 300px;
+            margin-bottom: -50px;
+        }
+        
+        h4 {
+            color: white;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        
+        .form-control {
+            background: white;
+            border: none;
+            border-radius: 25px;
+            padding: 15px 20px;
+            margin-bottom: 15px;
+        }
+        
+        .checkbox-wrapper {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+        
+        .form-check-label {
+            color: white;
+        }
+        
+        .btn-login {
+            background: #4e73df;
+            border: none;
+            border-radius: 25px;
+            padding: 12px;
+            width: 50%;
+            color: white;
+            font-weight: 500;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="login-container">
+        <img src="/img/Black___White_Minimalist_Signature_Personal_Brand_Logo__1_-removebg-preview.png" class="logo" alt="Logo">
+        <h4>Selamat Datang!</h4>
+        <form>
+            <input type="email" class="form-control" placeholder="Enter Email Address...">
+            <input type="password" class="form-control" placeholder="Password">
+            <div class="checkbox-wrapper">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="remember">
+                    <label class="form-check-label" for="remember">
+                        Remember Me
+                    </label>
+                </div>
+            </div>
+            <a href="/dashboard" class="btn btn-login">Login</a>
+        </form>
+    </div>
+</body>
+
+</html>
