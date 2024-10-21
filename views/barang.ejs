@@ -163,149 +163,62 @@
                                     <div class="text-md-end dataTables_filter" id="dataTable_filter"><label class="form-label"><input type="search" class="form-control form-control-sm" aria-controls="dataTable" placeholder="Search"></label></div>
                                 </div>
                             </div>
-                            <div class="table-responsive table mt-2" id="dataTable" role="grid" aria-describedby="dataTable_info">
-                                <table class="table my-0" id="dataTable">
-                                    <thead>
-                                        <tr>
-                                            <th style="width: 96.766px;">Kode Barang</th>
-                                            <th style="transform: translate(-20px);">Nama Barang</th>
-                                            <th style="transform: translate(-25px);">Kategori</th>
-                                            <th style="transform: translate(-17px);">lokasi</th>
-                                            <th style="transform: translate(-31px);">Pemilik saat ini</th>
-                                            <th style="transform: translate(-35px);">Masa Lelang</th>
-                                            <th>Status Lelang</th>
-                                            <th></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td style="width: 16.781px;height: 9px;">A001</td>
-                                            <td style="transform: translate(-20px);">Meja Kantor 1024x1024</td>
-                                            <td style="transform: translate(-25px);">Furnitur</td>
-                                            <td style="transform: translate(-17px);">Ruang Rapat</td>
-                                            <td style="transform: translate(-31px);">Renata Angelica</td>
-                                            <td style="transform: translate(-35px);text-align: center;font-size: 15px;">5 Tahun</td>
-                                            <td>Belum Lelang</td>
-                                            <td style="background: rgb(255,0,0);height: 66px;margin: 17px;padding: -45px;position: static;"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-trash3-fill" style="border-color: var(--bs-table-color);font-size: 20px;color: var(--bs-table-active-color);margin: 27px;">
-                                                    <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06Zm6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528ZM8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"></path>
-                                                </svg></td>
-                                        </tr>
-                                        <tr>
-                                            <td>A002</td>
-                                            <td style="transform: translate(-20px);">Laptop HP Pavilion X360</td>
-                                            <td style="transform: translate(-25px);">Elekronik</td>
-                                            <td style="transform: translate(-17px);">Ruang 002</td>
-                                            <td style="transform: translate(-28px);">Crishtian Axel</td>
-                                            <td style="transform: translate(-35px);text-align: center;font-size: 15px;">3 Tahun</td>
-                                            <td>Cell 7</td>
-                                            <td style="background: rgb(255,0,0);"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-trash3-fill" style="border-color: var(--bs-table-color);font-size: 20px;color: var(--bs-table-active-color);margin: 27px;">
-                                                    <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06Zm6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528ZM8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"></path>
-                                                </svg></td>
-                                        </tr>
-                                        <tr>
-                                            <td>B001</td>
-                                            <td style="transform: translate(-20px);">Laptop Dell Core i5</td>
-                                            <td style="transform: translate(-25px);">Elekronik</td>
-                                            <td style="transform: translate(-17px);">Ruang Manager</td>
-                                            <td style="transform: translate(-28px);">Zidane Putra</td>
-                                            <td style="transform: translate(-35px);font-size: 15px;">3 Tahun</td>
-                                            <td>Cell 7</td>
-                                            <td style="background: rgb(255,0,0);"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-trash3-fill" style="border-color: var(--bs-table-color);font-size: 20px;color: var(--bs-table-active-color);margin: 27px;">
-                                                    <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06Zm6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528ZM8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"></path>
-                                                </svg></td>
-                                        </tr>
-                                        <tr>
-                                            <td>B002</td>
-                                            <td style="transform: translate(-20px);">Laptop Dell Core i7</td>
-                                            <td style="transform: translate(-25px);">Elekronik</td>
-                                            <td style="transform: translate(-17px);">Ruang Server</td>
-                                            <td style="transform: translate(-28px);">Puteri Natalia</td>
-                                            <td style="transform: translate(-35px);font-size: 15px;">3 Tahun</td>
-                                            <td>Cell 7</td>
-                                            <td>Cell 8</td>
-                                        </tr>
-                                        <tr>
-                                            <td>C001</td>
-                                            <td style="transform: translate(-20px);">Meja Kantor</td>
-                                            <td style="transform: translate(-25px);">Furnitur</td>
-                                            <td style="transform: translate(-17px);">Ruang Dosir</td>
-                                            <td style="transform: translate(-28px);">Crishtian Axel</td>
-                                            <td style="transform: translate(-35px);font-size: 15px;">5 Tahun</td>
-                                            <td>Cell 7</td>
-                                            <td>Cell 8</td>
-                                        </tr>
-                                        <tr>
-                                            <td>C002</td>
-                                            <td style="transform: translate(-20px);">Kursi Kantor</td>
-                                            <td style="transform: translate(-25px);">Furnitur</td>
-                                            <td style="transform: translate(-17px);">Ruang 001</td>
-                                            <td style="transform: translate(-28px);">Renata Angelica</td>
-                                            <td style="transform: translate(-35px);font-size: 15px;">5 Tahun</td>
-                                            <td>Cell 7</td>
-                                            <td>Cell 8</td>
-                                        </tr>
-                                        <tr>
-                                            <td>D100</td>
-                                            <td style="transform: translate(-20px);"><span style="color: rgb(76, 79, 83);">HP Laptop 14s-FQ0562AU</span></td>
-                                            <td style="transform: translate(-25px);">Elekronik</td>
-                                            <td style="transform: translate(-17px);">Ruang Karyawan 2</td>
-                                            <td style="transform: translate(-28px);">Puteri Natalia</td>
-                                            <td style="transform: translate(-35px);font-size: 15px;">3 Tahun</td>
-                                            <td>Cell 7</td>
-                                            <td>Cell 8</td>
-                                        </tr>
-                                        <tr>
-                                            <td>D200</td>
-                                            <td style="transform: translate(-20px);"><span style="color: rgb(76, 79, 83);">HP Pavilion Plus 14 Inci 14-EY0017AU</span></td>
-                                            <td style="transform: translate(-25px);">Elekronik</td>
-                                            <td style="transform: translate(-17px);">Ruang Karyawan 2</td>
-                                            <td style="transform: translate(-28px);">Crishtian Axel</td>
-                                            <td style="transform: translate(-35px);font-size: 15px;">3 Tahun</td>
-                                            <td>Cell 7</td>
-                                            <td>Cell 8</td>
-                                        </tr>
-                                        <tr>
-                                            <td>E111</td>
-                                            <td style="transform: translate(-20px);"><span style="color: rgb(76, 79, 83);">HP ENVY x360 13 Inci 13-BF0107TU</span></td>
-                                            <td style="transform: translate(-25px);">Elekronik</td>
-                                            <td style="transform: translate(-17px);">Ruang Manager</td>
-                                            <td style="transform: translate(-28px);">Zidane Putra</td>
-                                            <td style="transform: translate(-35px);font-size: 15px;">3 Tahun</td>
-                                            <td>Cell 7</td>
-                                            <td>Cell 8</td>
-                                        </tr>
-                                        <tr>
-                                            <td>E122</td>
-                                            <td style="transform: translate(-20px);">Fcenter Michigan High productnation</td>
-                                            <td style="transform: translate(-25px);">Furnitur</td>
-                                            <td style="transform: translate(-17px);">Ruang Tamu</td>
-                                            <td style="transform: translate(-28px);">Renata Angelica</td>
-                                            <td style="transform: translate(-35px);font-size: 15px;">5 Tahun</td>
-                                            <td>Cell 7</td>
-                                            <td>Cell 8</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Cell 1</td>
-                                            <td>Cell 2</td>
-                                            <td>Cell 3</td>
-                                            <td>Cell 4</td>
-                                            <td>Cell 5</td>
-                                            <td>Cell 6</td>
-                                            <td>Cell 7</td>
-                                            <td>Cell 8</td>
-                                        </tr>
-                                    </tbody>
-                                    <tfoot>
-                                        <tr>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                        </tr>
-                                    </tfoot>
-                                </table>
-                            </div>
+                            <!-- views/table.ejs -->
+<div class="table-responsive table mt-2" id="dataTable" role="grid" aria-describedby="dataTable_info">
+    <table class="table my-0" id="dataTable">
+        <thead>
+            <tr>
+                <th style="width: 96.766px;">Kode Barang</th>
+                <th style="transform: translate(-20px);">Nama Barang</th>
+                <th style="transform: translate(-25px);">Kategori</th>
+                <th style="transform: translate(-17px);">lokasi</th>
+                <th style="transform: translate(-31px);">Pemilik saat ini</th>
+                <th style="transform: translate(-35px);">Masa Lelang</th>
+                <th>Status Lelang</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <% if(barang.length > 0) { %>
+                <% barang.forEach(item => { %>
+                    <tr>
+                        <td style="width: 16.781px;height: 9px;"><%= item.id_barang %></td>
+                        <td style="transform: translate(-20px);"><%= item.nama_barang %></td>
+                        <td style="transform: translate(-25px);"><%= item.kategori %></td>
+                        <td style="transform: translate(-17px);"><%= item.lokasi_barang %></td>
+                        <td style="transform: translate(-31px);"><%= item.nama_karyawan %></td>
+                        <td style="transform: translate(-35px);text-align: center;font-size: 15px;">
+                            <%= item.masa_lelang %> Tahun
+                        </td>
+                        <td><%= item.status_lelang || 'Belum Lelang' %></td>
+                        <td style="background: rgb(255,0,0);height: 66px;margin: 17px;padding: -45px;position: static;">
+                            <a href="/barang/<%= item.id_barang %>" onclick="return confirm('Are you sure you want to delete this item?')" class="delete-btn">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" 
+                                    viewBox="0 0 16 16" class="bi bi-trash3-fill" 
+                                    style="border-color: var(--bs-table-color);font-size: 20px;color: var(--bs-table-active-color);margin: 27px;">
+                                    <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06Zm6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528ZM8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"></path>
+                                </svg>
+                            </a>
+                        </td>
+                    </tr>
+                <% }); %>
+            <% } else { %>
+                <tr>
+                    <td colspan="8" class="text-center">No data available</td>
+                </tr>
+            <% } %>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </tfoot>
+    </table>
+</div>
                             <div class="row">
                                 <div class="col-md-6 align-self-center">
                                     <p id="dataTable_info" class="dataTables_info" role="status" aria-live="polite">Showing 1 to 10 of 27</p>

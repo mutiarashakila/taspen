@@ -1,9 +1,11 @@
 {
   "name": "inventas",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
+
   },
   "keywords": [],
   "author": "",
@@ -11,10 +13,17 @@
   "description": "",
   "dependencies": {
     "@popperjs/core": "^2.11.8",
+    "bcrypt": "^5.1.1",
+    "bcryptjs": "^2.4.3",
     "bootstrap": "^5.3.3",
     "chart.js": "^4.4.5",
     "ejs": "^3.1.10",
     "express": "^4.21.1",
-    "nodemon": "^3.1.7"
+    "express-session": "^1.18.1",
+    "multer": "^1.4.5-lts.1",
+    "mysql2": "^3.11.3",
+    "nodemon": "^3.1.7",
+    "path": "^0.12.7",
+    "sharp": "^0.33.5"
   }
 }

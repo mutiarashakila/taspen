@@ -61,6 +61,23 @@
             color: white;
             font-weight: 500;
         }
+
+        #loginMessage {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+        }
+
+        .message-success {
+            background-color: rgba(40, 167, 69, 0.8);
+            color: white;
+        }
+
+        .message-error {
+            background-color: rgba(220, 53, 69, 0.8);
+            color: white;
+        }
     </style>
 </head>
 
@@ -68,9 +85,9 @@
     <div class="login-container">
         <img src="/img/Black___White_Minimalist_Signature_Personal_Brand_Logo__1_-removebg-preview.png" class="logo" alt="Logo">
         <h4>Selamat Datang!</h4>
-        <form>
-            <input type="email" class="form-control" placeholder="Enter Email Address...">
-            <input type="password" class="form-control" placeholder="Password">
+        <form id="loginForm" onsubmit="handleLogin(event)">
+            <input type="email" id="email" class="form-control" name="email" required placeholder="Enter Email Address...">
+            <input type="password" id="password" class="form-control" name="password" required placeholder="Password">
             <div class="checkbox-wrapper">
                 <div class="form-check">
                     <input class="form-check-input" type="checkbox" id="remember">
@@ -79,9 +96,49 @@
                     </label>
                 </div>
             </div>
-            <a href="/dashboard" class="btn btn-login">Login</a>
+            <button type="submit" class="btn btn-primary btn-login">Login</button>
         </form>
+        <div id="loginMessage"></div>
     </div>
+
+    <script>
+        async function handleLogin(event) {
+            event.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const messageDiv = document.getElementById('loginMessage');
+            
+            try {
+                const response = await fetch('/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+                
+                messageDiv.style.display = 'block';
+                
+                if (data.success) {
+                    messageDiv.className = 'message-success';
+                    messageDiv.textContent = 'Login berhasil! Mengalihkan...';
+                    setTimeout(() => {
+                        window.location.href = '/dashboard';
+                    }, 1000);
+                } else {
+                    messageDiv.className = 'message-error';
+                    messageDiv.textContent = data.message || 'Login gagal!';
+                }
+            } catch (error) {
+                messageDiv.style.display = 'block';
+                messageDiv.className = 'message-error';
+                messageDiv.textContent = 'Terjadi kesalahan. Silakan coba lagi.';
+            }
+        }
+    </script>
 </body>
 
 </html>
