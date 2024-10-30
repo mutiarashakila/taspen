@@ -18,6 +18,7 @@
     <link rel="stylesheet" href="/fonts/fontawesome5-overrides.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
     <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
 
 </head>
 
@@ -756,15 +757,24 @@ class BarangFormHandler {
     async handleSubmit(e) {
         e.preventDefault();
         
-        const formData = new FormData(this.form[0]);
-        const cleanPrice = this.hargaInput.getRawValue();
-        formData.set('harga_barang', cleanPrice);
-
-        if (!$('#gambar_barang')[0].files[0]) {
-            formData.delete('gambar_barang');
-        }
-
         try {
+            const formData = new FormData(this.form[0]);
+            
+            // Bersihkan format harga
+            const hargaValue = this.hargaInput.getRawValue();
+            formData.set('harga_barang', hargaValue);
+
+            // Validasi data penting
+            if (!formData.get('nama_barang')) {
+                throw new Error('Nama barang harus diisi');
+            }
+
+            // Cek file gambar jika ada
+            const gambarFile = $('#gambar_barang')[0].files[0];
+            if (gambarFile && !Utils.validateImageFile(gambarFile)) {
+                return;
+            }
+
             const response = await $.ajax({
                 url: CONFIG.API_ENDPOINTS.EDIT,
                 type: 'POST',
@@ -779,14 +789,13 @@ class BarangFormHandler {
                 
                 if (typeof loadBarangTable === 'function') {
                     loadBarangTable();
-                } else {
-                    location.reload();
                 }
             } else {
-                Utils.showError('Gagal memperbarui barang: ' + response.message);
+                throw new Error(response.message || 'Gagal memperbarui barang');
             }
         } catch (error) {
-            Utils.showError('Terjadi kesalahan saat memperbarui barang');
+            console.error('Error submitting form:', error);
+            toastr.error(error.message || 'Terjadi kesalahan saat memperbarui barang');
         }
     }
 
@@ -826,7 +835,6 @@ class BarangFormHandler {
 
 const formHandler = new BarangFormHandler();
 
-// Perbaikan untuk format harga dengan Cleave
 function setupCleave() {
     new Cleave('#harga_barang', {
         numeral: true,
@@ -836,17 +844,14 @@ function setupCleave() {
     });
 }
 
-// Fungsi untuk mengambil detail barang
 function getBarangDetail(id_barang) {
     $.ajax({
         url: `/api/barang/detail/${id_barang}`,
         type: 'GET',
         success: function(response) {
             if (response.success) {
-                // Reset form
                 $('#editBarangForm')[0].reset();
                 
-                // Populate data
                 const barang = response.data;
                 $('#id_barang').val(barang.id_barang);
                 $('#nama_barang').val(barang.nama_barang);
@@ -857,7 +862,6 @@ function getBarangDetail(id_barang) {
                 $('#status_barang').val(barang.status_barang);
                 $('#pemilikBarang').val(barang.id_karyawan);
                 
-                // Set tanggal perolehan
                 if (barang.tanggal_perolehan) {
                     $('#tanggal_perolehan').text(new Date(barang.tanggal_perolehan).toLocaleDateString('id-ID', {
                         weekday: 'long',
@@ -867,15 +871,11 @@ function getBarangDetail(id_barang) {
                     }));
                 }
 
-                // Handle gambar
                 if (barang.gambar_barang) {
                     $('#previewImage').attr('src', `data:image/jpeg;base64,${barang.gambar_barang}`);
                 }
-
-                // Setup Cleave untuk format harga
                 setupCleave();
 
-                // Tampilkan modal
                 $('#editBarangModal').modal('show');
             } else {
                 toastr.error('Gagal mengambil data barang: ' + response.message);
@@ -886,14 +886,19 @@ function getBarangDetail(id_barang) {
         }
     });
 }
+// Di sisi client
 $('#editBarangForm').on('submit', function(e) {
     e.preventDefault();
     
     const formData = new FormData(this);
     
-    // Hapus format harga sebelum submit
-    const hargaValue = $('#harga_barang').val().replace(/[^\d]/g, '');
+    // Format harga
+    const hargaValue = $('#harga_barang').val().replace(/[^0-9]/g, '');
     formData.set('harga_barang', hargaValue);
+
+    // Disable submit button
+    const submitBtn = $(this).find('button[type="submit"]');
+    submitBtn.prop('disabled', true).html('Menyimpan...');
 
     $.ajax({
         url: '/api/barang/edit',
@@ -905,20 +910,23 @@ $('#editBarangForm').on('submit', function(e) {
             if (response.success) {
                 toastr.success('Barang berhasil diperbarui!');
                 $('#editBarangModal').modal('hide');
-                if (typeof loadBarangTable === 'function') {
-                    loadBarangTable();
-                }
+                // Update tabel tanpa reload
+                updateTable();
             } else {
                 toastr.error('Gagal memperbarui barang: ' + response.message);
             }
         },
         error: function(xhr, status, error) {
+            console.error('Error:', error);
+            console.error('Response:', xhr.responseText);
             toastr.error('Terjadi kesalahan saat memperbarui barang');
+        },
+        complete: function() {
+            submitBtn.prop('disabled', false).html('Simpan');
         }
     });
 });
 
-// Handle status barang change
 $('#status_barang').on('change', function() {
     const isLelang = $(this).val() === 'lelang';
     $('#lelangSection').toggleClass('d-none', !isLelang);
@@ -928,6 +936,117 @@ $('#status_barang').on('change', function() {
     }
 });
     </script>
+    <script>
+        function updateTable() {
+    const currentPage = new URLSearchParams(window.location.search).get('page') || 1;
+    
+    $.ajax({
+        url: `/api/barang/refresh?page=${currentPage}`,
+        type: 'GET',
+        success: function(response) {
+            if (response.success) {
+                const tbody = $('#dataTable tbody');
+                
+                if (response.barang.length > 0) {
+                    response.barang.forEach((item, index) => {
+                        let statusClass = '';
+                        let statusText = '';
+                        
+                        switch(item.status_barang) {
+                            case 'tersedia':
+                                statusClass = 'bg-success';
+                                statusText = 'Tersedia';
+                                break;
+                            case 'lelang':
+                                statusClass = 'bg-primary';
+                                statusText = 'Lelang';
+                                break;
+                            case 'jual':
+                                statusClass = 'bg-danger';
+                                statusText = 'Dijual';
+                                break;
+                            default:
+                                statusClass = 'bg-secondary';
+                                statusText = 'Tidak Diketahui';
+                        }
+
+                        const newRowContent = `
+                            <td class="px-4 py-3 text-sm">${item.id_barang}</td>
+                            <td class="px-4 py-3 text-sm font-medium">${item.nama_barang}</td>
+                            <td class="px-4 py-3 text-sm">${item.kategori}</td>
+                            <td class="px-4 py-3 text-sm">${item.lokasi_barang}</td>
+                            <td class="px-4 py-3 text-sm">${item.nama_karyawan || '-'}</td>
+                            <td class="px-4 py-3 text-sm text-center">
+                                ${item.masa_lelang == null ? '-' : item.masa_lelang + ' Hari'}
+                            </td>
+                            <td class="px-4 py-3 text-center">
+                                <span class="badge ${statusClass} text-white px-3 py-1 rounded-pill">
+                                    ${statusText}
+                                </span>
+                            </td>
+                            <td class="px-4 py-3 text-center">
+                                <div class="btn-group" role="group">
+                                    <button class="btn btn-warning btn-sm" 
+                                            data-bs-toggle="modal" 
+                                            data-bs-target="#editBarangModal" 
+                                            title="Edit"
+                                            onclick="getBarangDetail('${item.id_barang}')">
+                                        <i class="fas fa-ellipsis-v"></i>
+                                    </button>
+                                    <button class="btn btn-danger btn-sm" 
+                                            data-bs-toggle="popup" 
+                                            title="Hapus" 
+                                            onclick="confirmDelete('${item.id_barang}')">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        `;
+
+                        // Cari baris yang sudah ada berdasarkan id_barang
+                        const existingRow = tbody.find(`tr:has(td:contains('${item.id_barang}'))`);
+                        
+                        if (existingRow.length) {
+                            // Update baris yang sudah ada
+                            existingRow.html(newRowContent);
+                            existingRow.addClass('hover:bg-gray-50 transition-colors duration-200');
+                        } else {
+                            // Tambah baris baru jika belum ada
+                            tbody.append(`
+                                <tr class="hover:bg-gray-50 transition-colors duration-200">
+                                    ${newRowContent}
+                                </tr>
+                            `);
+                        }
+                    });
+
+                    // Hapus baris yang tidak ada dalam data baru
+                    tbody.find('tr').each(function() {
+                        const rowId = $(this).find('td:first').text();
+                        if (!response.barang.some(item => item.id_barang === rowId)) {
+                            $(this).remove();
+                        }
+                    });
+                } else {
+                    tbody.html(`
+                        <tr>
+                            <td colspan="8" class="px-4 py-8 text-center text-gray-500">
+                                <i class="fas fa-box-open fa-2x mb-2"></i>
+                                <p>Tidak ada data tersedia</p>
+                            </td>
+                        </tr>
+                    `);
+                }
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('Error:', error);
+            toastr.error('Gagal memperbarui tabel');
+        }
+    });
+}
+    </script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
 
 </body>
 
