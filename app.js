@@ -198,15 +198,16 @@ app.post('/api/barang', upload.single('gambar_barang'), async (req, res) => {
         return res.status(500).json({ error: 'Internal Server Error barang' });
       } 
 
-      const kepemilikanQuery = `
-        INSERT INTO kepemilikan (id_barang, id_karyawan, tanggal_perolehan)
-        VALUES (?, ?, NOW())
-      `;
-      db.query(kepemilikanQuery, [id_barang, id_karyawan], (kepemilikanErr, kepemilikanResult) => {
-        if (kepemilikanErr) {
-          console.error('Error adding to kepemilikan:', kepemilikanErr);
-          return res.status(500).json({ error: 'Gagal menambahkan ke kepemilikan' });
-        }
+      // Tambahkan data kepemilikan baru dengan status 'aktif'
+const kepemilikanQuery = `
+INSERT INTO kepemilikan (id_barang, id_karyawan, tanggal_perolehan, status_kepemilikan)
+VALUES (?, ?, NOW(), 'aktif')
+`;
+db.query(kepemilikanQuery, [id_barang, id_karyawan], (kepemilikanErr, kepemilikanResult) => {
+if (kepemilikanErr) {
+  console.error('Error adding to kepemilikan:', kepemilikanErr);
+  return res.status(500).json({ error: 'Gagal menambahkan ke kepemilikan' });
+}
 
         if (status_barang === 'lelang') {
           const lelangQuery = `
@@ -422,22 +423,39 @@ app.post('/api/barang/edit', upload.single('gambar_barang'), async (req, res) =>
                   });
               }
 
-              // Update kepemilikan jika ada id_karyawan
-              if (id_karyawan) {
-                  const kepemilikanQuery = `
-                      INSERT INTO kepemilikan (id_barang, id_karyawan, tanggal_perolehan)
-                      VALUES (?, ?, NOW())
-                  `;
-                  db.query(kepemilikanQuery, [id_barang, id_karyawan], (kepemilikanErr) => {
-                      if (kepemilikanErr) {
-                          return db.rollback(() => {
-                              console.error('Error updating kepemilikan:', kepemilikanErr);
-                              res.status(500).json({
-                                  success: false,
-                                  message: 'Gagal mengupdate kepemilikan'
-                              });
-                          });
-                      }
+              // Ubah status kepemilikan lama menjadi 'tidak aktif'
+        const updateKepemilikanQuery = `
+        UPDATE kepemilikan
+        SET status_kepemilikan = 'tidak aktif'
+        WHERE id_barang = ? AND status_kepemilikan = 'aktif'
+      `;
+      db.query(updateKepemilikanQuery, [id_barang], (updateKepemilikanErr) => {
+        if (updateKepemilikanErr) {
+          return db.rollback(() => {
+            console.error('Error updating kepemilikan:', updateKepemilikanErr);
+            res.status(500).json({
+              success: false,
+              message: 'Gagal mengubah status kepemilikan'
+            });
+          });
+        }})
+
+        if (id_karyawan) {
+          const newKepemilikanQuery = `
+            INSERT INTO kepemilikan (id_barang, id_karyawan, tanggal_perolehan, status_kepemilikan)
+            VALUES (?, ?, NOW(), 'aktif')
+          `;
+          db.query(newKepemilikanQuery, [id_barang, id_karyawan], (newKepemilikanErr) => {
+            if (newKepemilikanErr) {
+              return db.rollback(() => {
+                console.error('Error adding new kepemilikan:', newKepemilikanErr);
+                res.status(500).json({
+                  success: false,
+                  message: 'Gagal menambahkan kepemilikan baru'
+                });
+              });
+            }
+
 
                       // Handle lelang jika status = lelang
                       if (status_barang === 'lelang') {
@@ -554,7 +572,6 @@ app.post('/api/barang/edit', upload.single('gambar_barang'), async (req, res) =>
       console.error('Error updating barang:', error);
       res.status(500).json({
           success: false,
-          message: error.message || 'Terjadi kesalahan saat memperbarui barang'
       });
   }
 });
@@ -573,24 +590,24 @@ const updatedItems = new Map();
         let totalPages = Math.ceil(totalData / limit);
 
         const [rows] = await db.promise().query(`
-            SELECT 
-                b.id_barang,
-                b.nama_barang,
-                b.kategori,
-                b.lokasi_barang,
-                b.status_barang,
-                k.nama_karyawan,
-                l.waktu_mulai,
-                l.waktu_selesai,
-                l.status_lelang,
-                TIMESTAMPDIFF(DAY, l.waktu_mulai, l.waktu_selesai) as masa_lelang
-            FROM 
-                barang b
-                LEFT JOIN kepemilikan kp ON b.id_barang = kp.id_barang
-                LEFT JOIN karyawan k ON kp.id_karyawan = k.id_karyawan
-                LEFT JOIN lelang l ON b.id_barang = l.id_barang
-            LIMIT ? OFFSET ?
-        `, [limit, offset]);
+          SELECT 
+              b.id_barang,
+              b.nama_barang,
+              b.kategori,
+              b.lokasi_barang,
+              b.status_barang,
+              k.nama_karyawan,
+              l.waktu_mulai,
+              l.waktu_selesai,
+              l.status_lelang,
+              TIMESTAMPDIFF(DAY, l.waktu_mulai, l.waktu_selesai) as masa_lelang
+          FROM 
+              barang b
+              LEFT JOIN kepemilikan kp ON b.id_barang = kp.id_barang AND kp.status_kepemilikan = 'aktif'
+              LEFT JOIN karyawan k ON kp.id_karyawan = k.id_karyawan
+              LEFT JOIN lelang l ON b.id_barang = l.id_barang
+          LIMIT ? OFFSET ?
+      `, [limit, offset]);
 
         // Periksa status update untuk setiap item
         const processedRows = rows.map(row => {

@@ -795,7 +795,6 @@ class BarangFormHandler {
             }
         } catch (error) {
             console.error('Error submitting form:', error);
-            toastr.error(error.message || 'Terjadi kesalahan saat memperbarui barang');
         }
     }
 
@@ -919,7 +918,6 @@ $('#editBarangForm').on('submit', function(e) {
         error: function(xhr, status, error) {
             console.error('Error:', error);
             console.error('Response:', xhr.responseText);
-            toastr.error('Terjadi kesalahan saat memperbarui barang');
         },
         complete: function() {
             submitBtn.prop('disabled', false).html('Simpan');
