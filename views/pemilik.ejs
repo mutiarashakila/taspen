@@ -24,7 +24,7 @@
         <nav class="navbar align-items-start sidebar sidebar-dark accordion">
             <div class="container-fluid d-flex flex-column p-0">
                 <a class="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0" href="#">
-                    <img src="/img/logo.png" style="width: 120px; padding: 20px;">
+                    <img src="/img/logo.png" style="width: 150px; padding: 20px; margin-right: 30px;margin-top: 30px;">
                 </a>
                 <hr class="sidebar-divider my-3">
                 <ul class="navbar-nav text-light" id="accordionSidebar">
@@ -113,32 +113,68 @@
                     </div>
                 </nav>
                 <div class="container-fluid">
-                    <h3 class="text-dark mb-1">Pemilik Barang</h3>
+                    <h3 class="text-dark mb-4">Pemilik Barang</h3>
+                    
+                    <div class="card shadow">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Nama Barang</th>
+                                            <th>Pemilik Saat Ini</th>
+                                            <th>Pemilik Sebelumnya</th>
+                                            <th>Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% kepemilikan.forEach(function(item) { %>
+                                        <tr>
+                                            <td><%= item.nama_barang %></td>
+                                            <td><%= item.pemilik_sekarang %></td>
+                                            <td><%= item.pemilik_sebelumnya || '-' %></td>
+                                            <td>
+                                                <button class="btn btn-primary btn-sm" 
+                                                        data-bs-toggle="modal" 
+                                                        data-bs-target="#historiModal"
+                                                        onclick="loadHistori('<%= item.id_barang %>')">
+                                                    <i class="fas fa-history"></i> Riwayat
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <% }); %>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="table-responsive">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Nama Barang</th>
-                                <th>Pemilik Sebelumnya</th>
-                                <th>Pemilik Baru</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Cell 1</td>
-                                <td>Cell 2</td>
-                                <td>Cell 3</td>
-                            </tr>
-                            <tr>
-                                <td>Cell 3</td>
-                                <td>Cell 4</td>
-                                <td>Cell 3</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="modal fade" id="historiModal" tabindex="-1">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Histori Kepemilikan</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>Tanggal</th>
+                                                <th>Pemilik</th>
+                                                <th>Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="historiTableBody">
+                                            <!-- Data will be loaded dynamically -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
@@ -151,6 +187,25 @@
     <a class="scroll-to-top rounded" href="#page-top">
         <i class="fas fa-angle-up"></i>
     </a>
+    <script>
+        async function loadHistori(idBarang) {
+            try {
+                const response = await fetch(`/api/histori-kepemilikan/${idBarang}`);
+                const data = await response.json();
+                
+                const tableBody = document.getElementById('historiTableBody');
+                tableBody.innerHTML = data.map(item => `
+                    <tr>
+                        <td>${new Date(item.tanggal_perolehan).toLocaleDateString('id-ID')}</td>
+                        <td>${item.nama_karyawan}</td>
+                        <td>${item.status_kepemilikan}</td>
+                    </tr>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading history:', error);
+            }
+        }
+        </script>
     <script src="/bootstrap/js/bootstrap.min.js"></script>
     <script src="/js/bs-init.js"></script>
     <script src="/js/theme.js"></script>

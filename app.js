@@ -52,7 +52,7 @@ const requireLogin = (req, res, next) => {
 });*/
 
 app.get('/', (req, res) => {
-    res.redirect('/dashboard');
+  res.redirect('/dashboard');
 });
 
 app.post('/login', (req, res) => {
@@ -65,10 +65,10 @@ app.post('/login', (req, res) => {
       console.error('Database error:', err);
       return res.json({ success: false, message: 'Terjadi kesalahan sistem' });
     }
-    
+
     if (results.length > 0) {
       const hashedPassword = results[0].password;
-      
+
       bcrypt.compare(password, hashedPassword, (err, isMatch) => {
         if (err) {
           console.error('Bcrypt error:', err);
@@ -89,10 +89,10 @@ app.post('/login', (req, res) => {
 });
 
 //app.get('/dashboard', requireLogin, async (req, res) => {
-  app.get('/dashboard', async (req, res) => {
+app.get('/dashboard', async (req, res) => {
   try {
     const [totalBarang] = await db.promise().query('SELECT COUNT(id_barang) as total FROM barang');
-    
+
     const [latestItems] = await db.promise().query(`
       SELECT 
         b.id_barang,
@@ -131,7 +131,7 @@ app.post('/login', (req, res) => {
         cutout: '80%'
       }
     };
-  
+
     res.render('dashboard', {
       title: 'Dashboard',
       totalBarang: totalBarang[0].total,
@@ -165,8 +165,8 @@ app.post('/api/barang', upload.single('gambar_barang'), async (req, res) => {
       id_karyawan,
       waktu_mulai,
       waktu_selesai
-  } = req.body;
-  
+    } = req.body;
+
     const format_harga_barang = parseInt(harga_barang.replace(/[^0-9]/g, ''), 10);
 
     let gambar_barang = null;
@@ -196,18 +196,18 @@ app.post('/api/barang', upload.single('gambar_barang'), async (req, res) => {
       if (err) {
         console.error(err);
         return res.status(500).json({ error: 'Internal Server Error barang' });
-      } 
+      }
 
       // Tambahkan data kepemilikan baru dengan status 'aktif'
-const kepemilikanQuery = `
+      const kepemilikanQuery = `
 INSERT INTO kepemilikan (id_barang, id_karyawan, tanggal_perolehan, status_kepemilikan)
 VALUES (?, ?, NOW(), 'aktif')
 `;
-db.query(kepemilikanQuery, [id_barang, id_karyawan], (kepemilikanErr, kepemilikanResult) => {
-if (kepemilikanErr) {
-  console.error('Error adding to kepemilikan:', kepemilikanErr);
-  return res.status(500).json({ error: 'Gagal menambahkan ke kepemilikan' });
-}
+      db.query(kepemilikanQuery, [id_barang, id_karyawan], (kepemilikanErr, kepemilikanResult) => {
+        if (kepemilikanErr) {
+          console.error('Error adding to kepemilikan:', kepemilikanErr);
+          return res.status(500).json({ error: 'Gagal menambahkan ke kepemilikan' });
+        }
 
         if (status_barang === 'lelang') {
           const lelangQuery = `
@@ -215,12 +215,12 @@ if (kepemilikanErr) {
               VALUES (UUID(), ?, ?, ?, 'aktif')
           `;
           db.query(lelangQuery, [id_barang, waktu_mulai, waktu_selesai], (lelangErr, lelangResult) => {
-              if (lelangErr) {
-                  console.error('Error adding to lelang:', lelangErr);
-              }
+            if (lelangErr) {
+              console.error('Error adding to lelang:', lelangErr);
+            }
           });
-      }
-      
+        }
+
         const logQuery = `
           INSERT INTO log_aktivitas (id_log, timestamp, id_admin, jenis_aktivitas, detail_perubahan)
           VALUES (UUID(), NOW(), ?, 'Tambah Barang', ?)
@@ -245,7 +245,7 @@ if (kepemilikanErr) {
 app.get('/api/barang/detail/:id', async (req, res) => {
   const id_barang = req.params.id;
   try {
-      const query = `
+    const query = `
           SELECT b.id_barang, b.nama_barang, b.deskripsi_barang, 
                  b.kategori, b.lokasi_barang, b.harga_barang, 
                  b.status_barang, b.gambar_barang, 
@@ -258,126 +258,131 @@ app.get('/api/barang/detail/:id', async (req, res) => {
           LEFT JOIN lelang l ON b.id_barang = l.id_barang
           WHERE b.id_barang = ?
       `;
-      
-      const [result] = await db.promise().query(query, [id_barang]);
-      
-      if (result.length === 0) {
-          return res.json({
-              success: false,
-              message: 'Barang tidak ditemukan'
-          });
-      }
-      if (result[0].gambar_barang) {
-          result[0].gambar_barang = result[0].gambar_barang.toString('base64');
-      }
 
-      res.json({
-          success: true,
-          data: result[0]
+    const [result] = await db.promise().query(query, [id_barang]);
+
+    if (result.length === 0) {
+      return res.json({
+        success: false,
+        message: 'Barang tidak ditemukan'
       });
+    }
+    if (result[0].gambar_barang) {
+      result[0].gambar_barang = result[0].gambar_barang.toString('base64');
+    }
+
+    res.json({
+      success: true,
+      data: result[0]
+    });
   } catch (error) {
-      console.error('Error:', error);
-      res.json({
-          success: false,
-          message: error.message
-      });
+    console.error('Error:', error);
+    res.json({
+      success: false,
+      message: error.message
+    });
   }
 });
 
 app.get('/api/barang/refresh', async (req, res) => {
   try {
-      let page = req.query.page ? parseInt(req.query.page) : 1;
-      let limit = 10;
-      let offset = (page - 1) * limit;
+    let page = req.query.page ? parseInt(req.query.page) : 1;
+    let limit = 10;
+    let offset = (page - 1) * limit;
 
-      const [rows] = await db.promise().query(`
-          SELECT 
-              b.id_barang,
-              b.nama_barang,
-              b.kategori,
-              b.lokasi_barang,
-              b.status_barang,
-              k.nama_karyawan,
-              l.waktu_mulai,
-              l.waktu_selesai,
-              l.status_lelang,
-              TIMESTAMPDIFF(DAY, l.waktu_mulai, l.waktu_selesai) as masa_lelang
-          FROM 
-              barang b
-              LEFT JOIN kepemilikan kp ON b.id_barang = kp.id_barang
-              LEFT JOIN karyawan k ON kp.id_karyawan = k.id_karyawan
-              LEFT JOIN lelang l ON b.id_barang = l.id_barang
-          LIMIT ? OFFSET ?
-      `, [limit, offset]);
+    const [rows] = await db.promise().query(`
+      SELECT 
+          b.id_barang,
+          b.nama_barang,
+          b.kategori,
+          b.lokasi_barang,
+          b.status_barang,
+          k.nama_karyawan,
+          l.waktu_mulai,
+          l.waktu_selesai,
+          l.status_lelang,
+          CONCAT(
+              TIMESTAMPDIFF(DAY, l.waktu_mulai, l.waktu_selesai), ' hari, ',
+              MOD(TIMESTAMPDIFF(HOUR, l.waktu_mulai, l.waktu_selesai), 24), ' jam, ',
+              MOD(TIMESTAMPDIFF(MINUTE, l.waktu_mulai, l.waktu_selesai), 60), ' menit'
+          ) as masa_lelang
+      FROM 
+          barang b
+          LEFT JOIN kepemilikan kp ON b.id_barang = kp.id_barang
+          LEFT JOIN karyawan k ON kp.id_karyawan = k.id_karyawan
+          LEFT JOIN lelang l ON b.id_barang = l.id_barang
+      LIMIT ? OFFSET ?
+  `, [limit, offset]);
 
-      res.json({
-          success: true,
-          barang: rows
-      });
+
+    res.json({
+      success: true,
+      barang: rows
+    });
 
   } catch (error) {
-      console.error('Error:', error);
-      res.status(500).json({
-          success: false,
-          message: 'Internal Server Error'
-      });
+    console.error('Error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal Server Error'
+    });
   }
 });
 
 app.post('/api/barang/edit', upload.single('gambar_barang'), async (req, res) => {
   try {
-      const {
-          id_barang,
-          nama_barang,
-          deskripsi_barang,
-          kategori,
-          lokasi_barang,
-          harga_barang,
-          status_barang,
-          id_karyawan,
-          waktu_mulai,
-          waktu_selesai
-      } = req.body;
+    const {
+      id_barang,
+      nama_barang,
+      deskripsi_barang,
+      kategori,
+      lokasi_barang,
+      harga_barang,
+      status_barang,
+      id_karyawan,
+      waktu_mulai,
+      waktu_selesai
+    } = req.body;
 
-      // Validasi data wajib
-      if (!id_barang || !nama_barang) {
-          return res.status(400).json({
-              success: false,
-              message: 'ID Barang dan Nama Barang wajib diisi'
-          });
+    // Validasi data wajib
+    if (!id_barang || !nama_barang) {
+      return res.status(400).json({
+        success: false,
+        message: 'ID Barang dan Nama Barang wajib diisi'
+      });
+    }
+
+    // Format harga
+    const format_harga_barang = parseInt(harga_barang.replace(/[^0-9]/g, ''), 10);
+    if (isNaN(format_harga_barang)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Format harga tidak valid'
+      });
+    }
+
+    // Proses gambar jika ada
+    let gambar_barang = null;
+    if (req.file) {
+      gambar_barang = await compressImage(req.file.buffer, {
+        format: 'jpeg',
+        quality: 80,
+        width: 500
+      });
+    }
+
+    // Begin transaction
+    db.beginTransaction(async (err) => {
+      if (err) {
+        console.error('Error starting transaction:', err);
+        return res.status(500).json({
+          success: false,
+          message: 'Terjadi kesalahan saat memulai transaksi'
+        });
       }
 
-      // Format harga
-      const format_harga_barang = parseInt(harga_barang.replace(/[^0-9]/g, ''), 10);
-      if (isNaN(format_harga_barang)) {
-          return res.status(400).json({
-              success: false,
-              message: 'Format harga tidak valid'
-          });
-      }
-
-      // Proses gambar jika ada
-      let gambar_barang = null;
-      if (req.file) {
-          gambar_barang = await compressImage(req.file.buffer, {
-              format: 'jpeg',
-              quality: 80,
-              width: 500
-          });
-      }
-
-      // Begin transaction
-      db.beginTransaction(async (err) => {
-          if (err) {
-              console.error('Error starting transaction:', err);
-              return res.status(500).json({
-                  success: false,
-                  message: 'Terjadi kesalahan saat memulai transaksi'
-              });
-          }
-
-          // Update barang
-          let updateBarangQuery = `
+      // Update barang
+      let updateBarangQuery = `
               UPDATE barang 
               SET nama_barang = ?,
                   deskripsi_barang = ?,
@@ -386,59 +391,60 @@ app.post('/api/barang/edit', upload.single('gambar_barang'), async (req, res) =>
                   harga_barang = ?,
                   status_barang = ?
           `;
-          let updateBarangValues = [
-              nama_barang,
-              deskripsi_barang,
-              kategori,
-              lokasi_barang,
-              format_harga_barang,
-              status_barang
-          ];
+      let updateBarangValues = [
+        nama_barang,
+        deskripsi_barang,
+        kategori,
+        lokasi_barang,
+        format_harga_barang,
+        status_barang
+      ];
 
-          if (gambar_barang) {
-              updateBarangQuery += ', gambar_barang = ?';
-              updateBarangValues.push(gambar_barang);
-          }
+      if (gambar_barang) {
+        updateBarangQuery += ', gambar_barang = ?';
+        updateBarangValues.push(gambar_barang);
+      }
 
-          updateBarangQuery += ' WHERE id_barang = ?';
-          updateBarangValues.push(id_barang);
+      updateBarangQuery += ' WHERE id_barang = ?';
+      updateBarangValues.push(id_barang);
 
-          db.query(updateBarangQuery, updateBarangValues, (updateErr, updateResult) => {
-              if (updateErr) {
-                  return db.rollback(() => {
-                      console.error('Error updating barang:', updateErr);
-                      res.status(500).json({
-                          success: false,
-                          message: 'Gagal mengupdate barang'
-                      });
-                  });
-              }
+      db.query(updateBarangQuery, updateBarangValues, (updateErr, updateResult) => {
+        if (updateErr) {
+          return db.rollback(() => {
+            console.error('Error updating barang:', updateErr);
+            res.status(500).json({
+              success: false,
+              message: 'Gagal mengupdate barang'
+            });
+          });
+        }
 
-              if (updateResult.affectedRows === 0) {
-                  return db.rollback(() => {
-                      res.status(404).json({
-                          success: false,
-                          message: 'Barang tidak ditemukan'
-                      });
-                  });
-              }
+        if (updateResult.affectedRows === 0) {
+          return db.rollback(() => {
+            res.status(404).json({
+              success: false,
+              message: 'Barang tidak ditemukan'
+            });
+          });
+        }
 
-              // Ubah status kepemilikan lama menjadi 'tidak aktif'
+        // Ubah status kepemilikan lama menjadi 'tidak aktif'
         const updateKepemilikanQuery = `
         UPDATE kepemilikan
         SET status_kepemilikan = 'tidak aktif'
         WHERE id_barang = ? AND status_kepemilikan = 'aktif'
       `;
-      db.query(updateKepemilikanQuery, [id_barang], (updateKepemilikanErr) => {
-        if (updateKepemilikanErr) {
-          return db.rollback(() => {
-            console.error('Error updating kepemilikan:', updateKepemilikanErr);
-            res.status(500).json({
-              success: false,
-              message: 'Gagal mengubah status kepemilikan'
+        db.query(updateKepemilikanQuery, [id_barang], (updateKepemilikanErr) => {
+          if (updateKepemilikanErr) {
+            return db.rollback(() => {
+              console.error('Error updating kepemilikan:', updateKepemilikanErr);
+              res.status(500).json({
+                success: false,
+                message: 'Gagal mengubah status kepemilikan'
+              });
             });
-          });
-        }})
+          }
+        })
 
         if (id_karyawan) {
           const newKepemilikanQuery = `
@@ -456,123 +462,118 @@ app.post('/api/barang/edit', upload.single('gambar_barang'), async (req, res) =>
               });
             }
 
+            const logQuery = `
+                                  INSERT INTO log_aktivitas(id_log, timestamp, id_admin, jenis_aktivitas, detail_perubahan)
+                                  VALUES (UUID(), NOW(), ?, 'Edit Barang', ?)
+                              `;
+            const detail_perubahan = `Mengubah barang: ${nama_barang}`;
 
-                      // Handle lelang jika status = lelang
-                      if (status_barang === 'lelang') {
-                          if (!waktu_mulai || !waktu_selesai) {
-                              return db.rollback(() => {
-                                  res.status(400).json({
-                                      success: false,
-                                      message: 'Waktu lelang harus diisi'
-                                  });
-                              });
-                          }
+            db.query(logQuery, [req.session.admin_id, detail_perubahan], (logErr) => {
+              if (logErr) {
+                return db.rollback(() => {
+                  console.error('Error adding log:', logErr);
+                  res.status(500).json({
+                    success: false,
+                    message: 'Gagal menambahkan log'
+                  });
+                });
+              }
+            })
 
-                          const lelangQuery = `
+            if (status_barang === 'lelang') {
+              if (!waktu_mulai || !waktu_selesai) {
+                return db.rollback(() => {
+                  res.status(400).json({
+                    success: false,
+                    message: 'Waktu lelang harus diisi'
+                  });
+                });
+              }
+
+              const lelangQuery = `
                               INSERT INTO lelang (id_lelang, id_barang, waktu_mulai, waktu_selesai, status_lelang)
                               VALUES (UUID(), ?, ?, ?, 'aktif')
                               ON DUPLICATE KEY UPDATE
                               waktu_mulai = VALUES(waktu_mulai),
                               waktu_selesai = VALUES(waktu_selesai)
                           `;
-                          db.query(lelangQuery, [id_barang, waktu_mulai, waktu_selesai], (lelangErr) => {
-                              if (lelangErr) {
-                                  return db.rollback(() => {
-                                      console.error('Error updating lelang:', lelangErr);
-                                      res.status(500).json({
-                                          success: false,
-                                          message: 'Gagal mengupdate lelang'
-                                      });
-                                  });
-                              }
-
-                              // Log aktivitas
-                              const logQuery = `
-                                  INSERT INTO log_aktivitas_admin (id_log, timestamp, id_admin, jenis_aktivitas, detail_perubahan)
-                                  VALUES (UUID(), NOW(), ?, 'Edit Barang', ?)
-                              `;
-                              const detail_perubahan = `Mengubah barang: ${nama_barang}`;
-                              
-                              db.query(logQuery, [req.session.admin_id, detail_perubahan], (logErr) => {
-                                  if (logErr) {
-                                      return db.rollback(() => {
-                                          console.error('Error adding log:', logErr);
-                                          res.status(500).json({
-                                              success: false,
-                                              message: 'Gagal menambahkan log'
-                                          });
-                                      });
-                                  }
-
-                                  // Commit transaction
-                                  db.commit((commitErr) => {
-                                      if (commitErr) {
-                                          return db.rollback(() => {
-                                              console.error('Error committing transaction:', commitErr);
-                                              res.status(500).json({
-                                                  success: false,
-                                                  message: 'Gagal menyimpan perubahan'
-                                              });
-                                          });
-                                      }
-
-                                      res.json({
-                                          success: true,
-                                          message: 'Barang berhasil diperbarui',
-                                          data: { id_barang }
-                                      });
-                                  });
-                              });
-                          });
-                      } else {
-                          // Jika bukan lelang, langsung commit
-                          db.commit((commitErr) => {
-                              if (commitErr) {
-                                  return db.rollback(() => {
-                                      console.error('Error committing transaction:', commitErr);
-                                      res.status(500).json({
-                                          success: false,
-                                          message: 'Gagal menyimpan perubahan'
-                                      });
-                                  });
-                              }
-
-                              res.json({
-                                  success: true,
-                                  message: 'Barang berhasil diperbarui',
-                                  data: { id_barang }
-                              });
-                          });
-                      }
+              db.query(lelangQuery, [id_barang, waktu_mulai, waktu_selesai], (lelangErr) => {
+                if (lelangErr) {
+                  return db.rollback(() => {
+                    console.error('Error updating lelang:', lelangErr);
+                    res.status(500).json({
+                      success: false,
+                      message: 'Gagal mengupdate lelang'
+                    });
                   });
-              } else {
-                  // Jika tidak ada id_karyawan, langsung commit
-                  db.commit((commitErr) => {
-                      if (commitErr) {
-                          return db.rollback(() => {
-                              console.error('Error committing transaction:', commitErr);
-                              res.status(500).json({
-                                  success: false,
-                                  message: 'Gagal menyimpan perubahan'
-                              });
-                          });
-                      }
+                }
 
-                      res.json({
-                          success: true,
-                          message: 'Barang berhasil diperbarui',
-                          data: { id_barang }
+                db.commit((commitErr) => {
+                  if (commitErr) {
+                    return db.rollback(() => {
+                      console.error('Error committing transaction:', commitErr);
+                      res.status(500).json({
+                        success: false,
+                        message: 'Gagal menyimpan perubahan'
                       });
+                    });
+                  }
+
+                  res.json({
+                    success: true,
+                    message: 'Barang berhasil diperbarui',
+                    data: { id_barang }
                   });
-              }
+                });
+                ;
+              });
+            } else {
+              db.commit((commitErr) => {
+                if (commitErr) {
+                  return db.rollback(() => {
+                    console.error('Error committing transaction:', commitErr);
+                    res.status(500).json({
+                      success: false,
+                      message: 'Gagal menyimpan perubahan'
+                    });
+                  });
+                }
+
+                res.json({
+                  success: true,
+                  message: 'Barang berhasil diperbarui',
+                  data: { id_barang }
+                });
+              });
+            }
           });
+        } else {
+          db.commit((commitErr) => {
+            if (commitErr) {
+              return db.rollback(() => {
+                console.error('Error committing transaction:', commitErr);
+                res.status(500).json({
+                  success: false,
+                  message: 'Gagal menyimpan perubahan'
+                });
+              });
+            }
+
+            res.json({
+              success: true,
+              message: 'Barang berhasil diperbarui',
+              data: { id_barang }
+            });
+          });
+        }
       });
+    });
 
   } catch (error) {
-      console.error('Error updating barang:', error);
-      res.status(500).json({
-          success: false,
-      });
+    console.error('Error updating barang:', error);
+    res.status(500).json({
+      success: false,
+    });
   }
 });
 
@@ -581,139 +582,365 @@ const updatedItems = new Map();
 //app.get('/barang', requireLogin, async (req, res) => {
   app.get('/barang', async (req, res) => {
     try {
-        let page = req.query.page ? parseInt(req.query.page) : 1;
-        let limit = 10;
-        let offset = (page - 1) * limit;
-
-        const [countResult] = await db.promise().query('SELECT COUNT(*) AS total FROM barang');
-        let totalData = countResult[0].total;
-        let totalPages = Math.ceil(totalData / limit);
-
-        const [rows] = await db.promise().query(`
-          SELECT 
-              b.id_barang,
-              b.nama_barang,
-              b.kategori,
-              b.lokasi_barang,
-              b.status_barang,
-              k.nama_karyawan,
-              l.waktu_mulai,
-              l.waktu_selesai,
-              l.status_lelang,
-              TIMESTAMPDIFF(DAY, l.waktu_mulai, l.waktu_selesai) as masa_lelang
-          FROM 
-              barang b
-              LEFT JOIN kepemilikan kp ON b.id_barang = kp.id_barang AND kp.status_kepemilikan = 'aktif'
-              LEFT JOIN karyawan k ON kp.id_karyawan = k.id_karyawan
-              LEFT JOIN lelang l ON b.id_barang = l.id_barang
-          LIMIT ? OFFSET ?
+      let page = req.query.page ? parseInt(req.query.page) : 1;
+      let limit = 10;
+      let offset = (page - 1) * limit;
+      const [countResult] = await db.promise().query('SELECT COUNT(*) AS total FROM barang');
+      let totalData = countResult[0].total;
+      let totalPages = Math.ceil(totalData / limit);
+      const [rows] = await db.promise().query(`
+        SELECT 
+            b.id_barang,
+            b.nama_barang,
+            b.kategori,
+            b.lokasi_barang,
+            b.status_barang,
+            k.nama_karyawan,
+            l.waktu_mulai,
+            l.waktu_selesai,
+            l.status_lelang,
+            CONCAT(
+              TIMESTAMPDIFF(DAY, l.waktu_mulai, l.waktu_selesai), 'h',
+              MOD(TIMESTAMPDIFF(HOUR, l.waktu_mulai, l.waktu_selesai), 24), 'j',
+              MOD(TIMESTAMPDIFF(MINUTE, l.waktu_mulai, l.waktu_selesai), 60), 'm',
+              MOD(TIMESTAMPDIFF(SECOND, l.waktu_mulai, l.waktu_selesai), 60), 'd'
+            ) as masa_lelang
+        FROM 
+            barang b
+            LEFT JOIN kepemilikan kp ON b.id_barang = kp.id_barang
+            LEFT JOIN karyawan k ON kp.id_karyawan = k.id_karyawan
+            LEFT JOIN lelang l ON b.id_barang = l.id_barang
+        LIMIT ? OFFSET ?
       `, [limit, offset]);
-
-        // Periksa status update untuk setiap item
-        const processedRows = rows.map(row => {
-            const updatedItem = updatedItems.get(row.id_barang);
-            return updatedItem || row;
-        });
-
-        const [karyawan] = await db.promise().query('SELECT id_karyawan, nama_karyawan FROM karyawan');
-
-        res.render('barang', {
-            barang: processedRows,
-            karyawan: karyawan,
-            currentPage: page,
-            totalPages: totalPages,
-            totalData: totalData,
-            limit: limit
-        });
-
-    } catch (error) {
-        console.error('Error:', error);
-        res.status(500).send('Internal Server Error');
-    }
-});
-
-  app.get('/barang/delete/:id_barang', async (req, res) => {
-    const id_barang = req.params.id_barang;
   
-    try {
-      await db.promise().query('START TRANSACTION');
-      await db.promise().query('DELETE FROM lelang WHERE id_barang = ?', [id_barang]);
-      await db.promise().query('DELETE FROM kepemilikan WHERE id_barang = ?', [id_barang]);
-      await db.promise().query('DELETE FROM barang WHERE id_barang = ?', [id_barang]);
-      await db.promise().query('COMMIT');
+      // Logging untuk debugging
+      console.log('Rows fetched:', rows);
   
-      const logQuery = `
-        INSERT INTO log_aktivitas (id_log, timestamp, id_admin, jenis_aktivitas, detail_perubahan)
-        VALUES (UUID(), NOW(), ?, 'Hapus Barang', ?)
-      `;
-      const detail_perubahan = `Menghapus barang dengan ID: ${id_barang}`;
-      await db.promise().query(logQuery, [req.session.email, detail_perubahan]);
-  
-      res.redirect('/barang');
-    } catch (error) {
-      await db.promise().query('ROLLBACK');
-      console.error('Error during deletion:', error);
-      res.status(500).send('Gagal menghapus barang');
-    }
-  });
-
-  
-  //app.get('/mutasi', requireLogin, async (req, res) => {
-  app.get('/mutasi', async (req, res) => {
-    try {
-      const lelangQuery = `SELECT nama_barang FROM barang WHERE status_barang = 'lelang'`;
-      
-      const jualQuery = `SELECT nama_barang FROM barang WHERE status_barang = 'jual'`;
-  
-      const [barangLelang] = await db.promise().query(lelangQuery);
-      const [barangJual] = await db.promise().query(jualQuery);
-  
-      res.render('mutasi', {
-        barangLelang: barangLelang,
-        barangJual: barangJual
+      const processedRows = rows.map(row => {
+        console.log('Individual Row:', row);
+        const updatedItem = updatedItems.get(row.id_barang);
+        return updatedItem || row;
       });
   
-    } catch (err) {
-      console.error(err);
-      res.status(500).send('Terjadi kesalahan database');
+      const [karyawan] = await db.promise().query('SELECT id_karyawan, nama_karyawan FROM karyawan');
+      res.render('barang', {
+        barang: processedRows,
+        karyawan: karyawan,
+        currentPage: page,
+        totalPages: totalPages,
+        totalData: totalData,
+        limit: limit
+      });
+    } catch (error) {
+      console.error('Error:', error);
+      res.status(500).send('Internal Server Error');
     }
   });
 
-  app.get('/karyawan', async (req, res) => {
-    try {
-      const [rows] = await db.promise().query(`
-        SELECT id_karyawan, nama_karyawan, jabatan, jenis_kelamin FROM karyawan`);
-  
-      const [karyawan] = await db.promise().query('SELECT id_karyawan, nama_karyawan FROM karyawan');
-  
-      res.render('karyawan', { karyawan: rows});
-  
-    } catch (err) {
-      console.error(err);
-      res.status(500).send('Terjadi kesalahan database');
+app.get('/barang/delete/:id_barang', async (req, res) => {
+  const id_barang = req.params.id_barang;
+
+  try {
+    await db.promise().query('START TRANSACTION');
+
+    const [barangResult] = await db.promise().query(
+      'SELECT nama_barang FROM barang WHERE id_barang = ?',
+      [id_barang]
+    );
+
+    if (!barangResult || barangResult.length === 0) {
+      await db.promise().query('ROLLBACK');
+      return res.status(404).send('Barang tidak ditemukan');
     }
-  });
+
+    const nama_barang = barangResult[0].nama_barang;
+
+    await db.promise().query('DELETE FROM lelang WHERE id_barang = ?', [id_barang]);
+    await db.promise().query('DELETE FROM kepemilikan WHERE id_barang = ?', [id_barang]);
+    await db.promise().query('DELETE FROM barang WHERE id_barang = ?', [id_barang]);
+
+    const logQuery = `
+      INSERT INTO log_aktivitas (id_log, timestamp, id_admin, jenis_aktivitas, detail_perubahan)
+      VALUES (UUID(), NOW(), ?, 'Hapus Barang', ?)
+    `;
+    const detail_perubahan = `Menghapus barang : ${nama_barang}`;
+    await db.promise().query(logQuery, [req.session.email, detail_perubahan]);
+
+    await db.promise().query('COMMIT');
+    res.redirect('/barang');
+
+  } catch (error) {
+    await db.promise().query('ROLLBACK');
+    console.error('Error during deletion:', error);
+    res.status(500).send('Gagal menghapus barang');
+  }
+});
+
+
+//app.get('/mutasi', requireLogin, async (req, res) => {
+app.get('/mutasi', async (req, res) => {
+  try {
+    const lelangQuery = `SELECT nama_barang FROM barang WHERE status_barang = 'lelang'`;
+
+    const jualQuery = `SELECT nama_barang FROM barang WHERE status_barang = 'jual'`;
+
+    const [barangLelang] = await db.promise().query(lelangQuery);
+    const [barangJual] = await db.promise().query(jualQuery);
+
+    res.render('mutasi', {
+      barangLelang: barangLelang,
+      barangJual: barangJual
+    });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Terjadi kesalahan database');
+  }
+});
+
+app.get('/karyawan', async (req, res) => {
+  try {
+    const [rows] = await db.promise().query(`
+        SELECT id_karyawan, nama_karyawan, jabatan, jenis_kelamin FROM karyawan`);
+
+    const [karyawan] = await db.promise().query('SELECT id_karyawan, nama_karyawan FROM karyawan');
+
+    res.render('karyawan', { karyawan: rows });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Terjadi kesalahan database');
+  }
+});
 
 //app.get('/lelang', requireLogin, (req, res) => {
-  app.get('/lelang', (req, res) => {
-  res.render('lelang');
+  app.get('/lelang', async (req, res) => {
+    try {
+      const [akanLelang] = await db.promise().query(`
+        SELECT 
+          l.id_lelang, 
+          b.id_barang, 
+          b.nama_barang, 
+          b.harga_barang as harga_awal,
+          l.waktu_mulai, 
+          l.waktu_selesai
+        FROM Lelang l
+        JOIN Barang b ON l.id_barang = b.id_barang
+        WHERE l.status_proses = 'akan_lelang'
+      `);
+  
+      const [prosesLelang] = await db.promise().query(`
+        SELECT 
+          l.id_lelang, 
+          b.id_barang, 
+          b.nama_barang, 
+          l.harga_awal,
+          l.harga_tertinggi,
+          l.waktu_mulai, 
+          l.waktu_selesai
+        FROM Lelang l
+        JOIN Barang b ON l.id_barang = b.id_barang
+        WHERE l.status_proses = 'berlangsung'
+      `);
+  
+      res.render('lelang', {
+        akanLelang: akanLelang,
+        prosesLelang: prosesLelang
+      });
+    } catch (error) {
+      console.error('Error mengambil data lelang:', error);
+      res.status(500).send('Gagal memuat halaman lelang');
+    }
+  });
+
+app.post('/konfirmasi-lelang/:id_barang', async (req, res) => {
+  const { id_barang } = req.params;
+  const { waktu_mulai, waktu_selesai, harga_awal } = req.body;
+
+  try {
+    await db.promise().query(`
+      UPDATE Barang 
+      SET status_barang = 'lelang' 
+      WHERE id_barang = ?
+    `, [id_barang]);
+
+    await db.promise().query(`
+      UPDATE Lelang 
+      SET 
+        status_lelang = 'aktif', 
+        status_proses = 'berlangsung',
+        waktu_mulai = ?, 
+        waktu_selesai = ?,
+        harga_awal = ?
+      WHERE id_barang = ?
+    `, [waktu_mulai, waktu_selesai, harga_awal, id_barang]);
+
+    res.json({ 
+      success: true, 
+      message: 'Lelang berhasil dikonfirmasi' 
+    });
+  } catch (error) {
+    console.error('Error konfirmasi lelang:', error);
+    res.status(500).json({ 
+      success: false, 
+      message: 'Gagal mengkonfirmasi lelang' 
+    });
+  }
+});
+
+// Tutup Lelang
+app.post('/tutup-lelang/:id_lelang', async (req, res) => {
+  const { id_lelang } = req.params;
+  const { pemenang_id, harga_tertinggi } = req.body;
+
+  try {
+    await db.promise().query(`
+      UPDATE Lelang 
+      SET 
+        status_lelang = 'selesai', 
+        status_proses = 'selesai',
+        pemenang_id = ?,
+        harga_tertinggi = ?
+      WHERE id_lelang = ?
+    `, [pemenang_id, harga_tertinggi, id_lelang]);
+
+    // Update status barang
+    await db.promise().query(`
+      UPDATE Barang b
+      JOIN Lelang l ON b.id_barang = l.id_barang
+      SET b.status_barang = 'terjual'
+      WHERE l.id_lelang = ?
+    `, [id_lelang]);
+
+    res.json({ 
+      success: true, 
+      message: 'Lelang berhasil ditutup' 
+    });
+  } catch (error) {
+    console.error('Error menutup lelang:', error);
+    res.status(500).json({ 
+      success: false, 
+      message: 'Gagal menutup lelang' 
+    });
+  }
+});
+
+// Perpanjang Waktu Lelang
+app.post('/perpanjang-lelang/:id_lelang', async (req, res) => {
+  const { id_lelang } = req.params;
+  const { tambahan_waktu } = req.body;
+
+  try {
+    await db.promise().query(`
+      UPDATE Lelang 
+      SET waktu_selesai = DATE_ADD(waktu_selesai, INTERVAL ? HOUR)
+      WHERE id_lelang = ?
+    `, [tambahan_waktu, id_lelang]);
+
+    res.json({ 
+      success: true, 
+      message: 'Waktu lelang berhasil diperpanjang' 
+    });
+  } catch (error) {
+    console.error('Error perpanjang lelang:', error);
+    res.status(500).json({ 
+      success: false, 
+      message: 'Gagal memperpanjang waktu lelang' 
+    });
+  }
 });
 
 app.get('/login', (req, res) => {
   res.render('login');
 });
 
+app.get('/pemilik', async (req, res) => {
+  try {
+    const [rows] = await db.promise().query(`
+        SELECT 
+            b.id_barang,
+            b.nama_barang,
+            k1.nama_karyawan as pemilik_sekarang,
+            k1.id_karyawan as id_pemilik_sekarang,
+            k2.nama_karyawan as pemilik_sebelumnya
+        FROM Barang b
+        LEFT JOIN (
+            SELECT id_barang, id_karyawan
+            FROM Kepemilikan
+            WHERE status_kepemilikan = 'aktif'
+        ) current_own ON b.id_barang = current_own.id_barang
+        LEFT JOIN Karyawan k1 ON current_own.id_karyawan = k1.id_karyawan
+        LEFT JOIN (
+            SELECT DISTINCT k.id_barang, k.id_karyawan
+            FROM Kepemilikan k
+            WHERE k.status_kepemilikan = 'tidak aktif'
+            AND NOT EXISTS (
+                SELECT 1 
+                FROM Kepemilikan k2 
+                WHERE k2.id_barang = k.id_barang 
+                AND k2.status_kepemilikan = 'aktif' 
+                AND k2.id_karyawan = k.id_karyawan
+            )
+            ORDER BY k.tanggal_perolehan DESC
+        ) prev_own ON b.id_barang = prev_own.id_barang
+        LEFT JOIN Karyawan k2 ON prev_own.id_karyawan = k2.id_karyawan
+        ORDER BY b.nama_barang`);
 
-app.get('/pemilik', /*requireLogin,*/ (req, res) => {
-  res.render('pemilik');
+    res.render('pemilik', { kepemilikan: rows });
+
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).send('Internal Server Error');
+  }
 });
 
-app.get('/profil', /*requireLogin,*/ (req, res) => {
+// Route untuk API histori kepemilikan
+app.get('/api/histori-kepemilikan/:idBarang', async (req, res) => {
+  try {
+    const [histori] = await db.promise().query(`
+        WITH RankedKepemilikan AS (
+            SELECT 
+                k.tanggal_perolehan,
+                k.id_karyawan,
+                kr.nama_karyawan,
+                k.status_kepemilikan,
+                ROW_NUMBER() OVER (PARTITION BY k.id_karyawan ORDER BY k.tanggal_perolehan DESC) as rn
+            FROM Kepemilikan k
+            JOIN Karyawan kr ON k.id_karyawan = kr.id_karyawan
+            WHERE k.id_barang = ?
+        )
+        SELECT 
+            tanggal_perolehan,
+            nama_karyawan,
+            status_kepemilikan
+        FROM RankedKepemilikan
+        WHERE rn = 1
+        ORDER BY tanggal_perolehan DESC`,
+      [req.params.idBarang]
+    );
+
+    res.json(histori);
+  } catch (error) {
+    console.error('Error fetching ownership history:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+app.get('/profil', /*requireLogin,*/(req, res) => {
   res.render('profil');
 });
 
-app.get('/pengaturan', /*requireLogin,*/ (req, res) => {
-  res.render('try');
+app.get('/logadmin', async (req, res) => {
+  try {
+    const [log] = await db.promise().query(`
+        SELECT timestamp, id_admin, jenis_aktivitas, detail_perubahan FROM log_aktivitas ORDER BY timestamp DESC`);
+
+    res.render('logadmin', { log });
+
+  } catch (err) {
+    console.error('Error fetching admin logs:', err);
+    res.status(500).send('Internal Server Error');
+  }
 });
 
 const port = 3000;
