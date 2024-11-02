@@ -11,7 +11,7 @@ const db = mysql.createConnection({
 
 // Admin credentials to add
 const newAdmin = {
-  id_admin: 'ao2',
+  id_admin: 'rvk',
     email: 'kev4818@gmail.com',
     password: '12345'
   };

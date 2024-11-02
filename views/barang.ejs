@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>Data Barang</title>
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i&amp;display=swap">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i&amp;display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Abril+Fatface&amp;display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Almarai&amp;display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Amarante&amp;display=swap">
@@ -19,7 +20,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
     <link rel="stylesheet" href="/css/styles.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
-
 </head>
 
 <body id="page-top">
@@ -28,20 +28,13 @@
             <div class="container-fluid d-flex flex-column p-0">
                 <a class="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0" href="#">
                     <img src="/img/logo.png" style="width: 150px; padding: 20px; margin-right: 30px;margin-top: 30px;">
-
                 </a>
                 <hr class="sidebar-divider my-3">
-                <ul class="navbar-nav text-light" id="accordionSidebar">
+                <ul class="navbar-nav text-light" id="accordionSidebar" style="margin-top: 20px;">
                     <li class="nav-item">
                         <a class="nav-link" href="/dashboard">
                             <i class="material-icons">dashboard</i>
                             <span>Dashboard</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/profil">
-                            <i class="fas fa-user"></i>
-                            <span>Profil</span>
                         </a>
                     </li>
                     <li class="nav-item">
@@ -70,8 +63,20 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/karyawan">
-                            <i class="fa fa-gear"></i>
-                            <span>Data Karyawan</span>
+                            <i class="fas fa-id-badge"></i>
+                            <span>Tabel Karyawan</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/profil">
+                            <i class="fas fa-user"></i>
+                            <span>Profil Admin</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/logadmin">
+                            <i class="fas fa-history"></i>
+                            <span>Log Aktivitas</span>
                         </a>
                     </li>
                     <li class="nav-item">
@@ -90,7 +95,8 @@
                         <button class="btn btn-link d-md-none rounded-circle me-3" id="sidebarToggleTop">
                             <i class="fas fa-bars"></i>
                         </button>
-                        <form class="d-none d-sm-inline-block me-auto ms-md-3 my-2 my-md-0 mw-100 navbar-search">
+                        <h4 class="h4 mb-0 text-gray-800 d-none d-sm-inline-block" style="font-weight: 700;">DATA BARANG</h4>
+                        <form class="d-none d-sm-inline-block ms-auto me-3 my-2 my-md-0 mw-100 navbar-search">
                             <div class="input-group">
                                 <input class="form-control bg-light border-0 small" type="text" placeholder="Search for...">
                                 <button class="btn btn-primary" type="button">
@@ -98,407 +104,442 @@
                                 </button>
                             </div>
                         </form>
-                        <ul class="navbar-nav ml-auto">
+                        <ul class="navbar-nav align-items-center">
                             <li class="nav-item dropdown no-arrow mx-1">
-                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="fas fa-bell fa-fw"></i>
                                     <span class="badge badge-danger badge-counter">3+</span>
                                 </a>
+                                <div class="dropdown-menu dropdown-menu-end shadow animated--grow-in">
+                                </div>
                             </li>
                             <div class="topbar-divider d-none d-sm-block"></div>
                             <li class="nav-item dropdown no-arrow">
-                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                                    <span class="mr-2 d-none d-lg-inline text-gray-600 small">Valerie Luna</span>
-                                    <img class="img-profile rounded-circle" src="/img/avatars/avatar1.jpeg" style="width: 32px;">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <span class="d-none d-lg-inline text-gray-600 small me-2">username</span>
+                                    <img class="img-profile rounded-circle" src="/img/avatars/avatar1.jpeg" style="width: 32px; height: 32px; object-fit: cover;">
                                 </a>
+                                <div class="dropdown-menu dropdown-menu-end shadow animated--grow-in">
+                                </div>
                             </li>
                         </ul>
                     </div>
                 </nav>
                 <div class="container-fluid">
-                    <div class="container-fluid">
-                        <div class="row align-items-center mb-4">
-                            <div class="col">
-                                <h3 class="text-dark mb-0">Data Barang</h3>
-                            </div>
-                            <div class="col-auto">
-                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addBarangModal" style="background: #1cda18;">
-                                    <i class="fas fa-plus me-2"></i>Buat Baru
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+                    <div class="modal fade" id="addBarangModal" tabindex="-1" aria-labelledby="addBarangModalLabel"
+                        aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="addBarangModalLabel">Tambah Barang Baru</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form id="addBarangForm" action="/api/barang" method="POST"
+                                        enctype="multipart/form-data">
+                                        <div class="row mb-3">
+                                            <div class="col-md-6">
+                                                <label class="form-label">Kode Barang</label>
+                                                <input type="text" class="form-control" name="id_barang" required>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label">Nama Barang</label>
+                                                <input type="text" class="form-control" name="nama_barang" required>
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Gambar Barang</label>
+                                            <input type="file" class="form-control" name="gambar_barang">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Deskripsi Barang</label>
+                                            <textarea class="form-control" name="deskripsi_barang" rows="3"></textarea>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col-md-6">
+                                                <label class="form-label">Kategori</label>
+                                                <select class="form-select" name="kategori" required>
+                                                    <option value="">Pilih Kategori</option>
+                                                    <option value="Elektronik">Elektronik</option>
+                                                    <option value="Furniture">Furniture</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label">Lokasi Barang</label>
+                                                <input type="text" class="form-control" name="lokasi_barang" required>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col-md-6">
+                                                <label class="form-label">Harga Barang</label>
+                                                <input type="text" class="form-control input-harga" name="harga_barang"
+                                                    required>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label">Status Barang</label>
+                                                <select class="form-select" name="status_barang" required>
+                                                    <option value="tersedia">Tersedia</option>
+                                                    <option value="lelang">Lelang</option>
+                                                    <option value="jual">Jual</option>
+                                                </select>
+                                            </div>
+                                            <div class="row mb-3 d-none" id="waktuLelang">
+                                                <div class="col-md-6">
+                                                    <label class="form-label">Waktu Mulai Lelang</label>
+                                                    <input type="datetime-local" class="form-control" name="waktu_mulai"
+                                                        id="waktu_mulai" required>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="form-label">Waktu Selesai Lelang</label>
+                                                    <input type="datetime-local" class="form-control"
+                                                        name="waktu_selesai" id="waktu_selesai" required>
+                                                </div>
+                                            </div>
 
-<div class="modal fade" id="addBarangModal" tabindex="-1" aria-labelledby="addBarangModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="addBarangModalLabel">Tambah Barang Baru</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="addBarangForm" action="/api/barang" method="POST" enctype="multipart/form-data">
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label class="form-label">Kode Barang</label>
-                            <input type="text" class="form-control" name="id_barang" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Nama Barang</label>
-                            <input type="text" class="form-control" name="nama_barang" required>
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Gambar Barang</label>
-                        <input type="file" class="form-control" name="gambar_barang">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Deskripsi Barang</label>
-                        <textarea class="form-control" name="deskripsi_barang" rows="3"></textarea>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label class="form-label">Kategori</label>
-                            <select class="form-select" name="kategori" required>
-                                <option value="">Pilih Kategori</option>
-                                <option value="Elektronik">Elektronik</option>
-                                <option value="Furniture">Furniture</option>
-                                <option value="Kendaraan">Kendaraan</option>
-                            </select>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Lokasi Barang</label>
-                            <input type="text" class="form-control" name="lokasi_barang" required>
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label class="form-label">Harga Barang</label>
-                            <input type="text" class="form-control input-harga" name="harga_barang" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Status Barang</label>
-                            <select class="form-select" name="status_barang" required>
-                                <option value="tersedia">Tersedia</option>
-                                <option value="lelang">Dalam Lelang</option>
-                                <option value="jual">Dijual</option>
-                            </select>
-                        </div>
-                        <div class="row mb-3 d-none" id="waktuLelang">
-                            <div class="col-md-6">
-                                <label class="form-label">Waktu Mulai Lelang</label>
-                                <input type="datetime-local" class="form-control" name="waktu_mulai" id="waktu_mulai">
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">Waktu Selesai Lelang</label>
-                                <input type="datetime-local" class="form-control" name="waktu_selesai" id="waktu_selesai">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Pemilik</label>
+                                            <select class="form-select" name="id_karyawan" required>
+                                                <option value="">Pilih Pemilik</option>
+                                                <% karyawan.forEach(function(k) { %>
+                                                    <option value="<%= k.id_karyawan %>">
+                                                        <%= k.nama_karyawan %>
+                                                    </option>
+                                                    <% }); %>
+                                            </select>
+                                        </div>
+
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Batal</button>
+                                    <button type="submit" class="btn btn-primary" id="submitBarang">Simpan</button>
+                                </div>
+                                </form>
                             </div>
                         </div>
-                        
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label">Pemilik</label>
-                        <select class="form-select" name="id_karyawan" required>
-                            <option value="">Pilih Pemilik</option>
-                            <% karyawan.forEach(function(k) { %>
-                                <option value="<%= k.id_karyawan %>"><%= k.nama_karyawan %></option>
-                            <% }); %>
-                        </select>
-                    </div>
+                    <!-- Edit Modal -->
+                    <div class="modal fade" id="editBarangModal" tabindex="-1" aria-labelledby="editBarangModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header border-bottom">
+                                    <div class="d-flex flex-column">
+                                        <h5 class="modal-title mb-0" id="editBarangModalLabel">
+                                            <span class="text-small" id="id_display"></span>
+                                            <span class="fw-bold" id="nama_display"></span>
+                                        </h5>
+                                    </div>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
                     
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                <button type="submit" class="btn btn-primary" id="submitBarang">Simpan</button>
-            </div>
-        </form>
-        </div>
-    </div>
-</div>
-<!-- Edit Modal -->
-<div class="modal fade" id="editBarangModal" tabindex="-1" aria-labelledby="editBarangModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title" id="editBarangModalLabel">
-                    <i class="fas fa-edit me-2"></i>Detail Barang
-                </h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            
-            <form id="editBarangForm" enctype="multipart/form-data">
-                <div class="modal-body">
-                    <input type="hidden" name="id_barang" id="id_barang">
-                    <div class="mb-4 text-center position-relative">
-                        <div class="image-upload-container" 
-                             style="width: 200px; height: 200px; margin: 0 auto; cursor: pointer; border-radius: 10px; overflow: hidden;">
-                            <img id="previewImage" src="/placeholder-image.jpg" 
-                                 alt="Preview" class="img-fluid w-100 h-100 object-fit-cover">
-                            <div class="image-upload-overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center"
-                                 style="background: rgba(0,0,0,0.5); opacity: 0; transition: opacity 0.3s;">
-                                <i class="fas fa-camera text-white fs-3"></i>
+                                <form id="editBarangForm" enctype="multipart/form-data">
+                                    <div class="modal-body">
+                                        <input type="hidden" name="id_barang" id="id_barang">
+                                        <div class="mb-4 text-center position-relative">
+                                            <div class="image-upload-container shadow-sm" 
+                                                style="width: 200px; height: 200px; margin: 0 auto; cursor: pointer; border-radius: 10px; overflow: hidden; border: 2px dashed #dee2e6;">
+                                                <img id="previewImage" src="/placeholder-image.jpg" alt="Preview"
+                                                    class="img-fluid w-100 h-100 object-fit-cover">
+                                                <div class="image-upload-overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center"
+                                                    style="background: rgba(0,0,0,0.5); opacity: 0; transition: opacity 0.3s;">
+                                                    <i class="fas fa-camera text-white fs-3"></i>
+                                                </div>
+                                            </div>
+                                            <input type="file" name="gambar_barang" id="gambar_barang" class="d-none">
+                                        </div>
+                                        <div class="row g-3">
+                                            <div class="col-md-6">
+                                                <div class="form-floating">
+                                                    <input type="text" name="nama_barang" class="form-control"
+                                                        id="nama_barang" required>
+                                                    <label for="nama_barang">Nama Barang</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-floating">
+                                                    <select name="kategori" class="form-select" id="kategori">
+                                                        <option value="Elektronik">Elektronik</option>
+                                                        <option value="Furniture">Furniture</option>
+                                                    </select>
+                                                    <label for="kategori">Kategori</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-floating mt-3">
+                                            <textarea name="deskripsi_barang" class="form-control" id="deskripsi_barang"
+                                                style="height: 100px"></textarea>
+                                            <label for="deskripsi_barang">Deskripsi</label>
+                                        </div>
+                                        <div class="row g-3 mt-2">
+                                            <div class="col-md-6">
+                                                <div class="form-floating">
+                                                    <input type="text" name="lokasi_barang" class="form-control"
+                                                        id="lokasi_barang">
+                                                    <label for="lokasi_barang">Lokasi</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-floating">
+                                                    <input type="text" name="harga_barang" class="form-control"
+                                                        id="harga_barang">
+                                                    <label for="harga_barang">Harga Barang</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row g-3 mt-2">
+                                            <div class="col-md-6">
+                                                <div class="form-floating">
+                                                    <select name="status_barang" class="form-select" id="status_barang">
+                                                        <option value="tersedia">Tersedia</option>
+                                                        <option value="lelang">Lelang</option>
+                                                        <option value="jual">Jual</option>
+                                                    </select>
+                                                    <label for="status_barang">Status Barang</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-floating">
+                                                    <select name="id_karyawan" class="form-select" id="pemilikBarang"
+                                                        required>
+                                                        <% karyawan.forEach(function(data) { %>
+                                                            <option value="<%= data.id_karyawan %>"
+                                                                <%=data.id_karyawan===karyawan.id_karyawan ? 'selected'
+                                                                : '' %>>
+                                                                <%= data.nama_karyawan %>
+                                                            </option>
+                                                            <% }); %>
+                                                    </select>
+                                                    <label for="pemilikBarang">Pemilik</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="lelangSection" class="row g-3 mt-2 d-none">
+                                            <div class="col-md-6">
+                                                <div class="form-floating">
+                                                    <input type="datetime-local" name="waktu_mulai" class="form-control"
+                                                        id="waktu_mulai">
+                                                    <label for="waktu_mulai">Waktu Mulai Lelang</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-floating">
+                                                    <input type="datetime-local" name="waktu_selesai"
+                                                        class="form-control" id="waktu_selesai">
+                                                    <label for="waktu_selesai">Waktu Selesai Lelang</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mt-3">
+                                            <p class="text-muted mb-1">Tanggal Perolehan:</p>
+                                            <p class="fw-bold" id="tanggal_perolehan"></p>
+                                        </div>
+                                    </div>
+                    
+                                    <div class="modal-footer border-top">
+                                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">
+                                            <i class="fas fa-times me-1"></i>Tutup
+                                        </button>
+                                        <button type="submit" class="btn btn-dark">
+                                            <i class="fas fa-save me-1"></i>Simpan Perubahan
+                                        </button>
+                                    </div>
+                                </form>
                             </div>
                         </div>
-                        <input type="file" name="gambar_barang" id="gambar_barang" class="d-none">
                     </div>
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                <input type="text" name="nama_barang" class="form-control" id="nama_barang" required>
-                                <label for="nama_barang">Nama Barang</label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                <select name="kategori" class="form-select" id="kategori">
-                                    <option value="Elektronik">Elektronik</option>
-                                    <option value="Furniture">Furniture</option>
-                                    <option value="Peralatan">Peralatan</option>
-                                    <option value="Kendaraan">Kendaraan</option>
-                                </select>
-                                <label for="kategori">Kategori</label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-floating mt-3">
-                        <textarea name="deskripsi_barang" class="form-control" id="deskripsi_barang" 
-                                  style="height: 100px"></textarea>
-                        <label for="deskripsi_barang">Deskripsi</label>
-                    </div>
-                    <div class="row g-3 mt-2">
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                <input type="text" name="lokasi_barang" class="form-control" id="lokasi_barang">
-                                <label for="lokasi_barang">Lokasi</label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                <input type="text" name="harga_barang" class="form-control" id="harga_barang">
-                                <label for="harga_barang">Harga Barang</label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row g-3 mt-2">
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                <select name="status_barang" class="form-select" id="status_barang">
-                                    <option value="tersedia">Tersedia</option>
-                                    <option value="lelang">Lelang</option>
-                                    <option value="jual">Dijual</option>
-                                </select>
-                                <label for="status_barang">Status Barang</label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                <select name="id_karyawan" class="form-select" id="pemilikBarang" required>
-                                    <% karyawan.forEach(function(data) { %>
-                                        <option value="<%= data.id_karyawan %>" 
-                                                <%= data.id_karyawan === karyawan.id_karyawan ? 'selected' : '' %>>
-                                            <%= data.nama_karyawan %>
-                                        </option>
-                                    <% }); %>
-                                </select>
-                                <label for="pemilikBarang">Pemilik</label>
-                            </div>
-                        </div>
-                    </div>
-                    <div id="lelangSection" class="row g-3 mt-2 d-none">
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                <input type="datetime-local" name="waktu_mulai" class="form-control" id="waktu_mulai">
-                                <label for="waktu_mulai">Waktu Mulai Lelang</label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                <input type="datetime-local" name="waktu_selesai" class="form-control" id="waktu_selesai">
-                                <label for="waktu_selesai">Waktu Selesai Lelang</label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="mt-3">
-                        <p class="text-muted mb-1">Tanggal Perolehan:</p>
-                        <p class="fw-bold" id="tanggal_perolehan"></p>
-                    </div>
-                </div>
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">
-                        <i class="fas fa-times me-1"></i>Tutup
-                    </button>
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-save me-1"></i>Simpan Perubahan
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-  <div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteLabel" aria-hidden="true" style="top: 25%;
+                    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog"
+                        aria-labelledby="confirmDeleteLabel" aria-hidden="true" style="top: 25%;
   align-items: center;
   justify-content: center;">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="confirmDeleteLabel">Konfirmasi Hapus</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          Apakah Anda yakin ingin menghapus barang ini beserta data terkait?
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-          <button type="button" class="btn btn-danger" id="deleteConfirmBtn">Hapus</button>
-        </div>
-      </div>
-    </div>
-  </div>
-                    <div class="card shadow">
-                        <div class="card-body">
-                            <div class="row">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="confirmDeleteLabel">Konfirmasi Hapus</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                    <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    Apakah Anda yakin ingin menghapus barang ini beserta data terkait?
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Batal</button>
+                                    <button type="button" class="btn btn-danger" id="deleteConfirmBtn">Hapus</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card" style="border: 0px; margin-top:-20px">
+                        <div class="card-body" style="width: 105%;margin-left:-30px">
+                            <div class="row align-items-center">
                                 <div class="col-md-6 text-nowrap">
-                                    <div id="dataTable_length" class="dataTables_length" aria-controls="dataTable"><label class="form-label">Show&nbsp;<select class="d-inline-block form-select form-select-sm">
-                                                <option value="10" selected="">10</option>
-                                                <option value="25">25</option>
-                                                <option value="50">50</option>
-                                                <option value="100">100</option>
-                                            </select>&nbsp;</label></div>
+                                    <div id="dataTable_length" class="dataTables_length" aria-controls="dataTable">
+                                        <label class="form-label">Show&nbsp;<select class="d-inline-block form-select form-select-sm">
+                                            <option value="10" selected="">10</option>
+                                            <option value="25">25</option>
+                                            <option value="50">50</option>
+                                            <option value="100">100</option>
+                                        </select>&nbsp;</label>
+                                    </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="text-md-end dataTables_filter" id="dataTable_filter"><label class="form-label"><input type="search" class="form-control form-control-sm" aria-controls="dataTable" placeholder="Search"></label></div>
+                                <div class="col-md-6 d-flex justify-content-end">
+                                    <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#addBarangModal" style="background: #1cda18;">
+                                        <i class="fas fa-plus me-2"></i>Buat Baru
+                                    </button>
+                                    <button type="button" class="btn btn-secondary">
+                                        <i class="fas fa-print me-2"></i>Print
+                                    </button>
                                 </div>
                             </div>
-<div class="table-responsive table mt-2" id="dataTable" role="grid" aria-describedby="dataTable_info">
-    <table class="table table-hover align-middle border-separate" id="dataTable">
-        <thead>
-            <tr class="bg-light">
-                <th class="px-4 py-3 text-sm font-semibold tracking-wide text-left">Kode</th>
-                <th class="px-4 py-3 text-sm font-semibold tracking-wide text-left">Nama Barang</th>
-                <th class="px-4 py-3 text-sm font-semibold tracking-wide text-left">Kategori</th>
-                <th class="px-4 py-3 text-sm font-semibold tracking-wide text-left">Lokasi</th>
-                <th class="px-4 py-3 text-sm font-semibold tracking-wide text-left">Pemilik</th>
-                <th class="px-4 py-3 text-sm font-semibold tracking-wide text-center">Masa Lelang</th>
-                <th class="px-4 py-3 text-sm font-semibold tracking-wide text-center">Status</th>
-                <th class="px-4 py-3 text-sm font-semibold tracking-wide text-center">Opsi</th>
-            </tr>
-        </thead>
-        <tbody class="bg-white divide-y">
-            <% if(barang.length > 0) { %>
-                <% barang.forEach(item => { %>
-                    <tr class="hover:bg-gray-50 transition-colors duration-200">
-                        <td class="px-4 py-3 text-sm"><%= item.id_barang %></td>
-                        <td class="px-4 py-3 text-sm font-medium"><%= item.nama_barang %></td>
-                        <td class="px-4 py-3 text-sm"><%= item.kategori %></td>
-                        <td class="px-4 py-3 text-sm"><%= item.lokasi_barang %></td>
-                        <td class="px-4 py-3 text-sm"><%= item.nama_karyawan %></td>
-                        <td class="px-4 py-3 text-sm text-center">
-                            <%= item.masa_lelang == null ? '-' : item.masa_lelang + ' Hari' %>
-                        </td>
-                        <td class="px-4 py-3 text-center">
-                            <% 
-                            let statusClass = '';
-                            let statusText = '';
                             
-                            switch(item.status_barang) {
-                                case 'tersedia':
-                                    statusClass = 'bg-success';
-                                    statusText = 'Tersedia';
-                                    break;
-                                case 'lelang':
-                                    statusClass = 'bg-primary';
-                                    statusText = 'Lelang';
-                                    break;
-                                case 'jual':
-                                    statusClass = 'bg-danger';
-                                    statusText = 'Dijual';
-                                    break;
-                                default:
-                                    statusClass = 'bg-secondary';
-                                    statusText = 'Tidak Diketahui';
-                            }
-                            %>
-                            <span class="badge <%= statusClass %> text-white px-3 py-1 rounded-pill">
-                                <%= statusText %>
-                            </span>
-                        </td>
-                        <td class="px-4 py-3 text-center">
-                            <div class="btn-group" role="group">
-                                <button class="btn btn-warning btn-sm" 
-                                        data-bs-toggle="modal" 
-                                        data-bs-target="#editBarangModal" 
-                                        title="Edit"
-                                        onclick="getBarangDetail('<%= item.id_barang %>')">
-                                    <i class="fas fa-ellipsis-v"></i>
-                                </button>
-                                <button class="btn btn-danger btn-sm" 
-                                        data-bs-toggle="popup" 
-                                        title="Hapus" 
-                                        onclick="confirmDelete('<%= item.id_barang %>')">
-                                    <i class="fas fa-trash"></i>
-                                </button>
+                            <div class="table-responsive table mt-2" id="dataTable" role="grid"
+                                aria-describedby="dataTable_info">
+                                <table class="table table-hover align-middle border-separate" id="dataTable">
+                                    <thead>
+                                        <tr class="bg-light">
+                                            <th class="px-4 py-3 text-sm font-semibold tracking-wide text-left">Kode Barang
+                                            </th>
+                                            <th class="px-4 py-3 text-sm font-semibold tracking-wide text-left">Nama
+                                                Barang</th>
+                                            <th class="px-4 py-3 text-sm font-semibold tracking-wide text-left">Kategori
+                                            </th>
+                                            <th class="px-4 py-3 text-sm font-semibold tracking-wide text-left">Lokasi
+                                            </th>
+                                            <th class="px-4 py-3 text-sm font-semibold tracking-wide text-left">Pemilik
+                                            </th>
+                                            <th class="px-4 py-3 text-sm font-semibold tracking-wide text-center">Masa
+                                                Lelang</th>
+                                            <th class="px-4 py-3 text-sm font-semibold tracking-wide text-center">Status
+                                            </th>
+                                            <th class="px-4 py-3 text-sm font-semibold tracking-wide text-center">Opsi
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="bg-white divide-y">
+                                        <% if(barang.length> 0) { %>
+                                            <% barang.forEach(item=> { %>
+                                                <tr class="hover:bg-gray-50 transition-colors duration-200">
+                                                    <td class="px-4 py-3 text-center">
+                                                        <%= item.id_barang %>
+                                                    </td>
+                                                    <td class="px-4 py-3 text-sm font-medium">
+                                                        <%= item.nama_barang %>
+                                                    </td>
+                                                    <td class="px-4 py-3 text-sm">
+                                                        <%= item.kategori %>
+                                                    </td>
+                                                    <td class="px-4 py-3 text-sm">
+                                                        <%= item.lokasi_barang %>
+                                                    </td>
+                                                    <td class="px-4 py-3 text-sm">
+                                                        <%= item.nama_karyawan %>
+                                                    </td>
+                                                    <td class="px-4 py-3 text-sm text-center"
+                                                        id="timer-<%= item.id_barang %>"
+                                                        data-start-time="<%= item.waktu_mulai ? item.waktu_mulai.toISOString() : '' %>"
+                                                        data-end-time="<%= item.waktu_selesai ? item.waktu_selesai.toISOString() : '' %>">
+                                                        <%= item.masa_lelang==null ? '-' : item.masa_lelang %>
+                                                    </td>
+                                                    <td class="px-4 py-3 text-center">
+                                                        <% let statusClass='' ; let statusText='' ;
+                                                            switch(item.status_barang) { case 'tersedia' :
+                                                            statusClass='bg-success' ; statusText='Tersedia' ; break;
+                                                            case 'lelang' : statusClass='bg-primary' ;
+                                                            statusText='Lelang' ; break; case 'jual' :
+                                                            statusClass='bg-warning' ; statusText='Jual' ; break;
+                                                            default: statusClass='bg-secondary' ;
+                                                            statusText='Tidak Diketahui' ; } %>
+                                                            <span
+                                                                class="badge <%= statusClass %> text-white px-3 py-1 rounded-pill">
+                                                                <%= statusText %>
+                                                            </span>
+                                                    </td>
+                                                    <td class="px-4 py-3 text-center">
+                                                        <div class="btn-group" role="group">
+                                                            <button class="btn btn-white btn-sm"
+                                                                data-bs-toggle="modal" data-bs-target="#editBarangModal"
+                                                                title="Edit"
+                                                                onclick="getBarangDetail('<%= item.id_barang %>')">
+                                                                <i class="fas fa-ellipsis-v"></i>
+                                                            </button>
+                                                            <button class="btn btn-danger btn-sm" data-bs-toggle="popup"
+                                                                title="Hapus"
+                                                                onclick="confirmDelete('<%= item.id_barang %>')">
+                                                                <i class="fas fa-trash"></i>
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <% }); %>
+                                                    <% } else { %>
+                                                        <tr>
+                                                            <td colspan="8" class="px-4 py-8 text-center text-gray-500">
+                                                                <i class="fas fa-box-open fa-2x mb-2"></i>
+                                                                <p>Tidak ada data tersedia</p>
+                                                            </td>
+                                                        </tr>
+                                                        <% } %>
+                                    </tbody>
+                                </table>
                             </div>
-                        </td>
-                    </tr>
-                <% }); %>
-            <% } else { %>
-                <tr>
-                    <td colspan="8" class="px-4 py-8 text-center text-gray-500">
-                        <i class="fas fa-box-open fa-2x mb-2"></i>
-                        <p>Tidak ada data tersedia</p>
-                    </td>
-                </tr>
-            <% } %>
-        </tbody>
-    </table>
-</div>            <div class="row">
+                            <div class="row" style="margin-top: 20px;">
                                 <div class="col-md-6 align-self-center">
                                     <p id="dataTable_info" class="dataTables_info" role="status" aria-live="polite">
-                                        Showing <%= (currentPage - 1) * limit + 1 %> to <%= Math.min(currentPage * limit, totalData) %> of <%= totalData %>
+                                        Showing <%= (currentPage - 1) * limit + 1 %> to <%= Math.min(currentPage *
+                                                limit, totalData) %> of <%= totalData %>
                                     </p>
-                                    
+
                                 </div>
                                 <div class="col-md-6">
-                                    <nav class="d-lg-flex justify-content-lg-end dataTables_paginate paging_simple_numbers">
+                                    <nav
+                                        class="d-lg-flex justify-content-lg-end dataTables_paginate paging_simple_numbers">
                                         <ul class="pagination">
-                                            <% if (currentPage > 1) { %>
+                                            <% if (currentPage> 1) { %>
                                                 <li class="page-item">
-                                                    <a class="page-link" href="/barang?page=<%= currentPage - 1 %>" aria-label="Previous">
+                                                    <a class="page-link" href="/barang?page=<%= currentPage - 1 %>"
+                                                        aria-label="Previous">
                                                         <span aria-hidden="true">«</span>
                                                     </a>
                                                 </li>
-                                            <% } else { %>
-                                                <li class="page-item disabled">
-                                                    <a class="page-link" href="#" aria-label="Previous">
-                                                        <span aria-hidden="true">«</span>
-                                                    </a>
-                                                </li>
-                                            <% } %>
-                                    
-                                            <% for (let i = 1; i <= totalPages; i++) { %>
-                                                <li class="page-item <%= i === currentPage ? 'active' : '' %>">
-                                                    <a class="page-link" href="/barang?page=<%= i %>"><%= i %></a>
-                                                </li>
-                                            <% } %>
-                                    
-                                            <% if (currentPage < totalPages) { %>
-                                                <li class="page-item">
-                                                    <a class="page-link" href="/barang?page=<%= currentPage + 1 %>" aria-label="Next">
-                                                        <span aria-hidden="true">»</span>
-                                                    </a>
-                                                </li>
-                                            <% } else { %>
-                                                <li class="page-item disabled">
-                                                    <a class="page-link" href="#" aria-label="Next">
-                                                        <span aria-hidden="true">»</span>
-                                                    </a>
-                                                </li>
-                                            <% } %>
+                                                <% } else { %>
+                                                    <li class="page-item disabled">
+                                                        <a class="page-link" href="#" aria-label="Previous">
+                                                            <span aria-hidden="true">«</span>
+                                                        </a>
+                                                    </li>
+                                                    <% } %>
+
+                                                        <% for (let i=1; i <=totalPages; i++) { %>
+                                                            <li
+                                                                class="page-item <%= i === currentPage ? 'active' : '' %>">
+                                                                <a class="page-link" href="/barang?page=<%= i %>">
+                                                                    <%= i %>
+                                                                </a>
+                                                            </li>
+                                                            <% } %>
+
+                                                                <% if (currentPage < totalPages) { %>
+                                                                    <li class="page-item">
+                                                                        <a class="page-link"
+                                                                            href="/barang?page=<%= currentPage + 1 %>"
+                                                                            aria-label="Next">
+                                                                            <span aria-hidden="true">»</span>
+                                                                        </a>
+                                                                    </li>
+                                                                    <% } else { %>
+                                                                        <li class="page-item disabled">
+                                                                            <a class="page-link" href="#"
+                                                                                aria-label="Next">
+                                                                                <span aria-hidden="true">»</span>
+                                                                            </a>
+                                                                        </li>
+                                                                        <% } %>
                                         </ul>
-                                    </nav>                                    
+                                    </nav>
                                 </div>
                             </div>
                         </div>
@@ -523,65 +564,65 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/cleave.js@1.6.0/dist/cleave.min.js"></script>
-<script>
-$(document).ready(function() {
-    $('#addBarangForm').submit(function(event) {
-        event.preventDefault();
+    <script>
+        $(document).ready(function () {
+            $('#addBarangForm').submit(function (event) {
+                event.preventDefault();
 
-        var formData = new FormData(this);
+                var formData = new FormData(this);
 
-        $.ajax({
-            url: '/api/barang',
-            type: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: function(response) {
-                if (response.success) {
-                    toastr.success('Barang berhasil ditambahkan!');
-                    $('#addBarangForm')[0].reset();
-                    location.reload();
-                } else {
-                    toastr.error('Gagal menambahkan barang: ' + response.message);
-                }
-            },
-            error: function(xhr, status, error) {
-                console.error('Error:', error);
-                alert('Terjadi kesalahan: ' + error);
-            }
+                $.ajax({
+                    url: '/api/barang',
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (response) {
+                        if (response.success) {
+                            toastr.success('Barang berhasil ditambahkan!');
+                            $('#addBarangForm')[0].reset();
+                            location.reload();
+                        } else {
+                            toastr.error('Gagal menambahkan barang: ' + response.message);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error:', error);
+                        alert('Terjadi kesalahan: ' + error);
+                    }
+                });
+            });
         });
-    });
-});
-</script>
-<script>
-    new Cleave('.input-harga', {
-        numeral: true,
-        numeralThousandsGroupStyle: 'thousand',
-        prefix: 'Rp ',
-        noImmediatePrefix: true
-    });
+    </script>
+    <script>
+        new Cleave('.input-harga', {
+            numeral: true,
+            numeralThousandsGroupStyle: 'thousand',
+            prefix: 'Rp ',
+            noImmediatePrefix: true
+        });
     </script>
 
     <script>
-        document.querySelector('form').addEventListener('submit', function(event) {
+        document.querySelector('form').addEventListener('submit', function (event) {
             const inputHarga = document.querySelector('.input-harga');
             const hargaValue = inputHarga.value;
-        
+
             const cleanValue = hargaValue.replace(/[^0-9]/g, '');
-        
+
             inputHarga.value = cleanValue;
         });
-        
+
     </script>
     <script>
         function confirmDelete(idBarang) {
-          $('#confirmDeleteModal').modal('show');
-          $('#deleteConfirmBtn').on('click', function() {
-            window.location.href = '/barang/delete/' + idBarang;
-          });
+            $('#confirmDeleteModal').modal('show');
+            $('#deleteConfirmBtn').on('click', function () {
+                window.location.href = '/barang/delete/' + idBarang;
+            });
         }
-      </script>
-      <script>
+    </script>
+    <script>
         document.querySelector('select[name="status_barang"]').addEventListener('change', function () {
             const waktuLelang = document.getElementById('waktuLelang');
             if (this.value === 'lelang') {
@@ -593,459 +634,465 @@ $(document).ready(function() {
     </script>
 
     <script>
-const CONFIG = {
-    MAX_IMAGE_SIZE: 5 * 1024 * 1024, // 5MB
-    DEFAULT_IMAGE_PATH: '/path/to/default-image.jpg',
-    LOADING_IMAGE_PATH: '/path/to/loading.gif',
-    API_ENDPOINTS: {
-        DETAIL: (id) => `/api/barang/detail/${id}`,
-        EDIT: '/api/barang/edit',
-        UPDATE: '/update-barang'
-    }
-};
-
-const Utils = {
-    formatDateTimeLocal(dateString) {
-        if (!dateString) return '';
-        return new Date(dateString).toISOString().slice(0, 16);
-    },
-
-    formatDate(date) {
-        return new Intl.DateTimeFormat('id-ID', {
-            weekday: 'long',
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
-        }).format(new Date(date));
-    },
-
-    showError(message) {
-        toastr.error(message);
-        console.error('Error:', message);
-    },
-
-    validateImageFile(file) {
-        if (!file) return true;
-        
-        if (file.size > CONFIG.MAX_IMAGE_SIZE) {
-            this.showError('Ukuran gambar terlalu besar. Maksimal 5MB');
-            return false;
-        }
-        
-        if (!file.type.match('image.*')) {
-            this.showError('File harus berupa gambar');
-            return false;
-        }
-        
-        return true;
-    }
-};
-
-class ImageHandler {
-    constructor(previewElement, inputElement) {
-        this.preview = $(previewElement);
-        this.input = $(inputElement);
-        this.setupEventListeners();
-    }
-
-    setupEventListeners() {
-        this.input.on('change', (e) => this.handleImageChange(e));
-        
-        $('.image-upload-container')
-            .on('click', () => this.input.click())
-            .on('mouseenter', () => $('.image-upload-overlay').css('opacity', '1'))
-            .on('mouseleave', () => $('.image-upload-overlay').css('opacity', '0'));
-    }
-
-    handleImageChange(event) {
-        const file = event.target.files[0];
-        if (!file) return;
-
-        if (!Utils.validateImageFile(file)) {
-            event.target.value = '';
-            return;
-        }
-
-        this.showLoadingState();
-        this.readAndPreviewImage(file);
-    }
-
-    showLoadingState() {
-        this.preview.attr('src', CONFIG.LOADING_IMAGE_PATH);
-    }
-
-    readAndPreviewImage(file) {
-        const reader = new FileReader();
-        
-        reader.onload = (e) => {
-            const img = new Image();
-            img.onload = () => {
-                this.preview
-                    .attr('src', e.target.result)
-                    .addClass('preview-image');
-            };
-            img.src = e.target.result;
-        };
-
-        reader.onerror = () => {
-            Utils.showError('Gagal membaca file gambar');
-            this.preview
-                .attr('src', CONFIG.DEFAULT_IMAGE_PATH)
-                .addClass('preview-image');
-        };
-
-        reader.readAsDataURL(file);
-    }
-
-    setPreviewImage(base64Image) {
-        if (!base64Image) {
-            this.preview.attr('src', CONFIG.DEFAULT_IMAGE_PATH);
-            return;
-        }
-
-        const img = new Image();
-        img.onload = () => {
-            this.preview
-                .attr('src', img.src)
-                .addClass('preview-image');
-        };
-        img.onerror = () => {
-            this.preview
-                .attr('src', CONFIG.DEFAULT_IMAGE_PATH)
-                .addClass('preview-image');
-        };
-        img.src = `data:image/jpeg;base64,${base64Image}`;
-    }
-}
-
-class BarangFormHandler {
-    constructor() {
-        this.form = $('#editBarangForm');
-        this.imageHandler = new ImageHandler('#previewImage', '#gambar_barang');
-        this.setupFormElements();
-        this.setupEventListeners();
-    }
-
-    setupFormElements() {
-        this.hargaInput = new Cleave('.input-harga', {
-            numeral: true,
-            numeralThousandsGroupStyle: 'thousand',
-            prefix: 'Rp ',
-            numeralDecimalScale: 0
-        });
-
-        this.statusSelect = $('#status_barang');
-        this.lelangSection = $('#lelangSection');
-    }
-
-    setupEventListeners() {
-        this.statusSelect.on('change', () => this.handleStatusChange());
-        this.form.on('submit', (e) => this.handleSubmit(e));
-    }
-
-    handleStatusChange() {
-        const isLelang = this.statusSelect.val() === 'lelang';
-        this.lelangSection.toggleClass('d-none', !isLelang);
-        
-        if (!isLelang) {
-            $('#waktu_mulai, #waktu_selesai').val('');
-        }
-    }
-
-    async handleSubmit(e) {
-        e.preventDefault();
-        
-        try {
-            const formData = new FormData(this.form[0]);
-            
-            // Bersihkan format harga
-            const hargaValue = this.hargaInput.getRawValue();
-            formData.set('harga_barang', hargaValue);
-
-            // Validasi data penting
-            if (!formData.get('nama_barang')) {
-                throw new Error('Nama barang harus diisi');
+        const CONFIG = {
+            MAX_IMAGE_SIZE: 5 * 1024 * 1024,
+            DEFAULT_IMAGE_PATH: '/path/to/default-image.jpg',
+            LOADING_IMAGE_PATH: '/path/to/loading.gif',
+            API_ENDPOINTS: {
+                DETAIL: (id) => `/api/barang/detail/${id}`,
+                EDIT: '/api/barang/edit',
+                UPDATE: '/update-barang'
             }
+        };
 
-            // Cek file gambar jika ada
-            const gambarFile = $('#gambar_barang')[0].files[0];
-            if (gambarFile && !Utils.validateImageFile(gambarFile)) {
-                return;
-            }
+        const Utils = {
+            formatDateTimeLocal(dateString) {
+                if (!dateString) return '';
+                return new Date(dateString).toISOString().slice(0, 16);
+            },
 
-            const response = await $.ajax({
-                url: CONFIG.API_ENDPOINTS.EDIT,
-                type: 'POST',
-                data: formData,
-                processData: false,
-                contentType: false
-            });
+            formatDate(date) {
+                return new Intl.DateTimeFormat('id-ID', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                }).format(new Date(date));
+            },
 
-            if (response.success) {
-                toastr.success('Barang berhasil diperbarui!');
-                $('#editBarangModal').modal('hide');
-                
-                if (typeof loadBarangTable === 'function') {
-                    loadBarangTable();
+            showError(message) {
+                toastr.error(message);
+                console.error('Error:', message);
+            },
+
+            validateImageFile(file) {
+                if (!file) return true;
+
+                if (file.size > CONFIG.MAX_IMAGE_SIZE) {
+                    this.showError('Ukuran gambar terlalu besar. Maksimal 5MB');
+                    return false;
                 }
-            } else {
-                throw new Error(response.message || 'Gagal memperbarui barang');
+
+                if (!file.type.match('image.*')) {
+                    this.showError('File harus berupa gambar');
+                    return false;
+                }
+
+                return true;
             }
-        } catch (error) {
-            console.error('Error submitting form:', error);
+        };
+
+        class ImageHandler {
+            constructor(previewElement, inputElement) {
+                this.preview = $(previewElement);
+                this.input = $(inputElement);
+                this.setupEventListeners();
+            }
+
+            setupEventListeners() {
+                this.input.on('change', (e) => this.handleImageChange(e));
+
+                $('.image-upload-container')
+                    .on('click', () => this.input.click())
+                    .on('mouseenter', () => $('.image-upload-overlay').css('opacity', '1'))
+                    .on('mouseleave', () => $('.image-upload-overlay').css('opacity', '0'));
+            }
+
+            handleImageChange(event) {
+                const file = event.target.files[0];
+                if (!file) return;
+
+                if (!Utils.validateImageFile(file)) {
+                    event.target.value = '';
+                    return;
+                }
+
+                this.showLoadingState();
+                this.readAndPreviewImage(file);
+            }
+
+            showLoadingState() {
+                this.preview.attr('src', CONFIG.LOADING_IMAGE_PATH);
+            }
+
+            readAndPreviewImage(file) {
+                const reader = new FileReader();
+
+                reader.onload = (e) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        this.preview
+                            .attr('src', e.target.result)
+                            .addClass('preview-image');
+                    };
+                    img.src = e.target.result;
+                };
+
+                reader.onerror = () => {
+                    Utils.showError('Gagal membaca file gambar');
+                    this.preview
+                        .attr('src', CONFIG.DEFAULT_IMAGE_PATH)
+                        .addClass('preview-image');
+                };
+
+                reader.readAsDataURL(file);
+            }
+
+            setPreviewImage(base64Image) {
+                if (!base64Image) {
+                    this.preview.attr('src', CONFIG.DEFAULT_IMAGE_PATH);
+                    return;
+                }
+
+                const img = new Image();
+                img.onload = () => {
+                    this.preview
+                        .attr('src', img.src)
+                        .addClass('preview-image');
+                };
+                img.onerror = () => {
+                    this.preview
+                        .attr('src', CONFIG.DEFAULT_IMAGE_PATH)
+                        .addClass('preview-image');
+                };
+                img.src = `data:image/jpeg;base64,${base64Image}`;
+            }
         }
-    }
 
-    populateForm(barang) {
-        this.form[0].reset();
-        
-        $('#editBarangModalLabel').text(`Edit Detail Barang - ${barang.nama_barang}`);
-        $('#id_barang').val(barang.id_barang);
-        $('#nama_barang').val(barang.nama_barang);
-        $('#deskripsi_barang').val(barang.deskripsi_barang);
-        $('#kategori').val(barang.kategori);
-        $('#lokasi_barang').val(barang.lokasi_barang);
-        $('#status_barang').val(barang.status_barang);
-        $('#id_karyawan').val(barang.id_karyawan);
+        class BarangFormHandler {
+            constructor() {
+                this.form = $('#editBarangForm');
+                this.imageHandler = new ImageHandler('#previewImage', '#gambar_barang');
+                this.setupFormElements();
+                this.setupEventListeners();
+            }
 
-        this.hargaInput.setRawValue(barang.harga_barang);
+            setupFormElements() {
+                this.hargaInput = new Cleave('.input-harga', {
+                    numeral: true,
+                    numeralThousandsGroupStyle: 'thousand',
+                    prefix: 'Rp ',
+                    numeralDecimalScale: 0
+                });
 
-        if (barang.tanggal_perolehan) {
-            $('#tanggal_perolehan').val(Utils.formatDate(barang.tanggal_perolehan));
-        }
+                this.statusSelect = $('#status_barang');
+                this.lelangSection = $('#lelangSection');
+            }
 
-        this.handleLelangSection(barang);
+            setupEventListeners() {
+                this.statusSelect.on('change', () => this.handleStatusChange());
+                this.form.on('submit', (e) => this.handleSubmit(e));
+            }
 
-        this.imageHandler.setPreviewImage(barang.gambar_barang);
-    }
+            handleStatusChange() {
+                const isLelang = this.statusSelect.val() === 'lelang';
+                this.lelangSection.toggleClass('d-none', !isLelang);
 
-    handleLelangSection(barang) {
-        const isLelang = barang.status_barang === 'lelang';
-        this.lelangSection.toggleClass('d-none', !isLelang);
-        
-        if (isLelang) {
-            $('#waktu_mulai').val(Utils.formatDateTimeLocal(barang.waktu_mulai));
-            $('#waktu_selesai').val(Utils.formatDateTimeLocal(barang.waktu_selesai));
-        }
-    }
-}
+                if (!isLelang) {
+                    $('#waktu_mulai, #waktu_selesai').val('');
+                }
+            }
 
-const formHandler = new BarangFormHandler();
+            async handleSubmit(e) {
+                e.preventDefault();
 
-function setupCleave() {
-    new Cleave('#harga_barang', {
-        numeral: true,
-        numeralThousandsGroupStyle: 'thousand',
-        prefix: 'Rp ',
-        numeralDecimalScale: 0
-    });
-}
+                try {
+                    const formData = new FormData(this.form[0]);
 
-function getBarangDetail(id_barang) {
-    $.ajax({
-        url: `/api/barang/detail/${id_barang}`,
-        type: 'GET',
-        success: function(response) {
-            if (response.success) {
-                $('#editBarangForm')[0].reset();
-                
-                const barang = response.data;
+                    const hargaValue = this.hargaInput.getRawValue();
+                    formData.set('harga_barang', hargaValue);
+
+                    if (!formData.get('nama_barang')) {
+                        throw new Error('Nama barang harus diisi');
+                    }
+
+                    const gambarFile = $('#gambar_barang')[0].files[0];
+                    if (gambarFile && !Utils.validateImageFile(gambarFile)) {
+                        return;
+                    }
+
+                    const response = await $.ajax({
+                        url: CONFIG.API_ENDPOINTS.EDIT,
+                        type: 'POST',
+                        data: formData,
+                        processData: false,
+                        contentType: false
+                    });
+
+                    if (response.success) {
+                        toastr.success('Barang berhasil diperbarui!');
+                        $('#editBarangModal').modal('hide');
+
+                        if (typeof loadBarangTable === 'function') {
+                            loadBarangTable();
+                        }
+                    } else {
+                        throw new Error(response.message || 'Gagal memperbarui barang');
+                    }
+                } catch (error) {
+                    console.error('Error submitting form:', error);
+                }
+            }
+
+            populateForm(barang) {
+                this.form[0].reset();
+
+                $('#editBarangModalLabel').text(`Edit Detail Barang - ${barang.nama_barang}`);
                 $('#id_barang').val(barang.id_barang);
                 $('#nama_barang').val(barang.nama_barang);
                 $('#deskripsi_barang').val(barang.deskripsi_barang);
                 $('#kategori').val(barang.kategori);
                 $('#lokasi_barang').val(barang.lokasi_barang);
-                $('#harga_barang').val(barang.harga_barang);
                 $('#status_barang').val(barang.status_barang);
-                $('#pemilikBarang').val(barang.id_karyawan);
-                
+                $('#id_karyawan').val(barang.id_karyawan);
+
+                this.hargaInput.setRawValue(barang.harga_barang);
+
                 if (barang.tanggal_perolehan) {
-                    $('#tanggal_perolehan').text(new Date(barang.tanggal_perolehan).toLocaleDateString('id-ID', {
-                        weekday: 'long',
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric'
-                    }));
+                    $('#tanggal_perolehan').val(Utils.formatDate(barang.tanggal_perolehan));
                 }
 
-                if (barang.gambar_barang) {
-                    $('#previewImage').attr('src', `data:image/jpeg;base64,${barang.gambar_barang}`);
+                this.handleLelangSection(barang);
+
+                this.imageHandler.setPreviewImage(barang.gambar_barang);
+            }
+
+            handleLelangSection(barang) {
+                const isLelang = barang.status_barang === 'lelang';
+                this.lelangSection.toggleClass('d-none', !isLelang);
+
+                if (isLelang) {
+                    $('#waktu_mulai').val(Utils.formatDateTimeLocal(barang.waktu_mulai));
+                    $('#waktu_selesai').val(Utils.formatDateTimeLocal(barang.waktu_selesai));
                 }
-                setupCleave();
-
-                $('#editBarangModal').modal('show');
-            } else {
-                toastr.error('Gagal mengambil data barang: ' + response.message);
             }
-        },
-        error: function(xhr, status, error) {
-            toastr.error('Terjadi kesalahan saat mengambil data barang');
         }
-    });
-}
-// Di sisi client
-$('#editBarangForm').on('submit', function(e) {
-    e.preventDefault();
-    
-    const formData = new FormData(this);
-    
-    // Format harga
-    const hargaValue = $('#harga_barang').val().replace(/[^0-9]/g, '');
-    formData.set('harga_barang', hargaValue);
 
-    // Disable submit button
-    const submitBtn = $(this).find('button[type="submit"]');
-    submitBtn.prop('disabled', true).html('Menyimpan...');
+        const formHandler = new BarangFormHandler();
 
-    $.ajax({
-        url: '/api/barang/edit',
-        type: 'POST',
-        data: formData,
-        processData: false,
-        contentType: false,
-        success: function(response) {
-            if (response.success) {
-                toastr.success('Barang berhasil diperbarui!');
-                $('#editBarangModal').modal('hide');
-                // Update tabel tanpa reload
-                updateTable();
-            } else {
-                toastr.error('Gagal memperbarui barang: ' + response.message);
+        function setupCleave() {
+            new Cleave('#harga_barang', {
+                numeral: true,
+                numeralThousandsGroupStyle: 'thousand',
+                prefix: 'Rp ',
+                numeralDecimalScale: 0
+            });
+        }
+
+        function getBarangDetail(id_barang) {
+            $.ajax({
+                url: `/api/barang/detail/${id_barang}`,
+                type: 'GET',
+                success: function (response) {
+                    if (response.success) {
+                        $('#editBarangForm')[0].reset();
+
+                        const barang = response.data;
+                        $('#id_barang').val(barang.id_barang);
+                        $('#nama_barang').val(barang.nama_barang);
+                        $('#deskripsi_barang').val(barang.deskripsi_barang);
+                        $('#kategori').val(barang.kategori);
+                        $('#lokasi_barang').val(barang.lokasi_barang);
+                        $('#harga_barang').val(barang.harga_barang);
+                        $('#status_barang').val(barang.status_barang);
+                        $('#pemilikBarang').val(barang.id_karyawan);
+
+                        if (barang.tanggal_perolehan) {
+                            $('#tanggal_perolehan').text(new Date(barang.tanggal_perolehan).toLocaleDateString('id-ID', {
+                                weekday: 'long',
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric'
+                            }));
+                        }
+
+                        if (barang.gambar_barang) {
+                            $('#previewImage').attr('src', `data:image/jpeg;base64,${barang.gambar_barang}`);
+                        }
+                        setupCleave();
+
+                        $('#editBarangModal').modal('show');
+                    } else {
+                        toastr.error('Gagal mengambil data barang: ' + response.message);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    toastr.error('Terjadi kesalahan saat mengambil data barang');
+                }
+            });
+        }
+        $('#editBarangForm').on('submit', function (e) {
+            e.preventDefault();
+
+            const formData = new FormData(this);
+
+            const hargaValue = $('#harga_barang').val().replace(/[^0-9]/g, '');
+            formData.set('harga_barang', hargaValue);
+
+            const submitBtn = $(this).find('button[type="submit"]');
+            submitBtn.prop('disabled', true).html('Menyimpan...');
+
+            $.ajax({
+                url: '/api/barang/edit',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    if (response.success) {
+                        toastr.success('Barang berhasil diperbarui!');
+                        $('#editBarangModal').modal('hide');
+                        updateTable();
+                    } else {
+                        toastr.error('Gagal memperbarui barang: ' + response.message);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error:', error);
+                    console.error('Response:', xhr.responseText);
+                },
+                complete: function () {
+                    submitBtn.prop('disabled', false).html('Simpan');
+                }
+            });
+        });
+
+        $('#status_barang').on('change', function () {
+            const isLelang = $(this).val() === 'lelang';
+            $('#lelangSection').toggleClass('d-none', !isLelang);
+
+            if (!isLelang) {
+                $('#waktu_mulai, #waktu_selesai').val('');
             }
-        },
-        error: function(xhr, status, error) {
-            console.error('Error:', error);
-            console.error('Response:', xhr.responseText);
-        },
-        complete: function() {
-            submitBtn.prop('disabled', false).html('Simpan');
-        }
-    });
-});
-
-$('#status_barang').on('change', function() {
-    const isLelang = $(this).val() === 'lelang';
-    $('#lelangSection').toggleClass('d-none', !isLelang);
-    
-    if (!isLelang) {
-        $('#waktu_mulai, #waktu_selesai').val('');
-    }
-});
+        });
     </script>
     <script>
-        function updateTable() {
-    const currentPage = new URLSearchParams(window.location.search).get('page') || 1;
-    
-    $.ajax({
-        url: `/api/barang/refresh?page=${currentPage}`,
-        type: 'GET',
-        success: function(response) {
-            if (response.success) {
-                const tbody = $('#dataTable tbody');
-                
-                if (response.barang.length > 0) {
-                    response.barang.forEach((item, index) => {
-                        let statusClass = '';
-                        let statusText = '';
-                        
-                        switch(item.status_barang) {
-                            case 'tersedia':
-                                statusClass = 'bg-success';
-                                statusText = 'Tersedia';
-                                break;
-                            case 'lelang':
-                                statusClass = 'bg-primary';
-                                statusText = 'Lelang';
-                                break;
-                            case 'jual':
-                                statusClass = 'bg-danger';
-                                statusText = 'Dijual';
-                                break;
-                            default:
-                                statusClass = 'bg-secondary';
-                                statusText = 'Tidak Diketahui';
-                        }
+        function initializeTimers() {
+            const timerElements = document.querySelectorAll('[id^="timer-"]');
 
-                        const newRowContent = `
-                            <td class="px-4 py-3 text-sm">${item.id_barang}</td>
-                            <td class="px-4 py-3 text-sm font-medium">${item.nama_barang}</td>
-                            <td class="px-4 py-3 text-sm">${item.kategori}</td>
-                            <td class="px-4 py-3 text-sm">${item.lokasi_barang}</td>
-                            <td class="px-4 py-3 text-sm">${item.nama_karyawan || '-'}</td>
-                            <td class="px-4 py-3 text-sm text-center">
-                                ${item.masa_lelang == null ? '-' : item.masa_lelang + ' Hari'}
-                            </td>
-                            <td class="px-4 py-3 text-center">
-                                <span class="badge ${statusClass} text-white px-3 py-1 rounded-pill">
-                                    ${statusText}
-                                </span>
-                            </td>
-                            <td class="px-4 py-3 text-center">
-                                <div class="btn-group" role="group">
-                                    <button class="btn btn-warning btn-sm" 
-                                            data-bs-toggle="modal" 
-                                            data-bs-target="#editBarangModal" 
-                                            title="Edit"
-                                            onclick="getBarangDetail('${item.id_barang}')">
-                                        <i class="fas fa-ellipsis-v"></i>
-                                    </button>
-                                    <button class="btn btn-danger btn-sm" 
-                                            data-bs-toggle="popup" 
-                                            title="Hapus" 
-                                            onclick="confirmDelete('${item.id_barang}')">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        `;
+            timerElements.forEach(function (timerEl) {
+                const startTimeStr = timerEl.getAttribute('data-start-time');
+                const endTimeStr = timerEl.getAttribute('data-end-time');
 
-                        // Cari baris yang sudah ada berdasarkan id_barang
-                        const existingRow = tbody.find(`tr:has(td:contains('${item.id_barang}'))`);
-                        
-                        if (existingRow.length) {
-                            // Update baris yang sudah ada
-                            existingRow.html(newRowContent);
-                            existingRow.addClass('hover:bg-gray-50 transition-colors duration-200');
+                if (startTimeStr && endTimeStr) {
+                    const startTime = new Date(startTimeStr);
+                    const endTime = new Date(endTimeStr);
+
+                    const updateTimer = () => {
+                        const now = new Date();
+
+                        if (now < endTime) {
+                            const diff = endTime - now;
+                            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+                            timerEl.textContent = `${days}h${hours}j${minutes}m${seconds}d`;
                         } else {
-                            // Tambah baris baru jika belum ada
-                            tbody.append(`
-                                <tr class="hover:bg-gray-50 transition-colors duration-200">
-                                    ${newRowContent}
-                                </tr>
-                            `);
+                            timerEl.textContent = 'Selesai';
                         }
-                    });
+                    };
 
-                    // Hapus baris yang tidak ada dalam data baru
-                    tbody.find('tr').each(function() {
-                        const rowId = $(this).find('td:first').text();
-                        if (!response.barang.some(item => item.id_barang === rowId)) {
-                            $(this).remove();
-                        }
-                    });
-                } else {
-                    tbody.html(`
-                        <tr>
-                            <td colspan="8" class="px-4 py-8 text-center text-gray-500">
-                                <i class="fas fa-box-open fa-2x mb-2"></i>
-                                <p>Tidak ada data tersedia</p>
-                            </td>
-                        </tr>
-                    `);
+                    setInterval(updateTimer, 1000);
+                    updateTimer();
                 }
-            }
-        },
-        error: function(xhr, status, error) {
-            console.error('Error:', error);
-            toastr.error('Gagal memperbarui tabel');
+            });
         }
-    });
-}
+
+        function updateTable() {
+            const currentPage = new URLSearchParams(window.location.search).get('page') || 1;
+
+            $.ajax({
+                url: `/api/barang/refresh?page=${currentPage}`,
+                type: 'GET',
+                success: function (response) {
+                    if (response.success) {
+                        const tbody = $('#dataTable tbody');
+                        initializeTimers();
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error:', error);
+                    toastr.error('Gagal memperbarui tabel');
+                }
+            });
+        }
+        $(document).ready(function () {
+            updateTable();
+            initializeTimers();
+        });
+
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            function updateTimers() {
+                const timerElements = document.querySelectorAll('[id^="timer-"]');
+
+                timerElements.forEach(function (timerEl) {
+                    const startTimeStr = timerEl.getAttribute('data-start-time');
+                    const endTimeStr = timerEl.getAttribute('data-end-time');
+
+                    if (startTimeStr && endTimeStr) {
+                        const startTime = new Date(startTimeStr);
+                        const endTime = new Date(endTimeStr);
+                        const now = new Date();
+
+                        if (now < endTime) {
+                            const diff = endTime - now;
+                            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+                            timerEl.textContent = `${days}h${hours}j${minutes}m${seconds}d`;
+                        } else {
+                            timerEl.textContent = 'Selesai';
+                        }
+                    }
+                });
+            }
+
+            setInterval(updateTimers, 1000);
+            updateTimers();
+        });
     </script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            function updateTimers() {
+                const timerElements = document.querySelectorAll('[id^="timer-"]');
 
+                timerElements.forEach(function (timerEl) {
+                    const startTimeStr = timerEl.getAttribute('data-start-time');
+                    const endTimeStr = timerEl.getAttribute('data-end-time');
+
+                    if (startTimeStr && endTimeStr) {
+                        const startTime = new Date(startTimeStr);
+                        const endTime = new Date(endTimeStr);
+                        const now = new Date();
+
+                        if (now < endTime) {
+                            const diff = endTime - now;
+                            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+                            timerEl.textContent = `${days}h${hours}j${minutes}m${seconds}d`;
+                        } else {
+                            timerEl.textContent = 'Selesai';
+                        }
+                    }
+                });
+            }
+
+            setInterval(updateTimers, 1000);
+            updateTimers();
+        });
+    </script>
 </body>
 
 </html>

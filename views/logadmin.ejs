@@ -19,18 +19,13 @@
             <div class="container-fluid d-flex flex-column p-0">
                 <a class="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0" href="#">
                     <img src="/img/logo.png" style="width: 150px; padding: 20px; margin-right: 30px;margin-top: 30px;">
+                </a>
                 <hr class="sidebar-divider my-3">
-                <ul class="navbar-nav text-light" id="accordionSidebar">
+                <ul class="navbar-nav text-light" id="accordionSidebar" style="margin-top: 20px;">
                     <li class="nav-item">
                         <a class="nav-link" href="/dashboard">
                             <i class="material-icons">dashboard</i>
                             <span>Dashboard</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/profil">
-                            <i class="fas fa-user"></i>
-                            <span>Profil</span>
                         </a>
                     </li>
                     <li class="nav-item">
@@ -52,15 +47,27 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="/mutasi">
+                        <a class="nav-link" href="/mutasi">
                             <i class="fa fa-exchange"></i>
                             <span>Mutasi Barang</span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/karyawan">
-                            <i class="fa fa-gear"></i>
-                            <span>Data Karyawan</span>
+                            <i class="fas fa-id-badge"></i>
+                            <span>Daftar Karyawan</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/profil">
+                            <i class="fas fa-user"></i>
+                            <span>Profil Admin</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/logadmin">
+                            <i class="fas fa-history"></i>
+                            <span>Log Aktivitas</span>
                         </a>
                     </li>
                     <li class="nav-item">
@@ -72,7 +79,6 @@
                 </ul>
             </div>
         </nav>
-
         <div id="content-wrapper" class="d-flex flex-column">
             <div id="content">
                 <nav class="navbar navbar-expand bg-white topbar mb-4 static-top">
@@ -80,7 +86,8 @@
                         <button class="btn btn-link d-md-none rounded-circle me-3" id="sidebarToggleTop">
                             <i class="fas fa-bars"></i>
                         </button>
-                        <form class="d-none d-sm-inline-block me-auto ms-md-3 my-2 my-md-0 mw-100 navbar-search">
+                        <h4 class="h4 mb-0 text-gray-800 d-none d-sm-inline-block" style="font-weight: 700;">DAFTAR KARYAWAN</h4>
+                        <form class="d-none d-sm-inline-block ms-auto me-3 my-2 my-md-0 mw-100 navbar-search">
                             <div class="input-group">
                                 <input class="form-control bg-light border-0 small" type="text" placeholder="Search for...">
                                 <button class="btn btn-primary" type="button">
@@ -88,57 +95,126 @@
                                 </button>
                             </div>
                         </form>
-                        <ul class="navbar-nav ml-auto">
+                        <ul class="navbar-nav align-items-center">
                             <li class="nav-item dropdown no-arrow mx-1">
-                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="fas fa-bell fa-fw"></i>
                                     <span class="badge badge-danger badge-counter">3+</span>
                                 </a>
+                                <div class="dropdown-menu dropdown-menu-end shadow animated--grow-in">
+                                </div>
                             </li>
                             <div class="topbar-divider d-none d-sm-block"></div>
                             <li class="nav-item dropdown no-arrow">
-                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                                    <span class="mr-2 d-none d-lg-inline text-gray-600 small">Valerie Luna</span>
-                                    <img class="img-profile rounded-circle" src="/img/avatars/avatar1.jpeg" style="width: 32px;">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <span class="d-none d-lg-inline text-gray-600 small me-2">username</span>
+                                    <img class="img-profile rounded-circle" src="/img/avatars/pfp.jpg" style="width: 32px; height: 32px; object-fit: cover;">
                                 </a>
+                                <div class="dropdown-menu dropdown-menu-end shadow animated--grow-in">
+                                </div>
                             </li>
                         </ul>
                     </div>
                 </nav>
-                <!-- Page Content -->
-                <div class="container-fluid">
-                    <h1 class="page-title">Log Aktivitas Admin</h1>
-
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-striped table-hover">
-                                    <thead>
+                <div class="card" style="border: 0px; margin-top:-20px; margin-left:10px;margin-right:10px">
+                    <div class="card-body" >
+                        <div class="row align-items-center">
+                            <div class="col-md-6 text-nowrap">
+                                <div id="dataTable_length" class="dataTables_length" aria-controls="dataTable">
+                                    <label class="form-label">Show&nbsp;<select class="d-inline-block form-select form-select-sm">
+                                        <option value="10" selected="">10</option>
+                                        <option value="25">25</option>
+                                        <option value="50">50</option>
+                                        <option value="100">100</option>
+                                    </select>&nbsp;</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6 d-flex justify-content-end">
+                                <button type="button" class="btn btn-secondary">
+                                    <i class="fas fa-print me-2"></i>Print
+                                </button>
+                            </div>
+                        </div>
+                        <div class="table-responsive table mt-2" id="dataTable" role="grid"
+                            aria-describedby="dataTable_info">
+                            <table class="table table-success">
+                                <thead>
+                                    <tr>
+                                        <th class="px-4 py-3 text-center" style="width: 20%;">Tanggal</th>
+                                        <th class="px-4 py-3 text-center" style="width: 20%;">Nama Admin</th>
+                                        <th class="px-4 py-3 text-center" style="width: 15%;">Jenis Aktivitas</th>
+                                        <th class="px-4 py-3 text-center">Detail Perubahan</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% log.forEach(log => { %>
                                         <tr>
-                                            <th>Tanggal</th>
-                                            <th>Nama Admin</th>
-                                            <th>Jenis Aktivitas</th>
-                                            <th>Detail</th>
+                                            <td><%= log.timestamp %></td>
+                                            <td><%= log.id_admin %></td>
+                                            <td><%= log.jenis_aktivitas %></td>
+                                            <td><%= log.detail_perubahan %></td>
                                         </tr>
-                                    </thead>
-                                    <tbody>
-                                        <% log.forEach(log => { %>
-                                            <tr>
-                                                <td><%= log.timestamp %></td>
-                                                <td><%= log.id_admin %></td>
-                                                <td><%= log.jenis_aktivitas %></td>
-                                                <td><%= log.detail_perubahan %></td>
-                                            </tr>
-                                        <% }) %>
-                                    </tbody>
-                                </table>
+                                    <% }) %>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="row" style="margin-top: 20px;">
+                            <div class="col-md-6 align-self-center">
+                                <p id="dataTable_info" class="dataTables_info" role="status" aria-live="polite">
+                                    Showing <%= (currentPage - 1) * limit + 1 %> to <%= Math.min(currentPage *
+                                            limit, totalData) %> of <%= totalData %>
+                                </p>
+                            </div>
+                            <div class="col-md-6">
+                                <nav
+                                    class="d-lg-flex justify-content-lg-end dataTables_paginate paging_simple_numbers">
+                                    <ul class="pagination">
+                                        <% if (currentPage> 1) { %>
+                                            <li class="page-item">
+                                                <a class="page-link" href="/logadmin?page=<%= currentPage - 1 %>"
+                                                    aria-label="Previous">
+                                                    <span aria-hidden="true">«</span>
+                                                </a>
+                                            </li>
+                                            <% } else { %>
+                                                <li class="page-item disabled">
+                                                    <a class="page-link" href="#" aria-label="Previous">
+                                                        <span aria-hidden="true">«</span>
+                                                    </a>
+                                                </li>
+                                                <% } %>
+
+                                                    <% for (let i=1; i <=totalPages; i++) { %>
+                                                        <li
+                                                            class="page-item <%= i === currentPage ? 'active' : '' %>">
+                                                            <a class="page-link" href="/logadmin?page=<%= i %>">
+                                                                <%= i %>
+                                                            </a>
+                                                        </li>
+                                                        <% } %>
+
+                                                            <% if (currentPage < totalPages) { %>
+                                                                <li class="page-item">
+                                                                    <a class="page-link"
+                                                                        href="/logadmin?page=<%= currentPage + 1 %>"
+                                                                        aria-label="Next">
+                                                                        <span aria-hidden="true">»</span>
+                                                                    </a>
+                                                                </li>
+                                                                <% } else { %>
+                                                                    <li class="page-item disabled">
+                                                                        <a class="page-link" href="#"
+                                                                            aria-label="Next">
+                                                                            <span aria-hidden="true">»</span>
+                                                                        </a>
+                                                                    </li>
+                                                                    <% } %>
+                                    </ul>
+                                </nav>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <!-- Footer -->
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
@@ -147,12 +223,10 @@
                 </div>
             </footer>
         </div>
+        <a class="scroll-to-top rounded" href="#page-top">
+            <i class="fas fa-angle-up"></i>
+        </a>
     </div>
-
-    <!-- Scroll to Top Button -->
-    <a class="scroll-to-top rounded" href="#page-top">
-        <i class="fas fa-angle-up"></i>
-    </a>
     <script src="/bootstrap/js/bootstrap.min.js"></script>
     <script src="/js/bs-init.js"></script>
     <script src="/js/theme.js"></script>

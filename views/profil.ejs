@@ -27,17 +27,11 @@
                     <img src="/img/logo.png" style="width: 150px; padding: 20px; margin-right: 30px;margin-top: 30px;">
                 </a>
                 <hr class="sidebar-divider my-3">
-                <ul class="navbar-nav text-light" id="accordionSidebar">
+                <ul class="navbar-nav text-light" id="accordionSidebar" style="margin-top: 20px;">
                     <li class="nav-item">
                         <a class="nav-link" href="/dashboard">
                             <i class="material-icons">dashboard</i>
                             <span>Dashboard</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="/profil">
-                            <i class="fas fa-user"></i>
-                            <span>Profil</span>
                         </a>
                     </li>
                     <li class="nav-item">
@@ -66,8 +60,20 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/karyawan">
-                            <i class="fa fa-gear"></i>
-                            <span>Data Karyawan</span>
+                            <i class="fas fa-id-badge"></i>
+                            <span>Daftar Karyawan</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/profil">
+                            <i class="fas fa-user"></i>
+                            <span>Profil Admin</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/logadmin">
+                            <i class="fas fa-history"></i>
+                            <span>Log Aktivitas</span>
                         </a>
                     </li>
                     <li class="nav-item">
@@ -79,7 +85,6 @@
                 </ul>
             </div>
         </nav>
-
         <div id="content-wrapper" class="d-flex flex-column">
             <div id="content">
                 <nav class="navbar navbar-expand bg-white topbar mb-4 static-top">
@@ -105,8 +110,8 @@
                             <div class="topbar-divider d-none d-sm-block"></div>
                             <li class="nav-item dropdown no-arrow">
                                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                                    <span class="mr-2 d-none d-lg-inline text-gray-600 small">Valerie Luna</span>
-                                    <img class="img-profile rounded-circle" src="/img/avatars/avatar1.jpeg" style="width: 32px;">
+                                    <span class="mr-2 d-none d-lg-inline text-gray-600 small">username</span>
+                                    <img class="img-profile rounded-circle" src="/img/avatars/pfp.jpg" style="width: 32px;">
                                 </a>
                             </li>
                         </ul>
@@ -117,7 +122,7 @@
                     <div class="row mb-3">
                         <div class="col-lg-4">
                             <div class="card mb-3">
-                                <div class="card-body text-center shadow"><img class="rounded-circle mb-3 mt-4" src="/img/clipboard-image.png" width="160" height="160">
+                                <div class="card-body text-center shadow"><img class="rounded-circle mb-3 mt-4" src="/img/avatars/pfp.jpg" width="160" height="160">
                                     <div class="mb-3"><button class="btn btn-primary btn-sm" type="button">Change Photo</button></div>
                                 </div>
                             </div>

@@ -1,297 +1,254 @@
-
+/* Base styles */
 body {
-            font-family: 'Nunito', sans-serif;
-            background-color: #f8f9fc;
-        }
+    background-color: #fafbfc;
+    color: #8279a8;
+}
 
+/* Sidebar styling */
 .sidebar {
-    background: #2c3e50 !important;  /*warna sidebar */
-   /* background: #87cefa !important;*/
-    transition: all 0.3s ease;
+    background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
     width: 230px !important;
+    transition: all 0.2s ease;
 }
 
 .sidebar .nav-item .nav-link {
     padding: 12px 18px;
-    color: #b3c3b2 !important;  /*warna font sidebar */
-    border-radius: 8px;
+    color: #94a3b8 !important;
+    border-radius: 6px;
     margin: 4px 12px;
-    transition: 0.3s;
+    transition: 0.2s;
 }
 
 .sidebar .nav-item .nav-link:hover {
-    background: rgba(255, 255, 255, 0.05); /*bg hover */
-    color: #fff !important;
+    background: rgba(255, 255, 255, 0.06);
+    color: #f1f5f9 !important;
 }
 
 .sidebar .nav-item .nav-link.active {
-    background: rgba(255, 255, 255, 0.08); /*bg active */
+    background: rgba(255, 255, 255, 0.1);
     color: #fff !important;
 }
 
-.sidebar .nav-link i, 
+.sidebar .nav-link i,
 .sidebar .nav-link svg {
-    width: 20px;
+    width: 18px;
     margin-right: 10px;
-    opacity: 0.8;
+    opacity: 0.9;
 }
 
-/* Main content improvements */
-.container-fluid .page-title {
-    font-size: 1.5rem;
+/* Main content area */
+#content-wrapper {
+    background-color: #fafbfc;
+}
+
+/* Topbar styling */
+.topbar {
+    background: #fff;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.topbar .navbar-search {
+    width: 320px;
+}
+
+.topbar .form-control {
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+    padding: 8px 16px;
+    font-size: 0.875rem;
+}
+
+/* Card styling */
+.card {
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    margin: 16px;
+    transition: transform 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-1px);
+}
+
+.card-header {
+    background-color: transparent;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 16px 20px;
+}
+
+/* Table styling */
+.table {
+    margin: 0;
+    border-radius: 8px;
+    border-collapse: separate;
+    border-spacing: 0;
+    width: 100%;
+    table-layout: fixed;
+}
+
+/* Styling untuk header tabel */
+.table thead th {
+    background-color: #d9d9e3;  /* Mengembalikan warna asli */
+    border-bottom: 2px solid #e5e7eb;
+    border-right: 1px solid #c7c7d1; /* Pemisah vertikal untuk header */
+    color: #475569;
     font-weight: 600;
-    color: #2c3e50;
-    margin-bottom: 1.5rem;
-    padding: 0.5rem 0;
-    border-bottom: 2px solid #f1f1f1;
+    font-size: 0.800rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 12px 16px;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    position: relative; /* Untuk pseudo-element */
 }
 
-        /* Improved content area */
-        #content-wrapper {
-            background-color: #f8f9fc;
-        }
-
-        /* Enhanced navbar */
-        .topbar {
-            box-shadow: 0 2px 15px rgba(0,0,0,0.1) !important;
-        }
-
-        .topbar .navbar-search {
-            width: 300px;
-        }
-
-        .topbar .form-control {
-            border-radius: 20px;
-            padding-left: 15px;
-        }
-
-        .topbar .btn-primary {
-            border-radius: 20px;
-            padding: 6px 15px;
-        }
-
-        /* Improved card and table styling */
-        .card {
-            border: none;
-            border-radius: 10px;
-            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
-            margin: 20px;
-        }
-
-        .card-header {
-            background-color: white;
-            border-bottom: 1px solid #e3e6f0;
-            padding: 15px 25px;
-        }
-
-        .table {
-            margin-bottom: 0;
-        }
-
-        .table thead th {
-            background-color: #f8f9fc;
-            border-bottom: 2px solid #e3e6f0;
-            color: #5a5c69;
-            font-weight: 700;
-            text-transform: uppercase;
-            font-size: 0.85rem;
-            padding: 15px;
-        }
-
-        .table tbody td {
-            padding: 15px;
-            vertical-align: middle;
-            border-bottom: 1px solid #e3e6f0;
-            color: #5a5c69;
-        }
-
-        /* Page title styling */
-        .page-title {
-            font-weight: 700;
-            color: #5e695a;
-            margin: 25px 20px;
-            font-size: 1.75rem;
-        }
-
-        /* Footer improvements */
-        .sticky-footer {
-            padding: 20px;
-        }
-
-        .table {
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 0;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        }
-        
-        .table thead tr {
-            background-color: #f8f9fa;
-            border-bottom: 2px solid #dee2e6;
-        }
-        
-        .table tbody tr:hover {
-            background-color: rgba(0, 0, 0, 0.02);
-        }
-        
-        .btn-group .btn {
-            margin: 0 2px;
-            padding: 0.25rem 0.5rem;
-        }
-        
-        .badge {
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.2px;
-            font-size: 0.55rem;
-        }
-        
-        .rounded-pill {
-            border-radius: 50rem;
-        }
-
-        .preview-image {
-            object-fit: cover;
-            width: 150px;
-            height: 150px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            padding: 2px;
-            display: block; /* Prevent inline flickering */
-            margin: 0 auto; /* Center the image */
-            background-color: #fff; /* Ensure white background */
-        }
-        
-        .image-container {
-            width: 150px;
-            height: 150px;
-            margin: 0 auto;
-            position: relative;
-            background-color: #f8f9fa;
-            border-radius: 4px;
-            overflow: hidden;
-        }
-        
-        /* Add loading spinner CSS */
-        .loading {
-            position: relative;
-        }
-        
-        .loading:after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 20px;
-            height: 20px;
-            margin: -10px 0 0 -10px;
-            border: 2px solid #f3f3f3;
-            border-top: 2px solid #3498db;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Modal styling */
-.modal-content {
-    border: none;
-    border-radius: 15px;
-    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+/* Menghilangkan border kanan pada header terakhir */
+.table thead th:last-child {
+    border-right: none;
 }
 
-.modal-header {
-    border-bottom: none;
-    padding: 1.5rem;
-    border-radius: 15px 15px 0 0;
+/* Styling untuk sel data */
+.table tbody td {
+    padding: 14px 16px;
+    vertical-align: top;
+    border-bottom: 1px solid #e5e7eb;
+    border-right: 1px solid #93939c9d; /* Pemisah vertikal yang lebih subtle untuk body */
+    color: #1e293b;  /* Mengembalikan warna asli */
+    font-size: 0.880rem;
+    font-weight: 600;  /* Mengembalikan weight asli */
+    line-height: 1.5;
+    word-wrap: break-word;
+    max-width: 0;
 }
 
-.modal-body {
-    padding: 1.5rem;
+/* Menghilangkan border kanan pada sel terakhir */
+.table tbody td:last-child {
+    border-right: none;
 }
 
-.modal-footer {
-    border-top: none;
-    padding: 1.5rem;
+/* Hover effect pada baris */
+.table tbody tr {
+    transition: background-color 0.2s ease;
 }
 
-/* Form styling */
-.form-control, .form-select {
-    border-radius: 8px;
-    border: 1px solid #e0e0e0;
-    padding: 0.75rem;
-    transition: all 0.3s ease;
+.table tbody tr:hover {
+    background-color: #f8fafc;
 }
 
-.form-control:focus, .form-select:focus {
-    border-color: #4a90e2;
-    box-shadow: 0 0 0 0.2rem rgba(74,144,226,0.25);
+/* Membuat sudut rounded pada header pertama dan terakhir */
+.table thead th:first-child {
+    border-top-left-radius: 8px;
 }
 
-.form-floating > label {
-    padding: 0.75rem;
+.table thead th:last-child {
+    border-top-right-radius: 8px;
 }
 
-/* Image upload container */
-.image-upload-container {
-    border: 2px dashed #e0e0e0;
-    transition: all 0.3s ease;
+/* Styling untuk baris terakhir */
+.table tbody tr:last-child td:first-child {
+    border-bottom-left-radius: 8px;
 }
 
-.image-upload-container:hover {
-    border-color: #4a90e2;
+.table tbody tr:last-child td:last-child {
+    border-bottom-right-radius: 8px;
 }
 
-/* Buttons */
+/* Responsive pada ukuran mobile */
+@media (max-width: 768px) {
+    .table thead th {
+        font-size: 0.8125rem;
+        padding: 10px 12px;
+    }
+    
+    .table tbody td {
+        font-size: 0.875rem;
+        padding: 12px;
+    }
+}
+
+/* Button styling */
 .btn {
-    padding: 0.5rem 1.5rem;
-    border-radius: 8px;
+    border-radius: 6px;
     font-weight: 500;
-    transition: all 0.3s ease;
+    padding: 8px 16px;
+    transition: all 0.2s ease;
+    font-size: 0.875rem;
 }
 
 .btn-primary {
-    background: linear-gradient(45deg, #4a90e2, #357abd);
+    background: #0f172a;
     border: none;
 }
 
 .btn-primary:hover {
-    background: linear-gradient(45deg, #357abd, #2868a0);
-    transform: translateY(-1px);
+    background: #1e293b;
 }
 
-.btn-light {
-    background: #f8f9fa;
-    border: 1px solid #e0e0e0;
-}
-
-.btn-light:hover {
-    background: #e9ecef;
-}
-
-/* Typography */
-.form-label {
+/* Badge styling */
+.badge {
     font-weight: 500;
-    color: #495057;
+    font-size: 0.75rem;
+    padding: 4px 8px;
+    border-radius: 6px;
 }
 
-.text-muted {
-    color: #6c757d !important;
+/* Image preview */
+.preview-image {
+    object-fit: cover;
+    width: 140px;
+    height: 140px;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+}
+
+/* Modal styling */
+.modal-content {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.modal-header {
+    padding: 20px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.modal-body {
+    padding: 20px;
+}
+
+.modal-footer {
+    padding: 20px;
+    border-top: 1px solid #e5e7eb;
+}
+
+/* Form controls */
+.form-control, 
+.form-select {
+    border-radius: 6px;
+    border: 1px solid #e5e7eb;
+    padding: 8px 12px;
+    font-size: 0.875rem;
+    transition: border-color 0.15s ease;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: #0f172a;
+    box-shadow: 0 0 0 2px rgba(15, 23, 42, 0.1);
 }
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-    .modal-dialog {
-        margin: 0.5rem;
+    .table-responsive {
+        border-radius: 8px;
+        border: 1px solid #e5e7eb;
     }
     
-    .image-upload-container {
-        width: 150px !important;
-        height: 150px !important;
+    .card {
+        margin: 12px;
     }
 }
