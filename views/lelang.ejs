@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>Manajemen Lelang</title>
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i&amp;display=swap">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i&amp;display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Abril+Fatface&amp;display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Almarai&amp;display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Amarante&amp;display=swap">
@@ -22,405 +23,184 @@
 
 <body id="page-top">
     <div id="wrapper">
-        <nav class="navbar align-items-start sidebar sidebar-dark accordion">
-            <div class="container-fluid d-flex flex-column p-0">
-                <a class="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0" href="#">
-                    <img src="/img/logo.png" style="width: 150px; padding: 20px; margin-right: 30px;margin-top: 30px;">
-                </a>
-                <hr class="sidebar-divider my-3">
-                <ul class="navbar-nav text-light" id="accordionSidebar" style="margin-top: 20px;">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/dashboard">
-                            <i class="material-icons">dashboard</i>
-                            <span>Dashboard</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/barang">
-                            <i class="fas fa-database"></i>
-                            <span>Data Barang</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/pemilik">
-                            <i class="fas fa-users"></i>
-                            <span>Pemilik Barang</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="/lelang">
-                            <i class="fa fa-gavel"></i>
-                            <span>Manajemen Lelang</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/mutasi">
-                            <i class="fa fa-exchange"></i>
-                            <span>Mutasi Barang</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/karyawan">
-                            <i class="fas fa-id-badge"></i>
-                            <span>Daftar Karyawan</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/profil">
-                            <i class="fas fa-user"></i>
-                            <span>Profil Admin</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/logadmin">
-                            <i class="fas fa-history"></i>
-                            <span>Log Aktivitas</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/login">
-                            <i class="fa fa-sign-out"></i>
-                            <span>Logout</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
-
-        <div id="content-wrapper" class="d-flex flex-column">
-            <div id="content">
-                <nav class="navbar navbar-expand bg-white topbar mb-4 static-top">
-                    <div class="container-fluid">
-                        <button class="btn btn-link d-md-none rounded-circle me-3" id="sidebarToggleTop">
-                            <i class="fas fa-bars"></i>
-                        </button>
-                        <form class="d-none d-sm-inline-block me-auto ms-md-3 my-2 my-md-0 mw-100 navbar-search">
-                            <div class="input-group">
-                                <input class="form-control bg-light border-0 small" type="text" placeholder="Search for...">
-                                <button class="btn btn-primary" type="button">
-                                    <i class="fas fa-search fa-sm"></i>
-                                </button>
-                            </div>
-                        </form>
-                        <ul class="navbar-nav ml-auto">
-                            <li class="nav-item dropdown no-arrow mx-1">
-                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                                    <i class="fas fa-bell fa-fw"></i>
-                                    <span class="badge badge-danger badge-counter">3+</span>
-                                </a>
-                            </li>
-                            <div class="topbar-divider d-none d-sm-block"></div>
-                            <li class="nav-item dropdown no-arrow">
-                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                                    <span class="mr-2 d-none d-lg-inline text-gray-600 small">username</span>
-                                    <img class="img-profile rounded-circle" src="/img/avatars/pfp.jpg" style="width: 32px;">
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </nav>
-                <div class="container-fluid">
-                    <h3 class="text-dark mb-1">Manajemen Lelang</h3>
-                </div>
-            <div class="card mb-4 shadow-sm border-0">
-                <div class="card-header text-white bg-warning">
-                    <h5 class="mb-0">Barang Akan Dilelang</h5>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-hover align-middle text-center">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>Kode Barang</th>
-                                    <th>Nama Barang</th>
-                                    <th>Harga Awal</th>
-                                    <th>Waktu Mulai</th>
-                                    <th>Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <% akanLelang.forEach(item => { %>
-                                    <tr>
-                                        <td><%= item.id_barang %></td>
-                                        <td><%= item.nama_barang %></td>
-                                        <td>Rp <%= item.harga_awal.toLocaleString() %></td>
-                                        <td><%= item.waktu_mulai %></td>
-                                        <td>
-                                            <button class="btn btn-primary btn-sm konfirmasi-lelang" data-id="<%= item.id_lelang %>">
-                                                Konfirmasi Lelang
-                                            </button>
-                                        </td>
-                                    </tr>
-                                <% }); %>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            <div class="card mb-4 shadow-sm border-0">
-                <div class="card-header text-white bg-info">
-                    <h5 class="mb-0">Dalam Proses Lelang</h5>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-hover align-middle text-center">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>Kode Barang</th>
-                                    <th>Nama Barang</th>
-                                    <th>Harga Awal</th>
-                                    <th>Harga Tertinggi</th>
-                                    <th>Sisa Waktu</th>
-                                    <th>Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <% prosesLelang.forEach(item => { %>
-                                    <tr>
-                                        <td><%= item.id_barang %></td>
-                                        <td><%= item.nama_barang %></td>
-                                        <td>Rp <%= item.harga_awal.toLocaleString() %></td>
-                                        <td>Rp <%= (item.harga_tertinggi || 0).toLocaleString() %></td>
-                                        <td id="timer-<%= item.id_lelang %>"></td>
-                                        <td>
-                                            <div class="btn-group">
-                                                <button class="btn btn-warning btn-sm perpanjang-lelang" data-id="<%= item.id_lelang %>">
-                                                    Perpanjang
-                                                </button>
-                                                <button class="btn btn-danger btn-sm tutup-lelang" data-id="<%= item.id_lelang %>">
-                                                    Tutup Lelang
-                                                </button>
+        <%- include('partials/sidebar') %>
+            <div id="content-wrapper" class="d-flex flex-column">
+                <div id="content">
+                    <%- include('partials/topbar') %>
+                        <div class="modal fade" id="konfirmasiLelangModal" tabindex="-1">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Konfirmasi Lelang</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <form id="formKonfirmasiLelang">
+                                        <div class="modal-body">
+                                            <input type="hidden" id="idBarangKonfirmasi">
+                                            <div class="mb-3">
+                                                <label>Waktu Mulai</label>
+                                                <input type="datetime-local" class="form-control" id="waktuMulaiLelang"
+                                                    required>
                                             </div>
-                                        </td>
-                                    </tr>
-                                <% }); %>
-                            </tbody>
-                        </table>
-                    </div>
+                                            <div class="mb-3">
+                                                <label>Waktu Selesai</label>
+                                                <input type="datetime-local" class="form-control"
+                                                    id="waktuSelesaiLelang" required>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label>Harga Lelang</label>
+                                                <input type="text" class="form-control" id="hargaLelang" required>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary"
+                                                data-bs-dismiss="modal">Batal</button>
+                                            <button type="submit" class="btn btn-primary">Konfirmasi</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal fade" id="editLelangModal" tabindex="-1">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Edit</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <form id="formEditLelang">
+                                        <div class="modal-body">
+                                            <input type="hidden" id="idLelangEdit">
+                                            <div class="mb-3">
+                                                <label>Waktu Selesai</label>
+                                                <input type="datetime-local" class="form-control" id="waktuSelesaiEdit"
+                                                    required>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label>Harga Lelang</label>
+                                                <input type="text" class="form-control" id="hargaLelangEdit" required>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary"
+                                                data-bs-dismiss="modal">Batal</button>
+                                            <button type="submit" class="btn btn-primary">Simpan</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card mb-4 shadow-sm border-0">
+                            <div class="card-header text-white bg-warning">
+                                <h5 class="mb-0">Barang Akan Dilelang</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover align-middle text-center">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Kode Barang</th>
+                                                <th>Nama Barang</th>
+                                                <th>Harga Awal</th>
+                                                <th>Aksi</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <% akanLelang.forEach(item=> { %>
+                                                <tr>
+                                                    <td>
+                                                        <%= item.id_barang %>
+                                                    </td>
+                                                    <td>
+                                                        <%= item.nama_barang %>
+                                                    </td>
+                                                    <td>Rp <%= item.harga_barang.toLocaleString() %>
+                                                    </td>
+                                                    <td>
+                                                        <div class="btn-group">
+                                                            <button class="btn btn-primary btn-sm konfirmasi-lelang"
+                                                                data-id="<%= item.id_barang %>"
+                                                                data-harga="<%= item.harga_barang %>">
+                                                                Konfirmasi
+                                                            </button>
+                                                            <button class="btn btn-danger btn-sm batal-lelang"
+                                                                data-id="<%= item.id_barang %>">
+                                                                Batal
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <% }); %>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card mb-4 shadow-sm border-0">
+                            <div class="card-header text-white bg-info">
+                                <h5 class="mb-0">Dalam Proses Lelang</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover align-middle text-center">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Kode Barang</th>
+                                                <th>Nama Barang</th>
+                                                <th>Harga Lelang</th>
+                                                <th>Sisa Waktu</th>
+                                                <th>Aksi</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <% prosesLelang.forEach(item=> { %>
+                                                <tr>
+                                                    <td>
+                                                        <%= item.id_barang %>
+                                                    </td>
+                                                    <td>
+                                                        <%= item.nama_barang %>
+                                                    </td>
+                                                    <td>Rp <%= item.harga_lelang.toLocaleString() %>
+                                                    </td>
+                                                    <td>
+                                                        <span id="timer-<%= item.id_barang %>"
+                                                            data-start-time="<%= item.waktu_mulai %>"
+                                                            data-end-time="<%= item.waktu_selesai %>">
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        <div class="btn-group">
+                                                            <button class="btn btn-warning btn-sm edit-lelang"
+                                                                data-id="<%= item.id_barang %>"
+                                                                data-harga="<%= item.harga_lelang %>"
+                                                                data-waktu-selesai="<%= item.waktu_selesai.toISOString().slice(0, 16) %>">
+                                                                Edit
+                                                            </button>
+                                                            <button class="btn btn-success btn-sm selesai-lelang"
+                                                                data-id="<%= item.id_barang %>">
+                                                                Selesai
+                                                            </button>
+                                                            <button class="btn btn-danger btn-sm hapus-lelang"
+                                                                data-id="<%= item.id_barang %>">
+                                                                Hapus
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <% }); %>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <%- include('partials/footer') %>
                 </div>
             </div>
-            <!-- Modal Konfirmasi Lelang -->
-<div class="modal fade" id="konfirmasiLelangModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Konfirmasi Lelang</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <form id="formKonfirmasiLelang">
-                <div class="modal-body">
-                    <input type="hidden" id="idBarangKonfirmasi">
-                    <div class="mb-3">
-                        <label>Waktu Mulai</label>
-                        <input type="datetime-local" class="form-control" id="waktuMulaiLelang" required>
-                    </div>
-                    <div class="mb-3">
-                        <label>Waktu Selesai</label>
-                        <input type="datetime-local" class="form-control" id="waktuSelesaiLelang" required>
-                    </div>
-                    <div class="mb-3">
-                        <label>Harga Awal</label>
-                        <input type="number" class="form-control" id="hargaAwalLelang" required>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Konfirmasi</button>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-            <footer class="sticky-footer bg-white">
-                <div class="container my-auto">
-                    <div class="copyright text-center my-auto">
-                        <span>© 2024 PT TASPEN (PERSERO) KC BOGOR</span>
-                    </div>
-                </div>
-            </footer>
-        </div>
-    </div>
-    <a class="scroll-to-top rounded" href="#page-top">
-        <i class="fas fa-angle-up"></i>
-    </a>
-    <script src="/bootstrap/js/bootstrap.min.js"></script>
-    <script src="/js/bs-init.js"></script>
-    <script src="/js/theme.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        // Konfirmasi Lelang
-        // Di lelang.ejs, perbaiki script konfirmasi lelang
-$('.konfirmasi-lelang').on('click', function() {
-    const idBarang = $(this).closest('tr').find('td:first').text(); // Ambil ID barang dari baris tabel
-    
-    // Tampilkan modal konfirmasi lelang
-    $('#konfirmasiLelangModal').modal('show');
-    
-    // Isi form dengan data barang
-    $('#idBarangKonfirmasi').val(idBarang);
-});
-
-// Submit form konfirmasi lelang
-$('#formKonfirmasiLelang').on('submit', function(e) {
-    e.preventDefault();
-    
-    const idBarang = $('#idBarangKonfirmasi').val();
-    const waktuMulai = $('#waktuMulaiLelang').val();
-    const waktuSelesai = $('#waktuSelesaiLelang').val();
-    const hargaAwal = $('#hargaAwalLelang').val();
-    
-    $.ajax({
-        url: `/konfirmasi-lelang/${idBarang}`,
-        method: 'POST',
-        data: {
-            waktu_mulai: waktuMulai,
-            waktu_selesai: waktuSelesai,
-            harga_awal: hargaAwal
-        },
-        success: function(response) {
-            if (response.success) {
-                Swal.fire('Berhasil!', 'Lelang berhasil dikonfirmasi', 'success');
-                location.reload(); // Refresh halaman
-            }
-        },
-        error: function() {
-            Swal.fire('Gagal!', 'Terjadi kesalahan saat konfirmasi lelang', 'error');
-        }
-    });
-});
-
-        // Perpanjang Lelang
-$('.perpanjang-lelang').on('click', function() {
-    const idLelang = $(this).data('id');
-    
-    Swal.fire({
-        title: 'Perpanjang Waktu Lelang',
-        input: 'number',
-        inputLabel: 'Tambahan Waktu (Jam)',
-        showCancelButton: true,
-        confirmButtonText: 'Perpanjang',
-        preConfirm: (tambahWaktu) => {
-            return $.ajax({
-                url: `/perpanjang-lelang/${idLelang}`,
-                method: 'POST',
-                data: { tambahan_waktu: tambahWaktu },
-                success: function(response) {
-                    if (response.success) {
-                        Swal.fire('Berhasil!', 'Waktu lelang diperpanjang', 'success');
-                        location.reload();
-                    }
-                },
-                error: function() {
-                    Swal.fire('Gagal!', 'Terjadi kesalahan', 'error');
-                }
-            });
-        }
-    });
-});
-
-// Tutup Lelang
-$('.tutup-lelang').on('click', function() {
-    const idLelang = $(this).data('id');
-    
-    Swal.fire({
-        title: 'Tutup Lelang',
-        text: 'Masukkan ID pemenang dan harga tertinggi',
-        html: `
-            <input type="text" id="pemenangId" class="swal2-input" placeholder="ID Pemenang">
-            <input type="number" id="hargaTertinggi" class="swal2-input" placeholder="Harga Tertinggi">
-        `,
-        showCancelButton: true,
-        confirmButtonText: 'Tutup',
-        preConfirm: () => {
-            const pemenangId = document.getElementById('pemenangId').value;
-            const hargaTertinggi = document.getElementById('hargaTertinggi').value;
-            
-            return $.ajax({
-                url: `/tutup-lelang/${idLelang}`,
-                method: 'POST',
-                data: { 
-                    pemenang_id: pemenangId, 
-                    harga_tertinggi: hargaTertinggi 
-                },
-                success: function(response) {
-                    if (response.success) {
-                        Swal.fire('Berhasil!', 'Lelang ditutup', 'success');
-                        location.reload();
-                    }
-                },
-                error: function() {
-                    Swal.fire('Gagal!', 'Terjadi kesalahan', 'error');
-                }
-            });
-        }
-    });
-});
-
-       // Tutup Lelang
-$('.tutup-lelang').on('click', function() {
-    const idLelang = $(this).data('id');
-    
-    Swal.fire({
-        title: 'Tutup Lelang',
-        text: 'Masukkan ID pemenang dan harga tertinggi',
-        html: `
-            <input type="text" id="pemenangId" class="swal2-input" placeholder="ID Pemenang">
-            <input type="number" id="hargaTertinggi" class="swal2-input" placeholder="Harga Tertinggi">
-        `,
-        showCancelButton: true,
-        confirmButtonText: 'Tutup',
-        preConfirm: () => {
-            const pemenangId = document.getElementById('pemenangId').value;
-            const hargaTertinggi = document.getElementById('hargaTertinggi').value;
-            
-            return $.ajax({
-                url: `/tutup-lelang/${idLelang}`,
-                method: 'POST',
-                data: { 
-                    pemenang_id: pemenangId, 
-                    harga_tertinggi: hargaTertinggi 
-                },
-                success: function(response) {
-                    if (response.success) {
-                        Swal.fire('Berhasil!', 'Lelang ditutup', 'success');
-                        location.reload();
-                    }
-                },
-                error: function() {
-                    Swal.fire('Gagal!', 'Terjadi kesalahan', 'error');
-                }
-            });
-        }
-    });
-});
-    </script>
-    <script>
-        function updateCountdown() {
-            $('.table tbody tr').each(function() {
-                const timerId = $(this).find('[id^="timer-"]').attr('id');
-                const waktuSelesai = '2024-06-15 10:00:00'; // Ganti dengan waktu selesai dari database
-        
-                const countDownDate = new Date(waktuSelesai).getTime();
-                const now = new Date().getTime();
-                const distance = countDownDate - now;
-        
-                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-        
-                $(`#${timerId}`).text(`${days}d ${hours}h ${minutes}m ${seconds}s`);
-        
-                if (distance < 0) {
-                    $(`#${timerId}`).text('Lelang Selesai');
-                }
-            });
-        }
-        
-        // Update countdown setiap detik
-        setInterval(updateCountdown, 1000);
-    </script>
+            <a class="scroll-to-top rounded" href="#page-top">
+                <i class="fas fa-angle-up"></i>
+            </a>
+            <%- include('partials/scripts') %>
 </body>
 
 </html>

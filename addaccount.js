@@ -6,7 +6,7 @@ const db = mysql.createConnection({
   host: 'localhost',
   user: 'root',
   password: '',
-  database: 'inventas'
+  database: 'taspen'
 });
 
 // Admin credentials to add

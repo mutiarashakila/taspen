@@ -4,202 +4,166 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Profil</title>
+    <title>Profile</title>
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i&amp;display=swap">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Abril+Fatface&amp;display=swap">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Almarai&amp;display=swap">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Amarante&amp;display=swap">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Amethysta&amp;display=swap">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto&amp;display=swap">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i&amp;display=swap">
     <link rel="stylesheet" href="/fonts/fontawesome-all.min.css">
-    <link rel="stylesheet" href="/fonts/font-awesome.min.css">
-    <link rel="stylesheet" href="/fonts/material-icons.min.css">
-    <link rel="stylesheet" href="/fonts/fontawesome5-overrides.min.css">
     <link rel="stylesheet" href="/css/styles.css">
 </head>
 
 <body id="page-top">
     <div id="wrapper">
-        <nav class="navbar align-items-start sidebar sidebar-dark accordion">
-            <div class="container-fluid d-flex flex-column p-0">
-                <a class="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0" href="#">
-                    <img src="/img/logo.png" style="width: 150px; padding: 20px; margin-right: 30px;margin-top: 30px;">
-                </a>
-                <hr class="sidebar-divider my-3">
-                <ul class="navbar-nav text-light" id="accordionSidebar" style="margin-top: 20px;">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/dashboard">
-                            <i class="material-icons">dashboard</i>
-                            <span>Dashboard</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/barang">
-                            <i class="fas fa-database"></i>
-                            <span>Data Barang</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/pemilik">
-                            <i class="fas fa-users"></i>
-                            <span>Pemilik Barang</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/lelang">
-                            <i class="fa fa-gavel"></i>
-                            <span>Manajemen Lelang</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/mutasi">
-                            <i class="fa fa-exchange"></i>
-                            <span>Mutasi Barang</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/karyawan">
-                            <i class="fas fa-id-badge"></i>
-                            <span>Daftar Karyawan</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="/profil">
-                            <i class="fas fa-user"></i>
-                            <span>Profil Admin</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/logadmin">
-                            <i class="fas fa-history"></i>
-                            <span>Log Aktivitas</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/login">
-                            <i class="fa fa-sign-out"></i>
-                            <span>Logout</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
-        <div id="content-wrapper" class="d-flex flex-column">
-            <div id="content">
-                <nav class="navbar navbar-expand bg-white topbar mb-4 static-top">
-                    <div class="container-fluid">
-                        <button class="btn btn-link d-md-none rounded-circle me-3" id="sidebarToggleTop">
-                            <i class="fas fa-bars"></i>
-                        </button>
-                        <form class="d-none d-sm-inline-block me-auto ms-md-3 my-2 my-md-0 mw-100 navbar-search">
-                            <div class="input-group">
-                                <input class="form-control bg-light border-0 small" type="text" placeholder="Search for...">
-                                <button class="btn btn-primary" type="button">
-                                    <i class="fas fa-search fa-sm"></i>
-                                </button>
-                            </div>
-                        </form>
-                        <ul class="navbar-nav ml-auto">
-                            <li class="nav-item dropdown no-arrow mx-1">
-                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                                    <i class="fas fa-bell fa-fw"></i>
-                                    <span class="badge badge-danger badge-counter">3+</span>
-                                </a>
-                            </li>
-                            <div class="topbar-divider d-none d-sm-block"></div>
-                            <li class="nav-item dropdown no-arrow">
-                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                                    <span class="mr-2 d-none d-lg-inline text-gray-600 small">username</span>
-                                    <img class="img-profile rounded-circle" src="/img/avatars/pfp.jpg" style="width: 32px;">
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </nav>
-                <div class="container-fluid">
-                    <h3 class="text-dark mb-4">Profile</h3>
-                    <div class="row mb-3">
-                        <div class="col-lg-4">
-                            <div class="card mb-3">
-                                <div class="card-body text-center shadow"><img class="rounded-circle mb-3 mt-4" src="/img/avatars/pfp.jpg" width="160" height="160">
-                                    <div class="mb-3"><button class="btn btn-primary btn-sm" type="button">Change Photo</button></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-8">
-                            <div class="row mb-3 d-none">
-                                <div class="col">
-                                    <div class="card text-white bg-primary shadow">
-                                        <div class="card-body">
-                                            <div class="row mb-2">
-                                                <div class="col">
-                                                    <p class="m-0">Peformance</p>
-                                                    <p class="m-0"><strong>65.2%</strong></p>
-                                                </div>
-                                                <div class="col-auto"><i class="fas fa-rocket fa-2x"></i></div>
+        <%- include('partials/sidebar') %>
+            <div id="content-wrapper" class="d-flex flex-column">
+                <div id="content">
+                    <%- include('partials/topbar') %>
+                        <div class="container-fluid">
+                            <div class="row mb-3">
+                                <div class="col-lg-4">
+                                    <div class="card mb-3">
+                                        <div class="card-body text-center shadow">
+                                            <img class="rounded-circle mb-3 mt-4"
+                                                src="/api/admin/photo/<%= admin.id_admin %>" width="160" height="160"
+                                                alt="Profile Photo">
+                                            <div class="mb-3">
+                                                <form id="photoForm" enctype="multipart/form-data">
+                                                    <input type="file" id="photoInput" name="photo" class="d-none"
+                                                        accept="image/*">
+                                                    <button class="btn btn-primary btn-sm" type="button"
+                                                        onclick="document.getElementById('photoInput').click()">
+                                                        Change Photo
+                                                    </button>
+                                                </form>
                                             </div>
-                                            <p class="text-white-50 small m-0"><i class="fas fa-arrow-up"></i>&nbsp;5% since last month</p>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col">
-                                    <div class="card text-white bg-success shadow">
-                                        <div class="card-body">
-                                            <div class="row mb-2">
-                                                <div class="col">
-                                                    <p class="m-0">Peformance</p>
-                                                    <p class="m-0"><strong>65.2%</strong></p>
-                                                </div>
-                                                <div class="col-auto"><i class="fas fa-rocket fa-2x"></i></div>
-                                            </div>
-                                            <p class="text-white-50 small m-0"><i class="fas fa-arrow-up"></i>&nbsp;5% since last month</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col">
+                                <div class="col-lg-8">
                                     <div class="card shadow mb-3">
                                         <div class="card-header py-3">
                                             <p class="text-primary m-0 fw-bold">User Settings</p>
                                         </div>
                                         <div class="card-body">
-                                            <form>
+                                            <form id="profileForm">
                                                 <div class="row">
                                                     <div class="col">
-                                                        <div class="mb-3"><label class="form-label" for="username"><strong>Username</strong></label><input class="form-control" type="text" id="username" placeholder="user.name" name="username"></div>
+                                                        <div class="mb-3">
+                                                            <label class="form-label"
+                                                                for="username"><strong>Username</strong></label>
+                                                            <input class="form-control" type="text" id="username"
+                                                                name="username" value="<%= admin.username %>">
+                                                        </div>
                                                     </div>
                                                     <div class="col">
-                                                        <div class="mb-3"><label class="form-label" for="email"><strong>Email Address</strong></label><input class="form-control" type="email" id="email" placeholder="user@example.com" name="email"></div>
+                                                        <div class="mb-3">
+                                                            <label class="form-label" for="email"><strong>Email
+                                                                    Address</strong></label>
+                                                            <input class="form-control" type="email" id="email"
+                                                                name="email" value="<%= admin.email %>">
+                                                        </div>
                                                     </div>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <button class="btn btn-primary" type="submit">Save Settings</button>
                                                 </div>
                                             </form>
                                         </div>
                                     </div>
-                                    <div class="card shadow"></div>
+                                </div>
+                            </div>
+                            <div class="card shadow mb-5">
+                                <div class="card-header py-3">
+                                    <p class="text-primary m-0 fw-bold">Recent Activities</p>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>Timestamp</th>
+                                                    <th>Activity Type</th>
+                                                    <th>Details</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <% activities.forEach(function(activity) { %>
+                                                    <tr>
+                                                        <td>
+                                                            <%= new Date(activity.timestamp).toLocaleString() %>
+                                                        </td>
+                                                        <td>
+                                                            <%= activity.jenis_aktivitas %>
+                                                        </td>
+                                                        <td>
+                                                            <%= activity.detail_perubahan %>
+                                                        </td>
+                                                    </tr>
+                                                    <% }); %>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="card shadow mb-5"></div>
                 </div>
+                <%- include('partials/footer') %>
             </div>
-            <footer class="sticky-footer bg-white">
-                <div class="container my-auto">
-                    <div class="copyright text-center my-auto">
-                        <span>© 2024 PT TASPEN (PERSERO) KC BOGOR</span>
-                    </div>
-                </div>
-            </footer>
-        </div>
     </div>
-    <a class="scroll-to-top rounded" href="#page-top">
-        <i class="fas fa-angle-up"></i>
-    </a>
-    <script src="/bootstrap/js/bootstrap.min.js"></script>
-    <script src="/js/bs-init.js"></script>
-    <script src="/js/theme.js"></script>
+
+    <script>
+        document.getElementById('photoInput').addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const formData = new FormData();
+            formData.append('photo', file);
+
+            try {
+                const response = await fetch('/api/admin/update-photo', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (response.ok) {
+                    window.location.reload();
+                } else {
+                    alert('Failed to update photo');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred while updating the photo');
+            }
+        });
+
+        document.getElementById('profileForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const formData = {
+                username: document.getElementById('username').value,
+                email: document.getElementById('email').value
+            };
+
+            try {
+                const response = await fetch('/api/admin/update-profile', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                if (response.ok) {
+                    alert('Profile updated successfully');
+                } else {
+                    alert('Failed to update profile');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred while updating the profile');
+            }
+        });
+    </script>
 </body>
 
 </html>
