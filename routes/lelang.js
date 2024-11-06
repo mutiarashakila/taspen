@@ -156,7 +156,7 @@ router.post('/selesai-lelang/:id_barang',requireLogin, async (req, res) => {
       await connection.query(`
         INSERT INTO Penjualan (
           id_penjualan, id_barang, nama_barang, gambar_barang, 
-          deskripsi_barang, kategori, harga_terakhir, 
+          deskripsi_barang, kategori, harga_jual, 
           tanggal_keluar, status_penjualan
         )
         VALUES (
@@ -171,6 +171,11 @@ router.post('/selesai-lelang/:id_barang',requireLogin, async (req, res) => {
         barangData[0].kategori,
         lelangData[0].harga_lelang
       ]);
+
+      await connection.query(`
+        DELETE FROM Notifikasi 
+        WHERE id_barang = ?
+      `, [id_barang]);
 
       await connection.query(`
         DELETE FROM Lelang 

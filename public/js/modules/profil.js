@@ -4,7 +4,13 @@ if (window.location.pathname === "/profil") {
         if (!file) return;
 
         if (!file.type.startsWith('image/')) {
-            toastr.error('Please select an image file');
+            toastr.error('Pilih foto');
+            return;
+        }
+
+        const maxSize = 5 * 1024 * 1024;
+        if (file.size > maxSize) {
+            toastr.error('Ukuran foto maksimal 5MB');
             return;
         }
 
@@ -12,7 +18,7 @@ if (window.location.pathname === "/profil") {
         formData.append('photo', file);
 
         try {
-            const response = await fetch('profil/update-photo', {
+            const response = await fetch('/profil/update-photo', {
                 method: 'POST',
                 body: formData
             });
@@ -20,8 +26,11 @@ if (window.location.pathname === "/profil") {
             const result = await response.json();
 
             if (response.ok) {
-                toastr.success('Photo updated successfully');
-                setTimeout(() => window.location.reload(), 1500);
+                toastr.success('Foto berhasil diubah');
+                // Update profile image without page reload
+                const newImageUrl = `profil/photo/${result.adminId}?t=${new Date().getTime()}`;
+                document.querySelector('.img-profile').src = newImageUrl;
+                document.querySelector('.rounded-circle.mb-3.mt-4').src = newImageUrl;
             } else {
                 toastr.error(result.message || 'Failed to update photo');
             }
@@ -31,76 +40,39 @@ if (window.location.pathname === "/profil") {
         }
     });
 
-    const changePasswordCheckbox = document.getElementById('changePassword');
-    const passwordFields = document.getElementById('passwordFields');
-    const passwordInputs = passwordFields.querySelectorAll('input[type="password"]');
-
-    changePasswordCheckbox.addEventListener('change', (e) => {
-        passwordFields.style.display = e.target.checked ? 'block' : 'none';
-        passwordInputs.forEach(input => {
-            input.disabled = !e.target.checked;
-            if (!e.target.checked) {
-                input.value = '';
-                input.classList.remove('is-invalid');
-            }
-        });
-    });
-
+    // Profile form submission handler
     document.getElementById('profileForm').addEventListener('submit', async (e) => {
         e.preventDefault();
 
-        e.target.querySelectorAll('.is-invalid').forEach(el => {
-            el.classList.remove('is-invalid');
-        });
-
-        let isValid = true;
         const username = document.getElementById('username');
         const email = document.getElementById('email');
         const currentPassword = document.getElementById('currentPassword');
         const newPassword = document.getElementById('newPassword');
-        const confirmPassword = document.getElementById('confirmPassword');
 
-        if (username.value.length < 3) {
-            username.classList.add('is-invalid');
-            isValid = false;
+        if (username.value.trim().length < 3) {
+            toastr.error('Username must be at least 3 characters long');
+            return;
         }
 
         if (!email.value.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
-            email.classList.add('is-invalid');
-            isValid = false;
+            toastr.error('Please enter a valid email address');
+            return;
         }
 
-        if (changePasswordCheckbox.checked) {
-            if (!currentPassword.value) {
-                currentPassword.classList.add('is-invalid');
-                isValid = false;
-            }
-
-            if (newPassword.value.length < 8) {
-                newPassword.classList.add('is-invalid');
-                isValid = false;
-            }
-
-            if (newPassword.value !== confirmPassword.value) {
-                confirmPassword.classList.add('is-invalid');
-                isValid = false;
-            }
-        }
-
-        if (!isValid) {
-            toastr.error('Please check the form for errors');
+        if (newPassword.value && !currentPassword.value) {
+            toastr.error('Current password is required to change password');
             return;
         }
 
         const formData = {
-            username: username.value,
-            email: email.value,
-            currentPassword: changePasswordCheckbox.checked ? currentPassword.value : '',
-            newPassword: changePasswordCheckbox.checked ? newPassword.value : ''
+            username: username.value.trim(),
+            email: email.value.trim(),
+            currentPassword: currentPassword.value,
+            newPassword: newPassword.value
         };
 
         try {
-            const response = await fetch('profil/update-profil', {
+            const response = await fetch('/profil/update-profil', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -111,32 +83,27 @@ if (window.location.pathname === "/profil") {
             const result = await response.json();
 
             if (response.ok) {
-                toastr.success('Profile updated successfully');
-                setTimeout(() => window.location.reload(), 1500);
+                toastr.success(result.message);
+                
+                const usernameElement = document.querySelector('.d-none.d-lg-inline.text-gray-600.small');
+                if (usernameElement) {
+                    usernameElement.textContent = username.value;
+                }
+
+                currentPassword.value = '';
+                newPassword.value = '';
+                
+                if (email.value !== result.previousEmail) {
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1500);
+                }
             } else {
                 toastr.error(result.message || 'Failed to update profile');
-                if (result.message.includes('password')) {
-                    currentPassword.classList.add('is-invalid');
-                }
             }
         } catch (error) {
             console.error('Error:', error);
             toastr.error('An error occurred while updating the profile');
         }
-    });
-
-    document.querySelector('button[type="reset"]').addEventListener('click', () => {
-        setTimeout(() => {
-            changePasswordCheckbox.checked = false;
-            passwordFields.style.display = 'none';
-            passwordInputs.forEach(input => {
-                input.disabled = true;
-                input.value = '';
-                input.classList.remove('is-invalid');
-            });
-            document.querySelectorAll('.is-invalid').forEach(el => {
-                el.classList.remove('is-invalid');
-            });
-        }, 0);
     });
 }

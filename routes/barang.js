@@ -14,21 +14,20 @@ async function compressImage(buffer, { format = 'jpeg', quality = 80, width = 50
     .toBuffer();
 }
 
-function generateLogId() {
-  return 'LOG' + Date.now() + Math.random().toString(36).substr(2, 5);
-}
-
-async function logAdminActivity(id_admin, jenis_aktivitas, detail_perubahan) {
-  const id_log = generateLogId();
+async function logAdminActivity(connection, req, jenis_aktivitas, detail_perubahan) {
   try {
-      const sql = 'INSERT INTO Log_Aktivitas(id_log, timestamp, id_admin, jenis_aktivitas, detail_perubahan) VALUES (?, NOW(), ?, ?, ?)';
-      await db.query(sql, [id_log, id_admin, jenis_aktivitas, detail_perubahan]);
+    const logQuery = `
+          INSERT INTO Log_Aktivitas(timestamp, id_admin, jenis_aktivitas, detail_perubahan) 
+          VALUES (NOW(), ?, ?, ?)
+      `;
+    await connection.query(logQuery, [req.adminId, jenis_aktivitas, detail_perubahan]);
   } catch (error) {
-      console.error('Error logging admin activity:', error);
+    console.error('Error logging admin activity:', error);
+    throw error;
   }
 }
 
-router.post('/',requireLogin, upload.single('gambar_barang'), async (req, res) => {
+router.post('/', requireLogin, upload.single('gambar_barang'), async (req, res) => {
   const connection = await db.getConnection();
   try {
     const {
@@ -76,14 +75,12 @@ router.post('/',requireLogin, upload.single('gambar_barang'), async (req, res) =
 
     await connection.query(kepemilikanQuery, [id_barang, id_karyawan]);
 
-    const detail_perubahan = `Menambahkan barang: ${nama_barang}`;
-await logAdminActivity(
-    req.session.admin_id,
-    'Tambah Barang',
-    detail_perubahan
-);
-
-    await connection.query(logQuery, [req.session.admin_id, detail_perubahan]);
+    await logAdminActivity(
+      connection,
+      req,
+      'TAMBAH BARANG',
+      `Menambahkan barang: (${id_barang})${nama_barang}`
+    );
 
     if (status_barang === 'lelang') {
       const lelangQuery = `
@@ -111,7 +108,7 @@ await logAdminActivity(
   }
 });
 
-router.get('/detail/:id',requireLogin, async (req, res) => {
+router.get('/detail/:id', requireLogin, async (req, res) => {
   const connection = await db.getConnection();
   try {
     const id_barang = req.params.id;
@@ -157,7 +154,7 @@ router.get('/detail/:id',requireLogin, async (req, res) => {
   }
 });
 
-router.post('/edit',requireLogin, upload.single('gambar_barang'), async (req, res) => {
+router.post('/edit', requireLogin, upload.single('gambar_barang'), async (req, res) => {
   const connection = await db.getConnection();
   try {
     const {
@@ -176,6 +173,19 @@ router.post('/edit',requireLogin, upload.single('gambar_barang'), async (req, re
       return res.status(400).json({
         success: false,
         message: 'ID Barang dan Nama Barang wajib diisi'
+      });
+    }
+
+    // Get original item data for comparison
+    const [originalItem] = await connection.query(
+      'SELECT * FROM barang WHERE id_barang = ?',
+      [id_barang]
+    );
+
+    if (!originalItem || originalItem.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: 'Barang tidak ditemukan'
       });
     }
 
@@ -198,6 +208,7 @@ router.post('/edit',requireLogin, upload.single('gambar_barang'), async (req, re
 
     await connection.beginTransaction();
 
+    // Prepare update query
     let updateBarangQuery = `
       UPDATE barang 
       SET nama_barang = ?,
@@ -236,6 +247,40 @@ router.post('/edit',requireLogin, upload.single('gambar_barang'), async (req, re
       });
     }
 
+    // Generate detailed change log
+    const changes = [];
+    const original = originalItem[0];
+    
+    if (original.nama_barang !== nama_barang) {
+      changes.push(`Nama: ${original.nama_barang} → ${nama_barang}`);
+    }
+    if (original.deskripsi_barang !== deskripsi_barang) {
+      changes.push(`Deskripsi: ${original.deskripsi_barang} → ${deskripsi_barang}`);
+    }
+    if (original.kategori !== kategori) {
+      changes.push(`Kategori: ${original.kategori} → ${kategori}`);
+    }
+    if (original.lokasi_barang !== lokasi_barang) {
+      changes.push(`Lokasi: ${original.lokasi_barang} → ${lokasi_barang}`);
+    }
+    if (original.harga_barang !== format_harga_barang) {
+      changes.push(`Harga: ${original.harga_barang.toLocaleString()} → ${format_harga_barang.toLocaleString()}`);
+    }
+    if (original.status_barang !== status_barang) {
+      changes.push(`Status: ${original.status_barang} → ${status_barang}`);
+    }
+    if (original.kondisi_barang !== kondisi_barang) {
+      changes.push(`Kondisi: ${original.kondisi_barang} → ${kondisi_barang}`);
+    }
+    if (gambar_barang) {
+      changes.push('Gambar diperbarui');
+    }
+
+    // Create detailed log message
+    const changeLog = changes.length > 0 
+      ? `Mengedit barang (${id_barang}) ${nama_barang} ${changes.join(', ')}`
+      : `Mengedit barang (${id_barang}) ${nama_barang} tanpa perubahan`;
+
     await connection.query(
       'UPDATE kepemilikan SET status_kepemilikan = ? WHERE id_barang = ? AND status_kepemilikan = ?',
       ['tidak aktif', id_barang, 'aktif']
@@ -248,12 +293,13 @@ router.post('/edit',requireLogin, upload.single('gambar_barang'), async (req, re
       `;
       await connection.query(newKepemilikanQuery, [id_barang, id_karyawan]);
 
-      const logQuery = `
-        INSERT INTO log_aktivitas(id_log, timestamp, id_admin, jenis_aktivitas, detail_perubahan)
-        VALUES (UUID(), NOW(), ?, 'Edit Barang', ?)
-      `;
-      const detail_perubahan = `Mengubah barang: ${nama_barang}`;
-      await connection.query(logQuery, [req.session.admin_id, detail_perubahan]);
+      // Log with detailed changes
+      await logAdminActivity(
+        connection,
+        req,
+        'EDIT BARANG',
+        changeLog
+      );
 
       if (status_barang === 'lelang') {
         const lelangQuery = `
@@ -284,33 +330,33 @@ router.post('/edit',requireLogin, upload.single('gambar_barang'), async (req, re
   }
 });
 
-router.get('/refresh',requireLogin, async (req, res) => {
+router.get('/refresh', requireLogin, async (req, res) => {
   const connection = await db.getConnection();
   try {
     let page = req.query.page ? parseInt(req.query.page) : 1;
     let limit = 10;
     let offset = (page - 1) * limit;
     let searchQuery = req.query.search || '';
-      let queryParams = [];
+    let queryParams = [];
 
-      let whereClause = '';
-      if (searchQuery) {
-        whereClause = `WHERE 
+    let whereClause = '';
+    if (searchQuery) {
+      whereClause = `WHERE 
           LOWER(b.nama_barang) LIKE LOWER(?) OR 
           LOWER(b.id_barang) LIKE LOWER(?) OR
           LOWER(COALESCE(b.kategori, '')) LIKE LOWER(?) OR
           LOWER(COALESCE(b.lokasi_barang, '')) LIKE LOWER(?)`;
-        queryParams = Array(4).fill(`%${searchQuery}%`);
-      }
+      queryParams = Array(4).fill(`%${searchQuery}%`);
+    }
 
-     const [countResult] = await connection.query(`
+    const [countResult] = await connection.query(`
         SELECT COUNT(*) AS total 
         FROM barang b 
         ${whereClause}
       `, queryParams);
-      
-      let totalData = countResult[0].total;
-      let totalPages = Math.ceil(totalData / limit);
+
+    let totalData = countResult[0].total;
+    let totalPages = Math.ceil(totalData / limit);
 
     const [rows] = await connection.query(`
       SELECT 
@@ -377,41 +423,59 @@ const tanggal = {
   },
 };
 
-router.get('/',requireLogin, async (req, res) => {
-    const connection = await db.getConnection();
-    try {
-      let page = req.query.page ? parseInt(req.query.page) : 1;
-      let limit = 10;
-      let offset = (page - 1) * limit;
-      let searchQuery = req.query.search || '';
-      let queryParams = [];
-      
-      let whereClause = '';
-      if (searchQuery) {
-        whereClause = `WHERE 
+router.get('/', requireLogin, async (req, res) => {
+  const connection = await db.getConnection();
+  try {
+    // Pagination parameters
+    let page = req.query.page ? parseInt(req.query.page) : 1;
+    let limit = req.query.limit ? parseInt(req.query.limit) : 10;
+    let offset = (page - 1) * limit;
+    
+    // Sorting parameters
+    let sortField = req.query.sort || 'waktu_masuk'; // default sort by waktu_masuk
+    let sortOrder = req.query.order || 'DESC'; // default descending
+    
+    // Validate sort field to prevent SQL injection
+    const allowedSortFields = ['waktu_masuk', 'nama_barang', 'id_barang', 'kategori', 'lokasi_barang', 'status_barang'];
+    if (!allowedSortFields.includes(sortField)) {
+      sortField = 'waktu_masuk';
+    }
+    
+    // Validate sort order
+    if (!['ASC', 'DESC'].includes(sortOrder.toUpperCase())) {
+      sortOrder = 'DESC';
+    }
+    
+    let searchQuery = req.query.search || '';
+    let queryParams = [];
+    
+    let whereClause = '';
+    if (searchQuery) {
+      whereClause = `WHERE 
           LOWER(b.nama_barang) LIKE LOWER(?) OR 
           LOWER(b.id_barang) LIKE LOWER(?) OR
           LOWER(COALESCE(b.kategori, '')) LIKE LOWER(?) OR
           LOWER(COALESCE(b.lokasi_barang, '')) LIKE LOWER(?)`;
-        queryParams = Array(4).fill(`%${searchQuery}%`);
-      }
-  
-      const [countResult] = await connection.query(`
+      queryParams = Array(4).fill(`%${searchQuery}%`);
+    }
+
+    const [countResult] = await connection.query(`
         SELECT COUNT(*) AS total 
         FROM barang b 
         ${whereClause}
       `, queryParams);
-      
-      let totalData = countResult[0].total;
-      let totalPages = Math.ceil(totalData / limit);
-  
-      const [rows] = await connection.query(`
+
+    let totalData = countResult[0].total;
+    let totalPages = Math.ceil(totalData / limit);
+
+    const [rows] = await connection.query(`
         SELECT 
             b.id_barang,
             b.nama_barang,
             b.kategori,
             b.lokasi_barang,
             b.status_barang,
+            b.waktu_masuk,
             k.nama_karyawan,
             l.waktu_mulai,
             l.waktu_selesai,
@@ -427,28 +491,31 @@ router.get('/',requireLogin, async (req, res) => {
         LEFT JOIN karyawan k ON kp.id_karyawan = k.id_karyawan
         LEFT JOIN lelang l ON b.id_barang = l.id_barang
         ${whereClause}
+        ORDER BY b.${sortField} ${sortOrder}
         LIMIT ? OFFSET ?
       `, [...queryParams, limit, offset]);
-  
-      const [karyawan] = await connection.query('SELECT id_karyawan, nama_karyawan FROM karyawan');
-  
-      res.render('barang', {
-        barang: rows,
-        karyawan: karyawan,
-        currentPage: page,
-        totalPages: totalPages,
-        totalData: totalData,
-        limit: limit,
-        tanggal: tanggal,
-        searchQuery: searchQuery
-      });
-    } catch (error) {
-      console.error('Error:', error);
-      res.status(500).send('Internal Server Error');
-    } finally {
-      connection.release();
-    }
-  });
+
+    const [karyawan] = await connection.query('SELECT id_karyawan, nama_karyawan FROM karyawan');
+
+    res.render('barang', {
+      barang: rows,
+      karyawan: karyawan,
+      currentPage: page,
+      totalPages: totalPages,
+      totalData: totalData,
+      limit: limit,
+      tanggal: tanggal,
+      searchQuery: searchQuery,
+      sortField: sortField,
+      sortOrder: sortOrder
+    });
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).send('Internal Server Error');
+  } finally {
+    connection.release();
+  }
+});
 
 router.get('/delete/:id_barang', requireLogin, async (req, res) => {
   const connection = await db.getConnection();
@@ -469,17 +536,17 @@ router.get('/delete/:id_barang', requireLogin, async (req, res) => {
 
     const nama_barang = barangResult[0].nama_barang;
 
+    await connection.query('DELETE FROM notifikasi WHERE id_barang = ?', [id_barang]);
     await connection.query('DELETE FROM lelang WHERE id_barang = ?', [id_barang]);
     await connection.query('DELETE FROM kepemilikan WHERE id_barang = ?', [id_barang]);
     await connection.query('DELETE FROM barang WHERE id_barang = ?', [id_barang]);
-    await connection.query('DELETE FROM notifikasi WHERE id_barang = ?', [id_barang]);
 
-    const logQuery = `
-        INSERT INTO log_aktivitas (id_log, timestamp, id_admin, jenis_aktivitas, detail_perubahan)
-        VALUES (UUID(), NOW(), ?, 'Hapus Barang', ?)
-      `;
-    const detail_perubahan = `Menghapus barang : ${nama_barang}`;
-    await connection.query(logQuery, [req.session.email, detail_perubahan]);
+    await logAdminActivity(
+      connection,
+      req,
+      'HAPUS BARANG',
+      `Menghapus barang: (${id_barang})${nama_barang}`
+    );
 
     await connection.commit();
     res.redirect('/barang');

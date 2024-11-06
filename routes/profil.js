@@ -4,34 +4,17 @@ const multer = require('multer');
 const upload = multer({
     storage: multer.memoryStorage(),
     limits: {
-        fileSize: 5 * 1024 * 1024 // 5MB limit
+        fileSize: 5 * 1024 * 1024
     }
 });
 const db = require('../db.js');
 const bcrypt = require('bcrypt');
 const { requireLogin } = require('../routes/auth.js');
 
-// Helper function untuk generate log ID
-function generateLogId() {
-    return 'LOG' + Date.now() + Math.random().toString(36).substr(2, 5);
-}
-
-// Helper function untuk logging aktivitas
-async function logAdminActivity(id_admin, jenis_aktivitas, detail_perubahan) {
-    const id_log = generateLogId();
-    try {
-        const sql = 'INSERT INTO Log_Aktivitas(id_log, timestamp, id_admin, jenis_aktivitas, detail_perubahan) VALUES (?, NOW(), ?, ?, ?)';
-        await db.query(sql, [id_log, id_admin, jenis_aktivitas, detail_perubahan]);
-    } catch (error) {
-        console.error('Error logging admin activity:', error);
-    }
-}
-
-// GET profile page
 router.get('/', requireLogin, async (req, res) => {
     try {
         const [adminRows] = await db.query(
-            'SELECT id_admin, username, email, foto FROM Admin WHERE email = ?', 
+            'SELECT id_admin, username, email, foto FROM Admin WHERE email = ?',
             [req.session.email]
         );
 
@@ -58,18 +41,19 @@ router.get('/', requireLogin, async (req, res) => {
     }
 });
 
-// POST update profile
+// Profile update endpoint
 router.post('/update-profil', requireLogin, async (req, res) => {
     const conn = await db.getConnection();
     try {
         await conn.beginTransaction();
 
         const { username, email, currentPassword, newPassword } = req.body;
+        const previousEmail = req.session.email;
 
-        // Get current admin data
+        // Verify admin exists
         const [adminRows] = await conn.query(
             'SELECT id_admin, password FROM Admin WHERE email = ?',
-            [req.session.email]
+            [previousEmail]
         );
 
         if (!adminRows.length) {
@@ -91,57 +75,59 @@ router.post('/update-profil', requireLogin, async (req, res) => {
             }
         }
 
+        // Check if email already exists (if changing email)
+        if (email !== previousEmail) {
+            const [existingEmail] = await conn.query(
+                'SELECT id_admin FROM Admin WHERE email = ? AND id_admin != ?',
+                [email, adminRows[0].id_admin]
+            );
+
+            if (existingEmail.length > 0) {
+                await conn.rollback();
+                return res.status(400).json({ message: 'Email already in use' });
+            }
+        }
+
         // Prepare update query
         let updateQuery = 'UPDATE Admin SET username = ?, email = ?';
         let queryParams = [username, email];
 
-        // Add password to update if provided
         if (newPassword) {
             const hashedPassword = await bcrypt.hash(newPassword, 10);
             updateQuery += ', password = ?';
             queryParams.push(hashedPassword);
         }
 
-        // Add where clause
-        queryParams.push(req.session.email);
-        updateQuery += ' WHERE email = ?';
+        queryParams.push(adminRows[0].id_admin);
+        updateQuery += ' WHERE id_admin = ?';
 
-        // Execute update
         const [updateResult] = await conn.query(updateQuery, queryParams);
 
         if (updateResult.affectedRows === 0) {
             await conn.rollback();
             return res.status(400).json({ message: 'No changes were made' });
         }
-
-        // Log the activity
-        await logAdminActivity(
-            adminRows[0].id_admin,
-            'UPDATE_PROFILE',
-            `Updated profile information: username=${username}, email=${email}${newPassword ? ', password changed' : ''}`
-        );
-
-        // Update session if email changed
-        if (email !== req.session.email) {
-            req.session.email = email;
-        }
+        req.session.email = email;
 
         await conn.commit();
-        res.json({ message: 'Profile updated successfully' });
+        res.json({
+            message: 'Profile berhasil diperbarui',
+            previousEmail: previousEmail
+        });
 
     } catch (error) {
         await conn.rollback();
         console.error('Error updating profile:', error);
-        res.status(500).json({ 
+        res.status(500).json({
             message: 'Server error while updating profile',
-            error: error.message 
+            error: error.message
         });
     } finally {
         conn.release();
     }
 });
 
-// POST update photo
+// Photo update endpoint
 router.post('/update-photo', requireLogin, upload.single('photo'), async (req, res) => {
     const conn = await db.getConnection();
     try {
@@ -157,7 +143,6 @@ router.post('/update-photo', requireLogin, upload.single('photo'), async (req, r
             return res.status(400).json({ message: 'Only image files are allowed' });
         }
 
-        // Get admin ID first
         const [adminRows] = await conn.query(
             'SELECT id_admin FROM Admin WHERE email = ?',
             [req.session.email]
@@ -168,7 +153,6 @@ router.post('/update-photo', requireLogin, upload.single('photo'), async (req, r
             return res.status(404).json({ message: 'Admin not found' });
         }
 
-        // Update photo
         const [updateResult] = await conn.query(
             'UPDATE Admin SET foto = ? WHERE id_admin = ?',
             [req.file.buffer, adminRows[0].id_admin]
@@ -178,34 +162,29 @@ router.post('/update-photo', requireLogin, upload.single('photo'), async (req, r
             await conn.rollback();
             return res.status(400).json({ message: 'Failed to update photo' });
         }
-
-        // Log activity
-        await logAdminActivity(
-            adminRows[0].id_admin,
-            'UPDATE_PHOTO',
-            'Updated profile photo'
-        );
-
         await conn.commit();
-        res.json({ message: 'Photo updated successfully' });
+        res.json({
+            message: 'Photo updated successfully',
+            adminId: adminRows[0].id_admin
+        });
 
     } catch (error) {
         await conn.rollback();
         console.error('Error updating photo:', error);
-        res.status(500).json({ 
+        res.status(500).json({
             message: 'Server error while updating photo',
-            error: error.message 
+            error: error.message
         });
     } finally {
         conn.release();
     }
 });
 
-// GET photo
+
 router.get('/photo/:id', requireLogin, async (req, res) => {
     try {
         const [rows] = await db.query(
-            'SELECT foto FROM Admin WHERE id_admin = ?', 
+            'SELECT foto FROM Admin WHERE id_admin = ?',
             [req.params.id]
         );
 

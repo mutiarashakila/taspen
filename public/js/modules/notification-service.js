@@ -141,6 +141,7 @@ class NotificationService {
   async autoUpdateToLelang(idBarang) {
     try {
       await this.db.query('UPDATE Barang SET status_barang = "lelang" WHERE id_barang = ?', [idBarang]);
+      await this.db.query('INSERT INTO Lelang (id_barang, status_lelang) VALUES (?, "akan lelang")', [idBarang]);
       await this.createNotification(idBarang, 'auto_auction',
         'Barang telah otomatis masuk ke status lelang karena telah mencapai usia 3 tahun');
     } catch (error) {

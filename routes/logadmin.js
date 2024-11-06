@@ -3,7 +3,7 @@ const router = express.Router();
 const db = require('../db.js');
 const { requireLogin } = require('../routes/auth.js');
 
-router.get('/', requireLogin,async (req, res) => {
+router.get('/', requireLogin, async (req, res) => {
   let page = req.query.page ? parseInt(req.query.page) : 1;
   let limit = 10;
   let offset = (page - 1) * limit;
@@ -14,11 +14,17 @@ router.get('/', requireLogin,async (req, res) => {
     let totalPages = Math.ceil(totalData / limit);
 
     const [log] = await db.query(`
-        SELECT timestamp, id_admin, jenis_aktivitas, detail_perubahan 
-        FROM log_aktivitas 
-        ORDER BY timestamp DESC 
-        LIMIT ? OFFSET ?
-      `, [limit, offset]);
+      SELECT 
+        l.timestamp,
+        l.id_admin,
+        a.username AS nama_admin,
+        l.jenis_aktivitas,
+        l.detail_perubahan 
+      FROM log_aktivitas l
+      LEFT JOIN admin a ON l.id_admin = a.id_admin
+      ORDER BY l.timestamp DESC 
+      LIMIT ? OFFSET ?
+    `, [limit, offset]);
 
     res.render('logadmin', {
       log,

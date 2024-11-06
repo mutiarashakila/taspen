@@ -20,6 +20,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
     <link rel="stylesheet" href="/css/styles.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 </head>
 
 <body id="page-top">
@@ -268,7 +269,6 @@
                                             <h5 class="modal-title" id="confirmDeleteLabel">Konfirmasi Hapus</h5>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                 aria-label="Close"></button>
-                                            <span aria-hidden="true">&times;</span>
                                             </button>
                                         </div>
                                         <div class="modal-body">
@@ -286,21 +286,23 @@
                             <div class="card" style="border: 0px; margin-top:-20px">
                                 <div class="card-body" style="width: 105%;margin-left:-30px">
                                     <div class="row align-items-center">
-                                        <div class="col-md-6 text-nowrap">
-                                            <div id="dataTable_length" class="dataTables_length"
-                                                aria-controls="dataTable">
-                                                <label class="form-label">Show&nbsp;<select
-                                                        class="d-inline-block form-select form-select-sm">
-                                                        <option value="10" selected="">10</option>
-                                                        <option value="25">25</option>
-                                                        <option value="50">50</option>
-                                                        <option value="100">100</option>
-                                                    </select>&nbsp;</label>
+                                        <div class="col-md-8 text-nowrap d-flex align-items-center">
+                                            <div id="dataTable_length" class="d-flex align-items-center" aria-controls="dataTable">
+                                                <span class="me-2">Show</span>
+                                                <select class="form-select form-select-sm me-3" id="entriesSelect" onchange="changeEntries(this.value)" style="width: auto;">
+                                                    <option value="10" <%= limit == 10 ? 'selected' : '' %>>10</option>
+                                                    <option value="25" <%= limit == 25 ? 'selected' : '' %>>25</option>
+                                                    <option value="50" <%= limit == 50 ? 'selected' : '' %>>50</option>
+                                                    <option value="100" <%= limit == 100 ? 'selected' : '' %>>100</option>
+                                                </select>
+                                                <select class="form-select form-select-sm" id="sortSelect" onchange="sortByDate(this.value)" style="width: auto;">
+                                                    <option value="DESC" <%= sortField === 'waktu_masuk' && sortOrder === 'DESC' ? 'selected' : '' %>>Terbaru</option>
+                                                    <option value="ASC" <%= sortField === 'waktu_masuk' && sortOrder === 'ASC' ? 'selected' : '' %>>Terlama</option>
+                                                </select>
                                             </div>
                                         </div>
-                                        <div class="col-md-6 d-flex justify-content-end">
-                                            <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal"
-                                                data-bs-target="#addBarangModal" style="background: #1cda18;">
+                                        <div class="col-md-4 d-flex justify-content-end">
+                                            <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#addBarangModal" style="background: #1cda18;">
                                                 <i class="fas fa-plus me-2"></i>Buat Baru
                                             </button>
                                             <button type="button" class="btn btn-secondary" id="printBtn">
@@ -320,17 +322,28 @@
                                             <thead>
                                                 <tr class="bg-light">
                                                     <th class="px-4 py-3 text-sm font-semibold tracking-wide text-left">
-                                                        Kode
-                                                        Barang
+                                                        Kode Barang
                                                     </th>
                                                     <th class="px-4 py-3 text-sm font-semibold tracking-wide text-left">
-                                                        Nama
-                                                        Barang</th>
-                                                    <th class="px-4 py-3 text-sm font-semibold tracking-wide text-left">
+                                                        Nama Barang
+                                                    </th>
+                                                    <th class="px-4 py-3 text-sm font-semibold tracking-wide text-left sortable"
+                                                        onclick="sortTable('kategori', '<%= sortField === 'kategori' ? (sortOrder === 'ASC' ? 'DESC' : 'ASC') : 'ASC' %>')">
                                                         Kategori
+                                                        <% if (sortField === 'kategori') { %>
+                                                            <i class="fas fa-sort-<%= sortOrder.toLowerCase() === 'asc' ? 'up' : 'down' %>"></i>
+                                                        <% } else { %>
+                                                            <i class="fas fa-sort"></i>
+                                                        <% } %>
                                                     </th>
-                                                    <th class="px-4 py-3 text-sm font-semibold tracking-wide text-left">
+                                                    <th class="px-4 py-3 text-sm font-semibold tracking-wide text-left sortable"
+                                                        onclick="sortTable('lokasi_barang', '<%= sortField === 'lokasi_barang' ? (sortOrder === 'ASC' ? 'DESC' : 'ASC') : 'ASC' %>')">
                                                         Lokasi
+                                                        <% if (sortField === 'lokasi_barang') { %>
+                                                            <i class="fas fa-sort-<%= sortOrder.toLowerCase() === 'asc' ? 'up' : 'down' %>"></i>
+                                                        <% } else { %>
+                                                            <i class="fas fa-sort"></i>
+                                                        <% } %>
                                                     </th>
                                                     <th class="px-4 py-3 text-sm font-semibold tracking-wide text-left">
                                                         Pemilik
@@ -339,9 +352,14 @@
                                                         class="px-4 py-3 text-sm font-semibold tracking-wide text-center">
                                                         Masa
                                                         Lelang</th>
-                                                    <th
-                                                        class="px-4 py-3 text-sm font-semibold tracking-wide text-center">
+                                                    <th class="px-4 py-3 text-sm font-semibold tracking-wide text-left sortable"
+                                                        onclick="sortTable('status_barang', '<%= sortField === 'status_barang' ? (sortOrder === 'ASC' ? 'DESC' : 'ASC') : 'ASC' %>')">
                                                         Status
+                                                        <% if (sortField === 'status_barang') { %>
+                                                            <i class="fas fa-sort-<%= sortOrder.toLowerCase() === 'asc' ? 'up' : 'down' %>"></i>
+                                                        <% } else { %>
+                                                            <i class="fas fa-sort"></i>
+                                                        <% } %>
                                                     </th>
                                                     <th
                                                         class="px-4 py-3 text-sm font-semibold tracking-wide text-center">

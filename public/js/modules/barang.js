@@ -1,8 +1,16 @@
 if (window.location.pathname === "/barang") {
+
+    toastr.options = {
+        closeButton: true,
+        progressBar: true,
+        positionClass: "toast-top-right",
+        timeOut: 2000, // Waktu tampil 2 detik
+        preventDuplicates: true
+    };
+
     $(document).ready(function () {
         $('#addBarangForm').submit(function (event) {
             event.preventDefault();
-
             var formData = new FormData(this);
 
             $.ajax({
@@ -13,16 +21,18 @@ if (window.location.pathname === "/barang") {
                 contentType: false,
                 success: function (response) {
                     if (response.success) {
-                        toastr.success('Barang berhasil ditambahkan!');
+                        toastr.success('Barang berhasil ditambahkan!', 'Sukses');
                         $('#addBarangForm')[0].reset();
-                        location.reload();
+                        setTimeout(function () {
+                            location.reload();
+                        }, 2000);
                     } else {
                         toastr.error('Gagal menambahkan barang: ' + response.message);
                     }
                 },
                 error: function (xhr, status, error) {
                     console.error('Error:', error);
-                    alert('Terjadi kesalahan: ' + error);
+                    toastr.error('Terjadi kesalahan: ' + error);
                 }
             });
         });
@@ -469,9 +479,11 @@ if (window.location.pathname === "/barang") {
             contentType: false,
             success: function (response) {
                 if (response.success) {
-                    toastr.success('Barang berhasil diperbarui!');
+                    toastr.success('Barang berhasil diperbarui!', 'Sukses');
                     $('#editBarangModal').modal('hide');
-                    updateTable();
+                    setTimeout(function () {
+                        updateTable();
+                    }, 2000);
                 } else {
                     toastr.error('Gagal memperbarui barang: ' + response.message);
                 }
@@ -519,40 +531,81 @@ if (window.location.pathname === "/barang") {
         initializeTimers();
     });
 
-document.addEventListener('DOMContentLoaded', function() {
-    const printBtn = document.getElementById('printBtn');
-    if (printBtn) {
-        printBtn.addEventListener('click', function() {
-            printBtn.disabled = true;
-            printBtn.textContent = 'Mengunduh...';
+    document.addEventListener('DOMContentLoaded', function () {
+        const printBtn = document.getElementById('printBtn');
+        if (printBtn) {
+            printBtn.addEventListener('click', function () {
+                printBtn.disabled = true;
+                printBtn.textContent = 'Mengunduh...';
 
-            fetch('laporan/print')
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.blob();
-                })
-                .then(blob => {
-                    const url = URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.style.display = 'none';
-                    a.href = url;
-                    a.download = 'INVENTAS_BARANG.xlsx';
-                    document.body.appendChild(a);
-                    a.click();
-                    window.URL.revokeObjectURL(url);
-                    document.body.removeChild(a);
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Gagal mengunduh file Excel');
-                })
-                .finally(() => {
-                    printBtn.disabled = false;
-                    printBtn.textContent = 'Unduh Excel';
-                });
-        });
+                fetch('laporan/print')
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.blob();
+                    })
+                    .then(blob => {
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.style.display = 'none';
+                        a.href = url;
+                        a.download = 'INVENTAS_BARANG.xlsx';
+                        document.body.appendChild(a);
+                        a.click();
+                        window.URL.revokeObjectURL(url);
+                        document.body.removeChild(a);
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Gagal mengunduh file Excel');
+                    })
+                    .finally(() => {
+                        printBtn.disabled = false;
+                        printBtn.textContent = 'Unduh Excel';
+                    });
+            });
+        }
+    });
+
+    function changeEntries(value) {
+        const urlParams = new URLSearchParams(window.location.search);
+        urlParams.set('limit', value);
+        urlParams.set('page', '1');
+        window.location.href = `${window.location.pathname}?${urlParams.toString()}`;
     }
-});
+
+    function sortTable(field, order) {
+        const urlParams = new URLSearchParams(window.location.search);
+        urlParams.set('sort', field);
+        urlParams.set('order', order);
+        urlParams.set('page', '1');
+        window.location.href = `${window.location.pathname}?${urlParams.toString()}`;
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const paginationLinks = document.querySelectorAll('.pagination .page-link');
+        const urlParams = new URLSearchParams(window.location.search);
+
+        paginationLinks.forEach(link => {
+            if (link.href && !link.href.includes('#')) {
+                const linkUrl = new URL(link.href);
+                const linkParams = new URLSearchParams(linkUrl.search);
+
+                if (urlParams.has('sort')) linkParams.set('sort', urlParams.get('sort'));
+                if (urlParams.has('order')) linkParams.set('order', urlParams.get('order'));
+                if (urlParams.has('limit')) linkParams.set('limit', urlParams.get('limit'));
+                if (urlParams.has('search')) linkParams.set('search', urlParams.get('search'));
+
+                link.href = `${linkUrl.pathname}?${linkParams.toString()}`;
+            }
+        });
+    });
+
+    function sortByDate(order) {
+        const currentUrl = new URL(window.location.href);
+        currentUrl.searchParams.set('sort', 'waktu_masuk');
+        currentUrl.searchParams.set('order', order);
+        window.location.href = currentUrl.toString();
+    }
 }

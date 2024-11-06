@@ -74,11 +74,11 @@ function renderNotifications(notifications, isLoading = false) {
 
 function getNotificationIcon(type) {
     switch (type) {
-        case 'warning_12_months':
+        case 'peringatan 1 tahun':
             return 'fas fa-clock';
-        case 'warning_6_months':
+        case 'peringatan 6 bulan':
             return 'fas fa-exclamation-triangle';
-        case 'warning_3_months':
+        case 'peringatan 3 bulan':
             return 'fas fa-exclamation-circle';
         case 'auto_auction':
             return 'fas fa-gavel';
@@ -89,11 +89,11 @@ function getNotificationIcon(type) {
 
 function getNotificationIconClass(type) {
     switch (type) {
-        case 'warning_12_months':
+        case 'peringatan 1 tahun':
             return 'bg-info';
-        case 'warning_6_months':
+        case 'peringatan 6 bulan':
             return 'bg-warning';
-        case 'warning_3_months':
+        case 'peringatan 3 bulan':
             return 'bg-danger';
         case 'auto_auction':
             return 'bg-success';
