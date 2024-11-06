@@ -5,7 +5,7 @@ const multer = require('multer');
 const sharp = require('sharp');
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
-//const { requireLogin } = require('../middleware/authMiddleware');
+const { requireLogin } = require('../routes/auth.js');
 
 async function compressImage(buffer, { format = 'jpeg', quality = 80, width = 500 }) {
   return await sharp(buffer)
@@ -14,7 +14,21 @@ async function compressImage(buffer, { format = 'jpeg', quality = 80, width = 50
     .toBuffer();
 }
 
-router.post('/', upload.single('gambar_barang'), async (req, res) => {
+function generateLogId() {
+  return 'LOG' + Date.now() + Math.random().toString(36).substr(2, 5);
+}
+
+async function logAdminActivity(id_admin, jenis_aktivitas, detail_perubahan) {
+  const id_log = generateLogId();
+  try {
+      const sql = 'INSERT INTO Log_Aktivitas(id_log, timestamp, id_admin, jenis_aktivitas, detail_perubahan) VALUES (?, NOW(), ?, ?, ?)';
+      await db.query(sql, [id_log, id_admin, jenis_aktivitas, detail_perubahan]);
+  } catch (error) {
+      console.error('Error logging admin activity:', error);
+  }
+}
+
+router.post('/',requireLogin, upload.single('gambar_barang'), async (req, res) => {
   const connection = await db.getConnection();
   try {
     const {
@@ -63,10 +77,11 @@ router.post('/', upload.single('gambar_barang'), async (req, res) => {
     await connection.query(kepemilikanQuery, [id_barang, id_karyawan]);
 
     const detail_perubahan = `Menambahkan barang: ${nama_barang}`;
-    const logQuery = `
-      INSERT INTO log_aktivitas (id_log, timestamp, id_admin, jenis_aktivitas, detail_perubahan)
-      VALUES (UUID(), NOW(), ?, 'Tambah Barang', ?)
-    `;
+await logAdminActivity(
+    req.session.admin_id,
+    'Tambah Barang',
+    detail_perubahan
+);
 
     await connection.query(logQuery, [req.session.admin_id, detail_perubahan]);
 
@@ -96,7 +111,7 @@ router.post('/', upload.single('gambar_barang'), async (req, res) => {
   }
 });
 
-router.get('/detail/:id', async (req, res) => {
+router.get('/detail/:id',requireLogin, async (req, res) => {
   const connection = await db.getConnection();
   try {
     const id_barang = req.params.id;
@@ -142,7 +157,7 @@ router.get('/detail/:id', async (req, res) => {
   }
 });
 
-router.post('/edit', upload.single('gambar_barang'), async (req, res) => {
+router.post('/edit',requireLogin, upload.single('gambar_barang'), async (req, res) => {
   const connection = await db.getConnection();
   try {
     const {
@@ -269,16 +284,33 @@ router.post('/edit', upload.single('gambar_barang'), async (req, res) => {
   }
 });
 
-router.get('/refresh', async (req, res) => {
+router.get('/refresh',requireLogin, async (req, res) => {
   const connection = await db.getConnection();
   try {
     let page = req.query.page ? parseInt(req.query.page) : 1;
     let limit = 10;
     let offset = (page - 1) * limit;
+    let searchQuery = req.query.search || '';
+      let queryParams = [];
 
-    const [countResult] = await connection.query('SELECT COUNT(*) AS total FROM barang');
-    let totalData = countResult[0].total;
-    let totalPages = Math.ceil(totalData / limit);
+      let whereClause = '';
+      if (searchQuery) {
+        whereClause = `WHERE 
+          LOWER(b.nama_barang) LIKE LOWER(?) OR 
+          LOWER(b.id_barang) LIKE LOWER(?) OR
+          LOWER(COALESCE(b.kategori, '')) LIKE LOWER(?) OR
+          LOWER(COALESCE(b.lokasi_barang, '')) LIKE LOWER(?)`;
+        queryParams = Array(4).fill(`%${searchQuery}%`);
+      }
+
+     const [countResult] = await connection.query(`
+        SELECT COUNT(*) AS total 
+        FROM barang b 
+        ${whereClause}
+      `, queryParams);
+      
+      let totalData = countResult[0].total;
+      let totalPages = Math.ceil(totalData / limit);
 
     const [rows] = await connection.query(`
       SELECT 
@@ -301,8 +333,9 @@ router.get('/refresh', async (req, res) => {
       LEFT JOIN kepemilikan kp ON b.id_barang = kp.id_barang AND kp.status_kepemilikan = 'aktif'
       LEFT JOIN karyawan k ON kp.id_karyawan = k.id_karyawan
       LEFT JOIN lelang l ON b.id_barang = l.id_barang
-      LIMIT ? OFFSET ?
-    `, [limit, offset]);
+      ${whereClause}
+        LIMIT ? OFFSET ?
+      `, [...queryParams, limit, offset]);
 
     res.json({
       success: true,
@@ -312,7 +345,8 @@ router.get('/refresh', async (req, res) => {
         totalPages: totalPages,
         totalData: totalData,
         limit: limit,
-        tanggal: tanggal
+        tanggal: tanggal,
+        searchQuery: searchQuery
       }
     });
 
@@ -343,61 +377,80 @@ const tanggal = {
   },
 };
 
-router.get('/'/* , requireLogin */, async (req, res) => {
-  const connection = await db.getConnection();
-  try {
-    let page = req.query.page ? parseInt(req.query.page) : 1;
-    let limit = 10;
-    let offset = (page - 1) * limit;
+router.get('/',requireLogin, async (req, res) => {
+    const connection = await db.getConnection();
+    try {
+      let page = req.query.page ? parseInt(req.query.page) : 1;
+      let limit = 10;
+      let offset = (page - 1) * limit;
+      let searchQuery = req.query.search || '';
+      let queryParams = [];
+      
+      let whereClause = '';
+      if (searchQuery) {
+        whereClause = `WHERE 
+          LOWER(b.nama_barang) LIKE LOWER(?) OR 
+          LOWER(b.id_barang) LIKE LOWER(?) OR
+          LOWER(COALESCE(b.kategori, '')) LIKE LOWER(?) OR
+          LOWER(COALESCE(b.lokasi_barang, '')) LIKE LOWER(?)`;
+        queryParams = Array(4).fill(`%${searchQuery}%`);
+      }
+  
+      const [countResult] = await connection.query(`
+        SELECT COUNT(*) AS total 
+        FROM barang b 
+        ${whereClause}
+      `, queryParams);
+      
+      let totalData = countResult[0].total;
+      let totalPages = Math.ceil(totalData / limit);
+  
+      const [rows] = await connection.query(`
+        SELECT 
+            b.id_barang,
+            b.nama_barang,
+            b.kategori,
+            b.lokasi_barang,
+            b.status_barang,
+            k.nama_karyawan,
+            l.waktu_mulai,
+            l.waktu_selesai,
+            l.status_lelang,
+            CONCAT(
+              TIMESTAMPDIFF(DAY, l.waktu_mulai, l.waktu_selesai), 'h',
+              MOD(TIMESTAMPDIFF(HOUR, l.waktu_mulai, l.waktu_selesai), 24), 'j',
+              MOD(TIMESTAMPDIFF(MINUTE, l.waktu_mulai, l.waktu_selesai), 60), 'm',
+              MOD(TIMESTAMPDIFF(SECOND, l.waktu_mulai, l.waktu_selesai), 60), 'd'
+            ) as masa_lelang
+        FROM barang b
+        LEFT JOIN kepemilikan kp ON b.id_barang = kp.id_barang AND kp.status_kepemilikan = 'aktif'
+        LEFT JOIN karyawan k ON kp.id_karyawan = k.id_karyawan
+        LEFT JOIN lelang l ON b.id_barang = l.id_barang
+        ${whereClause}
+        LIMIT ? OFFSET ?
+      `, [...queryParams, limit, offset]);
+  
+      const [karyawan] = await connection.query('SELECT id_karyawan, nama_karyawan FROM karyawan');
+  
+      res.render('barang', {
+        barang: rows,
+        karyawan: karyawan,
+        currentPage: page,
+        totalPages: totalPages,
+        totalData: totalData,
+        limit: limit,
+        tanggal: tanggal,
+        searchQuery: searchQuery
+      });
+    } catch (error) {
+      console.error('Error:', error);
+      res.status(500).send('Internal Server Error');
+    } finally {
+      connection.release();
+    }
+  });
 
-    const [countResult] = await connection.query('SELECT COUNT(*) AS total FROM barang');
-    let totalData = countResult[0].total;
-    let totalPages = Math.ceil(totalData / limit);
-
-    const [rows] = await connection.query(`
-      SELECT 
-          b.id_barang,
-          b.nama_barang,
-          b.kategori,
-          b.lokasi_barang,
-          b.status_barang,
-          k.nama_karyawan,
-          l.waktu_mulai,
-          l.waktu_selesai,
-          l.status_lelang,
-          CONCAT(
-            TIMESTAMPDIFF(DAY, l.waktu_mulai, l.waktu_selesai), 'h',
-            MOD(TIMESTAMPDIFF(HOUR, l.waktu_mulai, l.waktu_selesai), 24), 'j',
-            MOD(TIMESTAMPDIFF(MINUTE, l.waktu_mulai, l.waktu_selesai), 60), 'm',
-            MOD(TIMESTAMPDIFF(SECOND, l.waktu_mulai, l.waktu_selesai), 60), 'd'
-          ) as masa_lelang
-      FROM barang b
-      LEFT JOIN kepemilikan kp ON b.id_barang = kp.id_barang AND kp.status_kepemilikan = 'aktif'
-      LEFT JOIN karyawan k ON kp.id_karyawan = k.id_karyawan
-      LEFT JOIN lelang l ON b.id_barang = l.id_barang
-      LIMIT ? OFFSET ?
-    `, [limit, offset]);
-
-    const [karyawan] = await connection.query('SELECT id_karyawan, nama_karyawan FROM karyawan');
-
-    res.render('barang', {
-      barang: rows,
-      karyawan: karyawan,
-      currentPage: page,
-      totalPages: totalPages,
-      totalData: totalData,
-      limit: limit,
-      tanggal: tanggal
-    });
-  } catch (error) {
-    console.error('Error:', error);
-    res.status(500).send('Internal Server Error');
-  } finally {
-    connection.release();
-  }
-});
-
-router.get('/delete/:id_barang'/* , requireLogin */, async (req, res) => {
+router.get('/delete/:id_barang', requireLogin, async (req, res) => {
   const connection = await db.getConnection();
   try {
     const id_barang = req.params.id_barang;
@@ -419,6 +472,7 @@ router.get('/delete/:id_barang'/* , requireLogin */, async (req, res) => {
     await connection.query('DELETE FROM lelang WHERE id_barang = ?', [id_barang]);
     await connection.query('DELETE FROM kepemilikan WHERE id_barang = ?', [id_barang]);
     await connection.query('DELETE FROM barang WHERE id_barang = ?', [id_barang]);
+    await connection.query('DELETE FROM notifikasi WHERE id_barang = ?', [id_barang]);
 
     const logQuery = `
         INSERT INTO log_aktivitas (id_log, timestamp, id_admin, jenis_aktivitas, detail_perubahan)

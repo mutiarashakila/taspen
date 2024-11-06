@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../db.js');
+const { requireLogin } = require('../routes/auth.js');
 
-router.get('/', async (req, res) => {
+router.get('/', requireLogin,async (req, res) => {
   let page = req.query.page ? parseInt(req.query.page) : 1;
   let limit = 10;
   let offset = (page - 1) * limit;

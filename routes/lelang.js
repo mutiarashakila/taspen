@@ -1,34 +1,50 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../db.js');
+const { requireLogin } = require('../routes/auth.js');
 
-router.get('/', async (req, res) => {
+router.get('/',requireLogin, async (req, res) => {
+  let searchQuery = req.query.search || '';
+  let queryParams = [];
+  
+  let whereClause = '';
+  if (searchQuery) {
+      whereClause = `AND (
+          LOWER(b.id_barang) LIKE LOWER(?) OR 
+          LOWER(b.nama_barang) LIKE LOWER(?)
+      )`;
+      queryParams = Array(2).fill(`%${searchQuery}%`);
+  }
+
   try {
-    const [akanLelang] = await db.query(`
-            SELECT b.id_barang, b.nama_barang, b.harga_barang 
-            FROM Barang b
-            WHERE b.status_barang = 'lelang'
-        `);
+      const [akanLelang] = await db.query(`
+          SELECT b.id_barang, b.nama_barang, b.harga_barang 
+          FROM Barang b
+          WHERE b.status_barang = 'lelang'
+          ${whereClause}
+      `, queryParams);
 
-    const [prosesLelang] = await db.query(`
-            SELECT b.id_barang, b.nama_barang, 
-                   l.harga_lelang, l.waktu_mulai, l.waktu_selesai
-            FROM Lelang l
-            JOIN Barang b ON l.id_barang = b.id_barang
-            WHERE l.status_lelang = 'sedang lelang'
-        `);
+      const [prosesLelang] = await db.query(`
+          SELECT b.id_barang, b.nama_barang, 
+                 l.harga_lelang, l.waktu_mulai, l.waktu_selesai
+          FROM Lelang l
+          JOIN Barang b ON l.id_barang = b.id_barang
+          WHERE l.status_lelang = 'sedang lelang'
+          ${whereClause}
+      `, queryParams);
 
-    res.render('lelang', {
-      akanLelang,
-      prosesLelang
-    });
+      res.render('lelang', {
+          akanLelang,
+          prosesLelang,
+          searchQuery: searchQuery
+      });
   } catch (error) {
-    console.error('Error fetching auction data:', error);
-    res.status(500).send('Failed to load auction page');
+      console.error('Error fetching auction data:', error);
+      res.status(500).send('Failed to load auction page');
   }
 });
 
-router.post('/konfirmasi-lelang/:id_barang', async (req, res) => {
+router.post('/konfirmasi-lelang/:id_barang',requireLogin, async (req, res) => {
   const { id_barang } = req.params;
   const { waktu_mulai, waktu_selesai, harga_lelang } = req.body;
   const hargalelang = parseInt(harga_lelang, 10);
@@ -72,7 +88,7 @@ router.post('/konfirmasi-lelang/:id_barang', async (req, res) => {
   }
 });
 
-router.post('/edit-lelang/:id_barang', async (req, res) => {
+router.post('/edit-lelang/:id_barang',requireLogin, async (req, res) => {
   const { id_barang } = req.params;
   const { waktu_selesai, harga_lelang } = req.body;
 
@@ -114,7 +130,7 @@ router.post('/edit-lelang/:id_barang', async (req, res) => {
   }
 });
 
-router.post('/selesai-lelang/:id_barang', async (req, res) => {
+router.post('/selesai-lelang/:id_barang',requireLogin, async (req, res) => {
   const { id_barang } = req.params;
 
   try {
@@ -191,7 +207,7 @@ router.post('/selesai-lelang/:id_barang', async (req, res) => {
   }
 });
 
-router.post('/hapus-lelang/:id_barang', async (req, res) => {
+router.post('/hapus-lelang/:id_barang',requireLogin, async (req, res) => {
   const { id_barang } = req.params;
 
   try {
@@ -241,7 +257,7 @@ router.post('/hapus-lelang/:id_barang', async (req, res) => {
   }
 });
 
-router.post('/batal-lelang/:id_barang', async (req, res) => {
+router.post('/batal-lelang/:id_barang',requireLogin, async (req, res) => {
   const { id_barang } = req.params;
 
   try {

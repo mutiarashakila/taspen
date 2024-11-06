@@ -25,7 +25,7 @@
     <%- include('partials/sidebar') %>
       <div id="content-wrapper" class="d-flex flex-column">
         <div id="content">
-          <%- include('partials/topbar') %>
+          <%- include('partials/topbar', { searchQuery: locals.searchQuery }) %>
             <div class="container-fluid p-4">
               <div class="col-12">
                 <div

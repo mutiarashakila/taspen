@@ -279,8 +279,6 @@ if (window.location.pathname === "/karyawan") {
 
                         // Update pagination
                         updatePagination(response.currentPage, response.totalPages);
-                    } else {
-                        toastr.error('Gagal memperbarui tabel: ' + response.message);
                     }
                 },
                 error: function (xhr, status, error) {
@@ -294,5 +292,25 @@ if (window.location.pathname === "/karyawan") {
             updateTable();
         });
     });
+    document.addEventListener('DOMContentLoaded', function () {
+        const printBtn = document.getElementById('printBtn');
 
+        printBtn.addEventListener('click', function () {
+            fetch('laporan/printkaryawan')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.blob();
+                })
+                .then(blob => {
+                    const url = URL.createObjectURL(blob);
+                    window.open(url, '_blank');
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Gagal menghasilkan PDF');
+                });
+        });
+    });
 }

@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../db.js');
+const { requireLogin } = require('../routes/auth.js');
 
-router.get('/', async (req, res) => {
+router.get('/',requireLogin, async (req, res) => {
   try {
     const [totalBarang] = await db.query('SELECT COUNT(id_barang) as total FROM barang');
     const [barangLelang] = await db.query('SELECT COUNT(id_barang) as total FROM barang where status_barang = "proses"');
@@ -10,8 +11,6 @@ router.get('/', async (req, res) => {
     const [barangTersedia] = await db.query('SELECT COUNT(id_barang) as total FROM barang where status_barang = "tersedia"');
     const [notif] = await db.query('SELECT COUNT(id_notifikasi) as total FROM notifikasi where status_baca = "0" ');
     const [peringatan] = await db.query('SELECT pesan FROM notifikasi ORDER BY id_notifikasi LIMIT 1');
-
-
 
     const [latestItems] = await db.query(`
       SELECT 

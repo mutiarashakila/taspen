@@ -77,3 +77,83 @@ document.addEventListener('DOMContentLoaded', function () {
     });
     console.log('Search event listeners attached');
 });
+
+document.addEventListener('DOMContentLoaded', function () {
+    const searchInput = document.querySelector('.navbar-search input');
+    const searchResults = document.querySelector('.search-results');
+
+    searchResults.addEventListener('click', function (e) {
+        const resultItem = e.target.closest('.search-result-item');
+        if (resultItem) {
+            e.preventDefault();
+            const resultUrl = resultItem.getAttribute('href');
+            const searchQuery = searchInput.value.trim();
+            const resultType = resultItem.querySelector('.search-result-type').textContent;
+
+            if (resultType === 'barang') {
+                window.location.href = `/barang?search=${encodeURIComponent(searchQuery)}`;
+            } else if (resultType === 'karyawan') {
+                window.location.href = `/karyawan?search=${encodeURIComponent(searchQuery)}`;
+            } else {
+                window.location.href = resultUrl;
+            }
+        }
+    });
+    searchInput.addEventListener('input', function (e) {
+        if (e.target.value.trim() === '') {
+            const currentPath = window.location.pathname;
+            if (currentPath === '/barang' || currentPath === '/karyawan') {
+                window.location.href = currentPath;
+            }
+        }
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+    const socket = io();
+
+    socket.on('notifications', function (notifications) {
+        const notificationCounter = document.querySelector('.badge-counter');
+        const dropdownMenu = document.querySelector('.dropdown-menu');
+
+        notificationCounter.textContent = notifications.length + '+';
+
+        dropdownMenu.innerHTML = '';
+
+        notifications.forEach(notification => {
+            const notifElement = document.createElement('a');
+            notifElement.className = 'dropdown-item d-flex align-items-center';
+            notifElement.href = '#';
+
+            let bgColor;
+            switch (notification.type) {
+                case 'auto_auction':
+                    bgColor = 'bg-danger';
+                    break;
+                case 'warning_3_months':
+                    bgColor = 'bg-warning';
+                    break;
+                case 'warning_6_months':
+                    bgColor = 'bg-info';
+                    break;
+                case 'warning_12_months':
+                    bgColor = 'bg-primary';
+                    break;
+            }
+
+            notifElement.innerHTML = `
+          <div class="mr-3">
+            <div class="icon-circle ${bgColor}">
+              <i class="fas fa-exclamation-triangle text-white"></i>
+            </div>
+          </div>
+          <div>
+            <div class="small text-gray-500">${new Date().toLocaleDateString()}</div>
+            <span class="font-weight-bold">${notification.message}</span>
+          </div>
+        `;
+
+            dropdownMenu.appendChild(notifElement);
+        });
+    });
+});

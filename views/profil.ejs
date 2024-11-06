@@ -4,27 +4,38 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Profile</title>
+    <title>Profil Admin</title>
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i&amp;display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Abril+Fatface&amp;display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Almarai&amp;display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Amarante&amp;display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Amethysta&amp;display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto&amp;display=swap">
     <link rel="stylesheet" href="/fonts/fontawesome-all.min.css">
+    <link rel="stylesheet" href="/fonts/font-awesome.min.css">
+    <link rel="stylesheet" href="/fonts/material-icons.min.css">
+    <link rel="stylesheet" href="/fonts/fontawesome5-overrides.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
     <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
 </head>
+
 
 <body id="page-top">
     <div id="wrapper">
         <%- include('partials/sidebar') %>
             <div id="content-wrapper" class="d-flex flex-column">
                 <div id="content">
-                    <%- include('partials/topbar') %>
+                    <%- include('partials/topbar', { searchQuery: locals.searchQuery }) %>
                         <div class="container-fluid">
                             <div class="row mb-3">
                                 <div class="col-lg-4">
                                     <div class="card mb-3">
                                         <div class="card-body text-center shadow">
                                             <img class="rounded-circle mb-3 mt-4"
-                                                src="/api/admin/photo/<%= admin.id_admin %>" width="160" height="160"
+                                            src="<%= locals.admin && admin.foto ? `profil/photo/${admin.id_admin}` : '/img/avatars/pfp.jpg' %>" width="160" height="160"
                                                 alt="Profile Photo">
                                             <div class="mb-3">
                                                 <form id="photoForm" enctype="multipart/form-data">
@@ -45,29 +56,43 @@
                                             <p class="text-primary m-0 fw-bold">User Settings</p>
                                         </div>
                                         <div class="card-body">
-                                            <form id="profileForm">
-                                                <div class="row">
-                                                    <div class="col">
-                                                        <div class="mb-3">
-                                                            <label class="form-label"
-                                                                for="username"><strong>Username</strong></label>
-                                                            <input class="form-control" type="text" id="username"
-                                                                name="username" value="<%= admin.username %>">
+                                            <div class="card-body">
+                                                <form id="profileForm">
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <div class="mb-3">
+                                                                <label class="form-label" for="username"><strong>Username</strong></label>
+                                                                <input class="form-control" type="text" id="username" name="username" value="<%= admin.username %>" required>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col">
+                                                            <div class="mb-3">
+                                                                <label class="form-label" for="email"><strong>Email Address</strong></label>
+                                                                <input class="form-control" type="email" id="email" name="email" value="<%= admin.email %>" required>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col">
-                                                        <div class="mb-3">
-                                                            <label class="form-label" for="email"><strong>Email
-                                                                    Address</strong></label>
-                                                            <input class="form-control" type="email" id="email"
-                                                                name="email" value="<%= admin.email %>">
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <div class="mb-3">
+                                                                <label class="form-label" for="currentPassword"><strong>Current Password</strong></label>
+                                                                <input class="form-control" type="password" id="currentPassword" name="currentPassword">
+                                                                <small class="text-muted">Required only if changing password</small>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col">
+                                                            <div class="mb-3">
+                                                                <label class="form-label" for="newPassword"><strong>New Password</strong></label>
+                                                                <input class="form-control" type="password" id="newPassword" name="newPassword">
+                                                                <small class="text-muted">Leave blank to keep current password</small>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                                <div class="mb-3">
-                                                    <button class="btn btn-primary" type="submit">Save Settings</button>
-                                                </div>
-                                            </form>
+                                                    <div class="mb-3">
+                                                        <button class="btn btn-primary" type="submit">Save Settings</button>
+                                                    </div>
+                                                </form>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -108,62 +133,9 @@
                         </div>
                 </div>
                 <%- include('partials/footer') %>
+                <%- include('partials/scripts') %>
             </div>
     </div>
-
-    <script>
-        document.getElementById('photoInput').addEventListener('change', async (e) => {
-            const file = e.target.files[0];
-            if (!file) return;
-
-            const formData = new FormData();
-            formData.append('photo', file);
-
-            try {
-                const response = await fetch('/api/admin/update-photo', {
-                    method: 'POST',
-                    body: formData
-                });
-
-                if (response.ok) {
-                    window.location.reload();
-                } else {
-                    alert('Failed to update photo');
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                alert('An error occurred while updating the photo');
-            }
-        });
-
-        document.getElementById('profileForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-
-            const formData = {
-                username: document.getElementById('username').value,
-                email: document.getElementById('email').value
-            };
-
-            try {
-                const response = await fetch('/api/admin/update-profile', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(formData)
-                });
-
-                if (response.ok) {
-                    alert('Profile updated successfully');
-                } else {
-                    alert('Failed to update profile');
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                alert('An error occurred while updating the profile');
-            }
-        });
-    </script>
 </body>
 
 </html>

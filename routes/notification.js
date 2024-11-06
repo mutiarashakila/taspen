@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router();
+const { requireLogin } = require('../routes/auth.js');
 
 module.exports = (notificationService) => {
-    // Get unread notifications
-    router.get('/', async (req, res) => {
+    router.get('/',requireLogin, async (req, res) => {
         try {
             const notifications = await notificationService.getUnreadNotifications();
-            console.log('Sending notifications:', notifications); // Debug log
+            console.log('Sending notifications:', notifications);
             res.json(notifications);
         } catch (error) {
             console.error('Error fetching notifications:', error);
@@ -14,8 +14,7 @@ module.exports = (notificationService) => {
         }
     });
 
-    // Get notification count
-    router.get('/count', async (req, res) => {
+    router.get('/count',requireLogin, async (req, res) => {
         try {
             const notifications = await notificationService.getUnreadNotifications();
             res.json({ count: notifications.length });
@@ -25,8 +24,7 @@ module.exports = (notificationService) => {
         }
     });
 
-    // Mark single notification as read
-    router.put('/:id/read', async (req, res) => {
+    router.put('/:id/read',requireLogin, async (req, res) => {
         try {
             await notificationService.markAsRead(req.params.id);
             res.json({ success: true });
@@ -36,8 +34,7 @@ module.exports = (notificationService) => {
         }
     });
 
-    // Mark all notifications as read
-    router.put('/mark-all-read', async (req, res) => {
+    router.put('/mark-all-read',requireLogin, async (req, res) => {
         try {
             await notificationService.markAllAsRead();
             res.json({ success: true });

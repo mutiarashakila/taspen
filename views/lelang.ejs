@@ -26,7 +26,7 @@
         <%- include('partials/sidebar') %>
             <div id="content-wrapper" class="d-flex flex-column">
                 <div id="content">
-                    <%- include('partials/topbar') %>
+                    <%- include('partials/topbar', { searchQuery: locals.searchQuery }) %>
                         <div class="modal fade" id="konfirmasiLelangModal" tabindex="-1">
                             <div class="modal-dialog">
                                 <div class="modal-content">
@@ -90,6 +90,12 @@
                                 </div>
                             </div>
                         </div>
+                        <% if (searchQuery) { %>
+                            <div class="search-info">
+                                <p>Menampilkan hasil pencarian untuk: "<%= searchQuery %>"</p>
+                                <a href="/barang" class="clear-search">Tampilkan Semua</a>
+                            </div>
+                        <% } %>
                         <div class="card mb-4 shadow-sm border-0">
                             <div class="card-header text-white bg-warning">
                                 <h5 class="mb-0">Barang Akan Dilelang</h5>
@@ -99,10 +105,10 @@
                                     <table class="table table-hover align-middle text-center">
                                         <thead class="table-light">
                                             <tr>
-                                                <th>Kode Barang</th>
-                                                <th>Nama Barang</th>
-                                                <th>Harga Awal</th>
-                                                <th>Aksi</th>
+                                                <th class="px-4 py-3 text-center">Kode Barang</th>
+                                                <th class="px-4 py-3 text-center">Nama Barang</th>
+                                                <th class="px-4 py-3 text-center">Harga Awal</th>
+                                                <th class="px-4 py-3 text-center">Aksi</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -145,11 +151,11 @@
                                     <table class="table table-hover align-middle text-center">
                                         <thead class="table-light">
                                             <tr>
-                                                <th>Kode Barang</th>
-                                                <th>Nama Barang</th>
-                                                <th>Harga Lelang</th>
-                                                <th>Sisa Waktu</th>
-                                                <th>Aksi</th>
+                                                <th class="px-4 py-3 text-center">Kode Barang</th>
+                                                <th class="px-4 py-3 text-center">Nama Barang</th>
+                                                <th class="px-4 py-3 text-center">Harga Lelang</th>
+                                                <th class="px-4 py-3 text-center">Sisa Waktu</th>
+                                                <th class="px-4 py-3 text-center">Aksi</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -170,22 +176,20 @@
                                                         </span>
                                                     </td>
                                                     <td>
-                                                        <div class="btn-group">
                                                             <button class="btn btn-warning btn-sm edit-lelang"
                                                                 data-id="<%= item.id_barang %>"
                                                                 data-harga="<%= item.harga_lelang %>"
                                                                 data-waktu-selesai="<%= item.waktu_selesai.toISOString().slice(0, 16) %>">
-                                                                Edit
+                                                                <i class="fas fa-edit me-1"></i>
                                                             </button>
                                                             <button class="btn btn-success btn-sm selesai-lelang"
                                                                 data-id="<%= item.id_barang %>">
-                                                                Selesai
+                                                                <i class="fas fa-check me-1"></i>
                                                             </button>
                                                             <button class="btn btn-danger btn-sm hapus-lelang"
                                                                 data-id="<%= item.id_barang %>">
-                                                                Hapus
+                                                                <i class="fas fa-trash me-1"></i>
                                                             </button>
-                                                        </div>
                                                     </td>
                                                 </tr>
                                                 <% }); %>

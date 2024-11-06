@@ -25,107 +25,78 @@ app.use(session({
   saveUninitialized: true
 }));
 app.use((req, res, next) => {
-  res.locals.url = req.originalUrl; // atau req.path
+  res.locals.url = req.originalUrl;
+  res.locals.admin = req.session.admin;
   next();
 });
 
 if (process.env.NODE_ENV === 'development') {
   app.post('/api/dev/speed-up-time', async (req, res) => {
-      const days = req.body.days || 30; // Default 30 hari
+      const days = req.body.days || 30;
       await speedUpTime(pool, days);
       res.json({ message: 'Time accelerated for testing' });
   });
 }
 
-const requireLogin = (req, res, next) => {
-  if (req.session.email) {
-    next();
-  } else {
-    res.redirect('/login');
-  }
-};
-
-// Routes untuk autentikasi
-/*app.get('/', (req, res) => {
+app.get('/', (req, res) => {
   if (req.session.email) {
     res.redirect('/dashboard');
   } else {
-    res.render('login', { title: 'Login' });
+    res.redirect('/login');
   }
-});*/
-
-app.get('/', (req, res) => {
-  res.redirect('/dashboard');
 });
 
-app.post('/login', (req, res) => {
-  const { email, password } = req.body;
-  console.log('Login attempt:', email);
+const getAdminData = async (req, res, next) => {
+  if (req.session.email) {
+      try {
+          const [adminRows] = await db.query(
+              'SELECT id_admin, username, foto FROM Admin WHERE email = ?', 
+              [req.session.email]
+          );
+          
+          if (adminRows.length > 0) {
+              res.locals.adminData = adminRows[0];
+          }
+      } catch (error) {
+          console.error('Error fetching admin data:', error);
+      }
+  }
+  next();
+};
 
-  const sql = 'SELECT * FROM admin WHERE email = ?';
-  db.query(sql, [email], (err, results) => {
-    if (err) {
-      console.error('Database error:', err);
-      return res.json({ success: false, message: 'Terjadi kesalahan sistem' });
-    }
+const login = require('./routes/login');
+const notification = require('./routes/notification');
+const dashboard = require('./routes/dashboard');
+const barang = require('./routes/barang');
+const karyawan = require('./routes/karyawan');
+const pemilik = require('./routes/pemilik');
+const logadmin = require('./routes/logadmin');
+const search = require('./routes/search');
+const lelang = require('./routes/lelang');
+const profil = require('./routes/profil');
+const laporan = require('./routes/laporan');
 
-    if (results.length > 0) {
-      const hashedPassword = results[0].password;
+app.use(getAdminData);
+app.use('/login', login);
+app.use('/notifications', notification(notificationService));
+app.use('/dashboard', dashboard);
+app.use('/barang', barang);
+app.use('/karyawan', karyawan);
+app.use('/pemilik', pemilik);
+app.use('/logadmin', logadmin);
+app.use('/search', search);
+app.use('/lelang', lelang);
+app.use('/profil', profil);
+app.use('/laporan', laporan);
 
-      bcrypt.compare(password, hashedPassword, (err, isMatch) => {
-        if (err) {
-          console.error('Bcrypt error:', err);
-          return res.json({ success: false, message: 'Terjadi kesalahan sistem' });
-        }
-
-        if (isMatch) {
-          req.session.email = email;
-          res.json({ success: true, message: 'Login berhasil' });
-        } else {
-          res.json({ success: false, message: 'Email atau password salah' });
-        }
-      });
-    } else {
-      res.json({ success: false, message: 'Email atau password salah' });
-    }
+app.post('/logout', (req, res) => {
+  req.session.destroy(err => {
+      if (err) {
+          return res.status(500).json({ message: 'Logout failed, please try again.' });
+      }
+      res.clearCookie('sessionId');
+      res.redirect('/login');
   });
-});
-
-const notificationRoutes = require('./routes/notification');
-app.use('/notifications', notificationRoutes(notificationService));
-
-const dashboardRouter = require('./routes/dashboard');
-app.use('/dashboard', dashboardRouter);
-
-const barangrouter = require('./routes/barang');
-app.use('/barang', barangrouter);
-
-const karyawanrouter = require('./routes/karyawan');
-app.use('/karyawan', karyawanrouter);
-
-const pemilikrouter = require('./routes/pemilik');
-app.use('/pemilik', pemilikrouter);
-
-const logadminrouter = require('./routes/logadmin');
-app.use('/logadmin', logadminrouter);
-
-const searchrouter = require('./routes/search');
-app.use('/search', searchrouter);
-
-const lelangrouter = require('./routes/lelang');
-app.use('/lelang', lelangrouter);
-
-const profilroutes = require('./routes/profil');
-app.use('/profil', profilroutes);
-
-
-
-app.get('/login', (req, res) => {
-  res.render('login');
-});
-
-app.get('/profil', /*requireLogin,*/(req, res) => {
-  res.render('profil');
 });
 
 const port = 3000;

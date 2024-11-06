@@ -27,7 +27,7 @@ if (window.location.pathname === "/barang") {
             });
         });
     });
-    
+
     new Cleave('.input-harga', {
         numeral: true,
         numeralThousandsGroupStyle: 'thousand',
@@ -304,7 +304,7 @@ if (window.location.pathname === "/barang") {
                 if (response.success) {
                     $('#editBarangForm')[0].reset();
 
-                    
+
                     const barang = response.data;
                     $('#id_barang').val(barang.id_barang);
                     $('#nama_barang').val(barang.nama_barang);
@@ -323,7 +323,7 @@ if (window.location.pathname === "/barang") {
                         window.location.href = `/lelang`;
                     }
 
-                    
+
                     if (barang.waktu_masuk) {
                         $('#waktu_masuk').text(new Date(barang.waktu_masuk).toLocaleDateString('id-ID', {
                             weekday: 'long',
@@ -491,31 +491,68 @@ if (window.location.pathname === "/barang") {
 
     function initializeTimers() {
         if (timerInterval) {
-          clearInterval(timerInterval);
+            clearInterval(timerInterval);
         }
-      
+
         const updateAllTimers = () => {
-          const timerElements = document.querySelectorAll('[id^="timer-"]');
-          timerElements.forEach(timerEl => {
-            const id_barang = timerEl.id.split('-')[1];
-            const startTimeStr = timerEl.getAttribute('data-start-time');
-            const endTimeStr = timerEl.getAttribute('data-end-time');
-            const status = $(`tr[data-id="${id_barang}"] .badge`).text().trim();
-      
-            if (startTimeStr && endTimeStr && status === 'Sedang Lelang') {
-              timerEl.textContent = formatTimeRemaining(startTimeStr, endTimeStr);
-            } else {
-              timerEl.textContent = '-';
-            }
-          });
+            const timerElements = document.querySelectorAll('[id^="timer-"]');
+            timerElements.forEach(timerEl => {
+                const id_barang = timerEl.id.split('-')[1];
+                const startTimeStr = timerEl.getAttribute('data-start-time');
+                const endTimeStr = timerEl.getAttribute('data-end-time');
+                const status = $(`tr[data-id="${id_barang}"] .badge`).text().trim();
+
+                if (startTimeStr && endTimeStr && status === 'Sedang Lelang') {
+                    timerEl.textContent = formatTimeRemaining(startTimeStr, endTimeStr);
+                } else {
+                    timerEl.textContent = '-';
+                }
+            });
         };
-      
+
         timerInterval = setInterval(updateAllTimers, 1000);
         updateAllTimers();
-      }
+    }
 
     $(document).ready(function () {
         updateTable();
         initializeTimers();
     });
+
+document.addEventListener('DOMContentLoaded', function() {
+    const printBtn = document.getElementById('printBtn');
+    if (printBtn) {
+        printBtn.addEventListener('click', function() {
+            printBtn.disabled = true;
+            printBtn.textContent = 'Mengunduh...';
+
+            fetch('laporan/print')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.blob();
+                })
+                .then(blob => {
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.style.display = 'none';
+                    a.href = url;
+                    a.download = 'INVENTAS_BARANG.xlsx';
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                    document.body.removeChild(a);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Gagal mengunduh file Excel');
+                })
+                .finally(() => {
+                    printBtn.disabled = false;
+                    printBtn.textContent = 'Unduh Excel';
+                });
+        });
+    }
+});
 }

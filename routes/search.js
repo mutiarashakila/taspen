@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../db.js');
+const { requireLogin } = require('../routes/auth.js');
 
-router.get('/', async (req, res) => {
+router.get('/', requireLogin,async (req, res) => {
   try {
     const { query } = req.query;
 
