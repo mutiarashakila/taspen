@@ -8,4 +8,11 @@ if (window.location.pathname === "/logadmin") {
             timestampCell.textContent = timestamp.toLocaleDateString('id-ID', options).replace(/ /g, '-');
         });
     });
+
+    function changeEntries(value) {
+        const urlParams = new URLSearchParams(window.location.search);
+        urlParams.set('limit', value);
+        urlParams.set('page', '1');
+        window.location.href = `${window.location.pathname}?${urlParams.toString()}`;
+    }
 }

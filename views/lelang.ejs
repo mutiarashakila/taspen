@@ -27,7 +27,9 @@
             <div id="content-wrapper" class="d-flex flex-column">
                 <div id="content">
                     <%- include('partials/topbar', { searchQuery: locals.searchQuery }) %>
-                        <div class="modal fade" id="konfirmasiLelangModal" tabindex="-1">
+                        <div class="modal fade" id="konfirmasiLelangModal" tabindex="-1" style="top: 10%;
+                        align-items: center;
+                        justify-content: center;">
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header">
@@ -61,7 +63,9 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="modal fade" id="editLelangModal" tabindex="-1">
+                        <div class="modal fade" id="editLelangModal" tabindex="-1" style="top: 10%;
+                        align-items: center;
+                        justify-content: center;">
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header">
@@ -105,7 +109,7 @@
                                     <table class="table table-hover align-middle text-center">
                                         <thead class="table-light">
                                             <tr>
-                                                <th class="px-4 py-3 text-center">Kode Barang</th>
+                                                <th class="px-4 py-3 text-center">ID Barang</th>
                                                 <th class="px-4 py-3 text-center">Nama Barang</th>
                                                 <th class="px-4 py-3 text-center">Harga Awal</th>
                                                 <th class="px-4 py-3 text-center">Aksi</th>
@@ -151,7 +155,7 @@
                                     <table class="table table-hover align-middle text-center">
                                         <thead class="table-light">
                                             <tr>
-                                                <th class="px-4 py-3 text-center">Kode Barang</th>
+                                                <th class="px-4 py-3 text-center">ID Barang</th>
                                                 <th class="px-4 py-3 text-center">Nama Barang</th>
                                                 <th class="px-4 py-3 text-center">Harga Lelang</th>
                                                 <th class="px-4 py-3 text-center">Sisa Waktu</th>

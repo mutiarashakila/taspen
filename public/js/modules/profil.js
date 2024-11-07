@@ -27,7 +27,6 @@ if (window.location.pathname === "/profil") {
 
             if (response.ok) {
                 toastr.success('Foto berhasil diubah');
-                // Update profile image without page reload
                 const newImageUrl = `profil/photo/${result.adminId}?t=${new Date().getTime()}`;
                 document.querySelector('.img-profile').src = newImageUrl;
                 document.querySelector('.rounded-circle.mb-3.mt-4').src = newImageUrl;
@@ -36,11 +35,9 @@ if (window.location.pathname === "/profil") {
             }
         } catch (error) {
             console.error('Error:', error);
-            toastr.error('An error occurred while updating the photo');
         }
     });
 
-    // Profile form submission handler
     document.getElementById('profileForm').addEventListener('submit', async (e) => {
         e.preventDefault();
 
@@ -103,7 +100,6 @@ if (window.location.pathname === "/profil") {
             }
         } catch (error) {
             console.error('Error:', error);
-            toastr.error('An error occurred while updating the profile');
         }
     });
 }

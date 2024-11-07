@@ -161,7 +161,7 @@ router.post('/selesai-lelang/:id_barang',requireLogin, async (req, res) => {
         )
         VALUES (
           UUID(), ?, ?, ?, ?, ?, ?, 
-          NOW(), 'lelang'
+          NOW(), 'Lelang'
         )
       `, [
         barangData[0].id_barang,

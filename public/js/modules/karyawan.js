@@ -1,19 +1,36 @@
 if (window.location.pathname === "/karyawan") {
     function confirmDeleteK(idKaryawan) {
+        console.log("ID Karyawan:", idKaryawan); // Debug log
         const modal = new bootstrap.Modal(document.getElementById('confirmDeleteModalK'));
         modal.show();
 
-        // Remove any existing click handlers to prevent multiple bindings
         const deleteBtn = document.getElementById('deleteConfirmBtnK');
-        deleteBtn.replaceWith(deleteBtn.cloneNode(true));
+        deleteBtn.removeEventListener('click', handleDelete); // Hapus event listener lama (jika ada)
+        deleteBtn.addEventListener('click', handleDelete);
 
-        // Add new click handler
-        document.getElementById('deleteConfirmBtnK').addEventListener('click', function () {
-            // Redirect to the delete URL
+        function handleDelete() {
             window.location.href = `/karyawan/delete/${idKaryawan}`;
-            modal.hide();
-        });
+        }
     }
+
+    let isDeleteListenerSet = false;
+
+    function confirmDeleteK(idKaryawan) {
+        const modal = new bootstrap.Modal(document.getElementById('confirmDeleteModalK'));
+        modal.show();
+
+        const deleteBtn = document.getElementById('deleteConfirmBtnK');
+
+        // Pastikan hanya menambahkan event listener sekali
+        if (!isDeleteListenerSet) {
+            deleteBtn.addEventListener('click', function () {
+                window.location.href = `/karyawan/delete/${idKaryawan}`;
+            });
+            isDeleteListenerSet = true;
+        }
+    }
+
+
 
     document.addEventListener('DOMContentLoaded', function () {
         if (typeof jQuery === 'undefined') {
@@ -62,7 +79,7 @@ if (window.location.pathname === "/karyawan") {
             API_ENDPOINTS: {
                 DETAIL: (id) => `/karyawan/detail/${id}`,
                 EDIT: '/karyawan/edit',
-                UPDATE: '/update-karyawan'
+                UPDATE: '/karyawan/edit'
             }
         };
 
@@ -138,62 +155,7 @@ if (window.location.pathname === "/karyawan") {
             }
         }
 
-        const formHandlerk = new KaryawanFormHandler();
-
-        function getKaryawanDetail(id_karyawan) {
-            $.ajax({
-                url: `/karyawan/detail/${id_karyawan}`,
-                type: 'GET',
-                success: function (response) {
-                    if (response.success) {
-                        $('#editKaryawanForm')[0].reset();
-
-                        const karyawan = response.data;
-                        $('#id_karyawan').val(karyawan.id_karyawan);
-                        $('#nama_karyawan').val(karyawan.nama_karyawan);
-                        $('#jabatan').val(karyawan.jabatan);
-                        $('#jenis_kelamin').val(karyawan.jenis_kelamin);
-                        $('#status_karyawan').val(karyawan.status_karyawan);
-
-                        $('#editKaryawanModal').modal('show');
-                    } else {
-                        toastr.error('Gagal mengambil data karyawan: ' + response.message);
-                    }
-                },
-                error: function (xhr, status, error) {
-                    toastr.error('Terjadi kesalahan saat mengambil data karyawan');
-                }
-            });
-        }
-
-        function updateTableRow(item) {
-            const row = document.querySelector(`tr[data-id="${item.id_karyawan}"]`);
-            if (!row) return;
-
-            row.innerHTML = `
-            <td class="px-4 py-3 text-center">${item.id_karyawan}</td>
-            <td class="px-4 py-3 text-sm font-medium">${item.nama_karyawan}</td>
-            <td class="px-4 py-3 text-sm">${item.jabatan}</td>
-            <td class="px-4 py-3 text-sm">${item.jenis_kelamin}</td>
-            <td class="px-4 py-3 text-center">
-                <div class="btn-group" role="group">
-                    <button class="btn btn-white btn-sm" 
-                        data-bs-toggle="modal"
-                        data-bs-target="#editKaryawanModal"
-                        title="Edit"
-                        onclick="getKaryawanDetail('${item.id_karyawan}')">
-                        <i class="fas fa-ellipsis-v"></i>
-                    </button>
-                    <button class="btn btn-danger btn-sm"
-                        data-bs-toggle="popup"
-                        title="Hapus"
-                        onclick="confirmDeleteK('${item.id_karyawan}')">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </div>
-            </td>
-        `;
-        }
+        const formHandler = new KaryawanFormHandler();
 
         $('#editKaryawanForm').on('submit', function (e) {
             e.preventDefault();
@@ -236,7 +198,6 @@ if (window.location.pathname === "/karyawan") {
                 type: 'GET',
                 success: function (response) {
                     if (response.success) {
-                        // Update tabel
                         let tableHTML = '';
                         if (response.karyawan.length > 0) {
                             response.karyawan.forEach(item => {
@@ -292,25 +253,105 @@ if (window.location.pathname === "/karyawan") {
             updateTable();
         });
     });
+
+
+
+    function getKaryawanDetail(id_karyawan) {
+        $.ajax({
+            url: `/karyawan/detail/${id_karyawan}`,
+            type: 'GET',
+            success: function (response) {
+                if (response.success) {
+                    $('#editKaryawanForm')[0].reset();
+
+                    const karyawan = response.data;
+                    $('#id_karyawan').val(karyawan.id_karyawan);
+                    $('#nama_karyawan').val(karyawan.nama_karyawan);
+                    $('#jabatan').val(karyawan.jabatan);
+                    $('#jenis_kelamin').val(karyawan.jenis_kelamin);
+                    $('#status_karyawan').val(karyawan.status_karyawan);
+
+                    $('#editKaryawanModal').modal('show');
+                } else {
+                    toastr.error('Gagal mengambil data karyawan: ' + response.message);
+                }
+            },
+            error: function (xhr, status, error) {
+                toastr.error('Terjadi kesalahan saat mengambil data karyawan');
+            }
+        });
+    }
+
+    function updateTableRow(item) {
+        const row = document.querySelector(`tr[data-id="${item.id_karyawan}"]`);
+        if (!row) return;
+
+        row.innerHTML = `
+            <td class="px-4 py-3 text-center">${item.id_karyawan}</td>
+            <td class="px-4 py-3 text-sm font-medium">${item.nama_karyawan}</td>
+            <td class="px-4 py-3 text-sm">${item.jabatan}</td>
+            <td class="px-4 py-3 text-sm">${item.jenis_kelamin}</td>
+            <td class="px-4 py-3 text-center">
+                <div class="btn-group" role="group">
+                    <button class="btn btn-white btn-sm" 
+                        data-bs-toggle="modal"
+                        data-bs-target="#editKaryawanModal"
+                        title="Edit"
+                        onclick="getKaryawanDetail('${item.id_karyawan}')">
+                        <i class="fas fa-ellipsis-v"></i>
+                    </button>
+                    <button class="btn btn-danger btn-sm"
+                        data-bs-toggle="popup"
+                        title="Hapus"
+                        onclick="confirmDeleteK('${item.id_karyawan}')">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </td>
+        `;
+    }
+
+    function changeEntries(value) {
+        const urlParams = new URLSearchParams(window.location.search);
+        urlParams.set('limit', value);
+        urlParams.set('page', '1');
+        window.location.href = `${window.location.pathname}?${urlParams.toString()}`;
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
         const printBtn = document.getElementById('printBtn');
+        if (printBtn) {
+            printBtn.addEventListener('click', function () {
+                printBtn.disabled = true;
+                printBtn.textContent = 'Mengunduh...';
 
-        printBtn.addEventListener('click', function () {
-            fetch('laporan/printkaryawan')
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.blob();
-                })
-                .then(blob => {
-                    const url = URL.createObjectURL(blob);
-                    window.open(url, '_blank');
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Gagal menghasilkan PDF');
-                });
-        });
+                fetch('laporan/printKaryawan')
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.blob();
+                    })
+                    .then(blob => {
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.style.display = 'none';
+                        a.href = url;
+                        a.download = 'INVENTAS_KARYAWAN.xlsx';
+                        document.body.appendChild(a);
+                        a.click();
+                        window.URL.revokeObjectURL(url);
+                        document.body.removeChild(a);
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Gagal mengunduh file Excel');
+                    })
+                    .finally(() => {
+                        printBtn.disabled = false;
+                        printBtn.textContent = 'Unduh Excel';
+                    });
+            });
+        }
     });
 }

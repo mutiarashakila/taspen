@@ -29,21 +29,19 @@
                         <div class="card" style="border: 0px; margin-top:-20px; margin-left:10px;margin-right:10px">
                             <div class="card-body">
                                 <div class="row align-items-center">
-                                    <div class="col-md-6 text-nowrap">
-                                        <div id="dataTable_length" class="dataTables_length" aria-controls="dataTable">
-                                            <label class="form-label">Show&nbsp;<select
-                                                    class="d-inline-block form-select form-select-sm">
-                                                    <option value="10" selected="">10</option>
-                                                    <option value="25">25</option>
-                                                    <option value="50">50</option>
-                                                    <option value="100">100</option>
-                                                </select>&nbsp;</label>
+                                    <div class="col-md-8 text-nowrap d-flex align-items-center">
+                                        <div id="dataTable_length" class="d-flex align-items-center" aria-controls="dataTable">
+                                            <select class="form-select-sm me-3" id="entriesSelect" onchange="changeEntries(this.value)" style="width: auto;">
+                                                <option value="10" <%= limit == 10 ? 'selected' : '' %>>10</option>
+                                                <option value="25" <%= limit == 25 ? 'selected' : '' %>>25</option>
+                                                <option value="50" <%= limit == 50 ? 'selected' : '' %>>50</option>
+                                                <option value="100" <%= limit == 100 ? 'selected' : '' %>>100</option>
+                                            </select>
+                                            <select class="form-select-sm" id="sortSelect" onchange="sortByDate(this.value)" style="width: auto;">
+                                                <option value="DESC" <%= sortField === 'tanggal_perolehan' && sortOrder === 'DESC' ? 'selected' : '' %>>Terbaru</option>
+                                                <option value="ASC" <%= sortField === 'tanggal_perolehan' && sortOrder === 'ASC' ? 'selected' : '' %>>Terlama</option>
+                                            </select>
                                         </div>
-                                    </div>
-                                    <div class="col-md-6 d-flex justify-content-end">
-                                        <button type="button" class="btn btn-secondary">
-                                            <i class="fas fa-print me-2"></i>Print
-                                        </button>
                                     </div>
                                 </div>
                                 <div class="table-responsive table mt-2" id="dataTable" role="grid"
@@ -58,7 +56,7 @@
                                         <thead class="table-light">
                                             <tr>
                                                 <th class="px-4 py-3 text-sm font-semibold tracking-wide text-center">
-                                                    Kode Barang</th>
+                                                    ID Barang</th>
                                                 <th class="px-4 py-3 text-sm font-semibold tracking-wide text-center">
                                                     Nama Barang</th>
                                                 <th class="px-4 py-3 text-sm font-semibold tracking-wide text-center">ID
@@ -166,7 +164,7 @@
                             <div class="modal-dialog modal-lg">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title">Histori Kepemilikan</h5>
+                                        <h5 class="modal-title">Riwayat Kepemilikan</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                     </div>
                                     <div class="modal-body">

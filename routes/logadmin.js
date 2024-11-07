@@ -5,8 +5,8 @@ const { requireLogin } = require('../routes/auth.js');
 
 router.get('/', requireLogin, async (req, res) => {
   let page = req.query.page ? parseInt(req.query.page) : 1;
-  let limit = 10;
-  let offset = (page - 1) * limit;
+    let limit = req.query.limit ? parseInt(req.query.limit) : 10;
+    let offset = (page - 1) * limit;
 
   try {
     const [countResult] = await db.query('SELECT COUNT(*) AS total FROM log_aktivitas');

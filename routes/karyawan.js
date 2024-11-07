@@ -46,7 +46,7 @@ router.post('/edit',requireLogin, async (req, res) => {
     }
 });
 
-router.get('/delete/:id_karyawan', requireLogin,async (req, res) => {
+router.get('/delete/:id_karyawan', requireLogin, async (req, res) => {
     const id_karyawan = req.params.id_karyawan;
 
     try {
@@ -58,25 +58,18 @@ router.get('/delete/:id_karyawan', requireLogin,async (req, res) => {
             return res.redirect('/karyawan');
         }
 
-        const nama_karyawan = karyawanResult[0].nama_karyawan;
-        await db.query('DELETE FROM lelang WHERE id_karyawan = ?', [id_karyawan]);
         await db.query('DELETE FROM kepemilikan WHERE id_karyawan = ?', [id_karyawan]);
         await db.query('DELETE FROM karyawan WHERE id_karyawan = ?', [id_karyawan]);
-
-        const logQuery = `
-            INSERT INTO log_aktivitas (id_log, timestamp, id_admin, jenis_aktivitas, detail_perubahan)
-            VALUES (UUID(), NOW(), ?, 'Hapus karyawan', ?)
-        `;
-        const detail_perubahan = `Menghapus karyawan : ${nama_karyawan}`;
-        await db.query(logQuery, [req.session.email, detail_perubahan]);
 
         await db.query('COMMIT');
         res.redirect('/karyawan');
     } catch (error) {
+        console.error("Error saat menghapus karyawan:", error); // Debug log untuk server
         await db.query('ROLLBACK');
         res.redirect('/karyawan');
     }
 });
+
 
 router.get('/detail/:id',requireLogin, async (req, res) => {
     try {
@@ -144,7 +137,7 @@ router.get('/refresh',requireLogin, async (req, res) => {
 
 router.get('/',requireLogin, async (req, res) => {
     let page = req.query.page ? parseInt(req.query.page) : 1;
-    let limit = 10;
+    let limit = req.query.limit ? parseInt(req.query.limit) : 10;
     let offset = (page - 1) * limit;
     let searchQuery = req.query.search || '';
     let queryParams = [];

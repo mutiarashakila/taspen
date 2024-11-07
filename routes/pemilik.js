@@ -3,14 +3,28 @@ const router = express.Router();
 const db = require('../db.js');
 const { requireLogin } = require('../routes/auth.js');
 
-router.get('/',requireLogin, async (req, res) => {
+router.get('/', requireLogin, async (req, res) => {
     try {
         let page = req.query.page ? parseInt(req.query.page) : 1;
-        let limit = 10;
+        let limit = req.query.limit ? parseInt(req.query.limit) : 10;
         let offset = (page - 1) * limit;
+
+        let sortField = req.query.sort || 'tanggal_perolehan';
+        let sortOrder = req.query.order || 'DESC';
+
+        // Validate sort field to prevent SQL injection
+        const allowedSortFields = ['tanggal_perolehan', 'id_barang', 'id_karyawan'];
+        if (!allowedSortFields.includes(sortField)) {
+            sortField = 'tanggal_perolehan';
+        }
+
+        // Validate sort order
+        if (!['ASC', 'DESC'].includes(sortOrder.toUpperCase())) {
+            sortOrder = 'DESC';
+        }
         let searchQuery = req.query.search || '';
         let queryParams = [];
-        
+
         let whereClause = '';
         if (searchQuery) {
             whereClause = `WHERE 
@@ -67,7 +81,7 @@ router.get('/',requireLogin, async (req, res) => {
                 k2.nama_karyawan AS pemilik_sebelumnya
             FROM Barang b
             LEFT JOIN (
-                SELECT id_barang, id_karyawan
+                SELECT id_barang, id_karyawan, tanggal_perolehan
                 FROM Kepemilikan
                 WHERE status_kepemilikan = 'aktif'
             ) current_own ON b.id_barang = current_own.id_barang
@@ -91,9 +105,9 @@ router.get('/',requireLogin, async (req, res) => {
             ) prev_own ON b.id_barang = prev_own.id_barang
             LEFT JOIN Karyawan k2 ON prev_own.id_karyawan = k2.id_karyawan
             ${whereClause}
-            ORDER BY b.nama_barang
-            LIMIT ? OFFSET ?
-        `, [...queryParams, limit, offset]);
+             ORDER BY current_own.${sortField} ${sortOrder}
+        LIMIT ? OFFSET ?
+      `, [...queryParams, limit, offset]);
 
         res.render('pemilik', {
             kepemilikan: rows,
@@ -101,7 +115,9 @@ router.get('/',requireLogin, async (req, res) => {
             totalPages: totalPages,
             totalData: totalData,
             limit: limit,
-            searchQuery: searchQuery
+            searchQuery: searchQuery,
+            sortField: sortField,
+            sortOrder: sortOrder
         });
 
     } catch (error) {
@@ -110,7 +126,7 @@ router.get('/',requireLogin, async (req, res) => {
     }
 });
 
-router.get('/histori-kepemilikan/:idBarang',requireLogin, async (req, res) => {
+router.get('/histori-kepemilikan/:idBarang', requireLogin, async (req, res) => {
     try {
         const [histori] = await db.query(`
       WITH RankedKepemilikan AS (

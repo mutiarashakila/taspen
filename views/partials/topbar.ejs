@@ -7,7 +7,8 @@
             <%= locals.url.includes('/dashboard') ? 'DASHBOARD' : locals.url.includes('/barang') ? 'DATA BARANG' :
                 locals.url.includes('/pemilik') ? 'PEMILIK BARANG' : locals.url.includes('/lelang') ? 'MANAJEMEN LELANG'
                 : locals.url.includes('/mutasi') ? 'MUTASI BARANG' : locals.url.includes('/karyawan')
-                ? 'DAFTAR KARYAWAN' : locals.url.includes('/profil') ? 'PROFIL ADMIN' : locals.url.includes('/logadmin')
+                ? 'DAFTAR KARYAWAN' : locals.url.includes('/penjualan')
+                ? 'DATA PENJUALAN' : locals.url.includes('/profil') ? 'PROFIL ADMIN' : locals.url.includes('/logadmin')
                 ? 'LOG AKTIVITAS' : 'DASHBOARD' %>
         </h4>
         <form class=" d-sm--block ms-auto me-3 my-2 my-md-0 mw-100 navbar-search">

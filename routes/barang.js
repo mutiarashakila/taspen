@@ -176,7 +176,6 @@ router.post('/edit', requireLogin, upload.single('gambar_barang'), async (req, r
       });
     }
 
-    // Get original item data for comparison
     const [originalItem] = await connection.query(
       'SELECT * FROM barang WHERE id_barang = ?',
       [id_barang]
@@ -247,10 +246,9 @@ router.post('/edit', requireLogin, upload.single('gambar_barang'), async (req, r
       });
     }
 
-    // Generate detailed change log
     const changes = [];
     const original = originalItem[0];
-    
+
     if (original.nama_barang !== nama_barang) {
       changes.push(`Nama: ${original.nama_barang} → ${nama_barang}`);
     }
@@ -276,8 +274,7 @@ router.post('/edit', requireLogin, upload.single('gambar_barang'), async (req, r
       changes.push('Gambar diperbarui');
     }
 
-    // Create detailed log message
-    const changeLog = changes.length > 0 
+    const changeLog = changes.length > 0
       ? `Mengedit barang (${id_barang}) ${nama_barang} ${changes.join(', ')}`
       : `Mengedit barang (${id_barang}) ${nama_barang} tanpa perubahan`;
 
@@ -293,7 +290,6 @@ router.post('/edit', requireLogin, upload.single('gambar_barang'), async (req, r
       `;
       await connection.query(newKepemilikanQuery, [id_barang, id_karyawan]);
 
-      // Log with detailed changes
       await logAdminActivity(
         connection,
         req,
@@ -334,8 +330,21 @@ router.get('/refresh', requireLogin, async (req, res) => {
   const connection = await db.getConnection();
   try {
     let page = req.query.page ? parseInt(req.query.page) : 1;
-    let limit = 10;
+    let limit = req.query.limit ? parseInt(req.query.limit) : 10;
     let offset = (page - 1) * limit;
+
+    let sortField = req.query.sort || 'waktu_masuk';
+    let sortOrder = req.query.order || 'DESC';
+
+    const allowedSortFields = ['waktu_masuk', 'nama_barang', 'id_barang', 'kategori', 'lokasi_barang', 'status_barang'];
+    if (!allowedSortFields.includes(sortField)) {
+      sortField = 'waktu_masuk';
+    }
+
+    if (!['ASC', 'DESC'].includes(sortOrder.toUpperCase())) {
+      sortOrder = 'DESC';
+    }
+
     let searchQuery = req.query.search || '';
     let queryParams = [];
 
@@ -359,27 +368,29 @@ router.get('/refresh', requireLogin, async (req, res) => {
     let totalPages = Math.ceil(totalData / limit);
 
     const [rows] = await connection.query(`
-      SELECT 
-          b.id_barang,
-          b.nama_barang,
-          b.kategori,
-          b.lokasi_barang,
-          b.status_barang,
-          k.nama_karyawan,
-          l.waktu_mulai,
-          l.waktu_selesai,
-          l.status_lelang,
-          CONCAT(
-            TIMESTAMPDIFF(DAY, l.waktu_mulai, l.waktu_selesai), 'h',
-            MOD(TIMESTAMPDIFF(HOUR, l.waktu_mulai, l.waktu_selesai), 24), 'j',
-            MOD(TIMESTAMPDIFF(MINUTE, l.waktu_mulai, l.waktu_selesai), 60), 'm',
-            MOD(TIMESTAMPDIFF(SECOND, l.waktu_mulai, l.waktu_selesai), 60), 'd'
-          ) as masa_lelang
-      FROM barang b
-      LEFT JOIN kepemilikan kp ON b.id_barang = kp.id_barang AND kp.status_kepemilikan = 'aktif'
-      LEFT JOIN karyawan k ON kp.id_karyawan = k.id_karyawan
-      LEFT JOIN lelang l ON b.id_barang = l.id_barang
-      ${whereClause}
+        SELECT 
+            b.id_barang,
+            b.nama_barang,
+            b.kategori,
+            b.lokasi_barang,
+            b.status_barang,
+            b.waktu_masuk,
+            k.nama_karyawan,
+            l.waktu_mulai,
+            l.waktu_selesai,
+            l.status_lelang,
+            CONCAT(
+              TIMESTAMPDIFF(DAY, l.waktu_mulai, l.waktu_selesai), 'h',
+              MOD(TIMESTAMPDIFF(HOUR, l.waktu_mulai, l.waktu_selesai), 24), 'j',
+              MOD(TIMESTAMPDIFF(MINUTE, l.waktu_mulai, l.waktu_selesai), 60), 'm',
+              MOD(TIMESTAMPDIFF(SECOND, l.waktu_mulai, l.waktu_selesai), 60), 'd'
+            ) as masa_lelang
+        FROM barang b
+        LEFT JOIN kepemilikan kp ON b.id_barang = kp.id_barang AND kp.status_kepemilikan = 'aktif'
+        LEFT JOIN karyawan k ON kp.id_karyawan = k.id_karyawan
+        LEFT JOIN lelang l ON b.id_barang = l.id_barang
+        ${whereClause}
+        ORDER BY b.${sortField} ${sortOrder}
         LIMIT ? OFFSET ?
       `, [...queryParams, limit, offset]);
 
@@ -392,7 +403,9 @@ router.get('/refresh', requireLogin, async (req, res) => {
         totalData: totalData,
         limit: limit,
         tanggal: tanggal,
-        searchQuery: searchQuery
+        searchQuery: searchQuery,
+        sortField: sortField,
+        sortOrder: sortOrder
       }
     });
 
@@ -426,29 +439,25 @@ const tanggal = {
 router.get('/', requireLogin, async (req, res) => {
   const connection = await db.getConnection();
   try {
-    // Pagination parameters
     let page = req.query.page ? parseInt(req.query.page) : 1;
     let limit = req.query.limit ? parseInt(req.query.limit) : 10;
     let offset = (page - 1) * limit;
-    
-    // Sorting parameters
-    let sortField = req.query.sort || 'waktu_masuk'; // default sort by waktu_masuk
-    let sortOrder = req.query.order || 'DESC'; // default descending
-    
-    // Validate sort field to prevent SQL injection
+
+    let sortField = req.query.sort || 'waktu_masuk';
+    let sortOrder = req.query.order || 'DESC';
+
     const allowedSortFields = ['waktu_masuk', 'nama_barang', 'id_barang', 'kategori', 'lokasi_barang', 'status_barang'];
     if (!allowedSortFields.includes(sortField)) {
       sortField = 'waktu_masuk';
     }
-    
-    // Validate sort order
+
     if (!['ASC', 'DESC'].includes(sortOrder.toUpperCase())) {
       sortOrder = 'DESC';
     }
-    
+
     let searchQuery = req.query.search || '';
     let queryParams = [];
-    
+
     let whereClause = '';
     if (searchQuery) {
       whereClause = `WHERE 

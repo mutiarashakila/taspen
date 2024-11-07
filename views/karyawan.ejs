@@ -29,7 +29,9 @@
                 <div id="content">
                     <%- include('partials/topbar', { searchQuery: locals.searchQuery }) %>
                         <div class="modal fade" id="addKaryawanModal" tabindex="-1"
-                            aria-labelledby="addKaryawanModalLabel" aria-hidden="true">
+                            aria-labelledby="addKaryawanModalLabel" aria-hidden="true" style="top: 10%;
+                            align-items: center;
+                            justify-content: center;">
                             <div class="modal-dialog modal-lg">
                                 <div class="modal-content">
                                     <div class="modal-header">
@@ -76,8 +78,8 @@
                                                     <label class="form-label">Jenis Kelamin</label>
                                                     <select class="form-select" name="jenis_kelamin" required>
                                                         <option value="">Pilih Kelamin</option>
-                                                        <option value="PRIA">PRIA</option>
-                                                        <option value="WANITA">WANITA</option>
+                                                        <option value="LAKI-LAKI">LAKI-LAKI</option>
+                                                        <option value="PEREMPUAN">PEREMPUAN</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -91,7 +93,9 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="modal fade" id="confirmDeleteModalK" tabindex="-1" aria-hidden="true">
+                        <div class="modal fade" id="confirmDeleteModalK" tabindex="-1" aria-hidden="true" style="top: 25%;
+                        align-items: center;
+                        justify-content: center;">
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header">
@@ -112,7 +116,9 @@
                             </div>
                         </div>
                         <div class="modal fade" id="editKaryawanModal" tabindex="-1"
-                            aria-labelledby="editKaryawanModalLabel" aria-hidden="true">
+                            aria-labelledby="editKaryawanModalLabel" aria-hidden="true" style="top: 10%;
+                            align-items: center;
+                            justify-content: center;">
                             <div class="modal-dialog modal-lg">
                                 <div class="modal-content">
                                     <div class="modal-header">
@@ -145,8 +151,8 @@
                                                     <select class="form-select" name="jenis_kelamin" id="jenis_kelamin"
                                                         required>
                                                         <option value="">Pilih Kelamin</option>
-                                                        <option value="PRIA">PRIA</option>
-                                                        <option value="WANITA">WANITA</option>
+                                                        <option value="LAKI-LAKI">LAKI-LAKI</option>
+                                                        <option value="PEREMPUAN">PEREMPUAN</option>
                                                     </select>
                                                 </div>
                                                 <div class="col-md-6">
@@ -172,14 +178,13 @@
                             <div class="card-body">
                                 <div class="row align-items-center">
                                     <div class="col-md-6 text-nowrap">
-                                        <div id="dataTable_length" class="dataTables_length" aria-controls="dataTable">
-                                            <label class="form-label">Show&nbsp;<select
-                                                    class="d-inline-block form-select form-select-sm">
-                                                    <option value="10" selected="">10</option>
-                                                    <option value="25">25</option>
-                                                    <option value="50">50</option>
-                                                    <option value="100">100</option>
-                                                </select>&nbsp;</label>
+                                        <div id="dataTable_length" class="d-flex align-items-center" aria-controls="dataTable">
+                                            <select class="form-select-sm me-3" id="entriesSelect" onchange="changeEntries(this.value)" style="width: auto;">
+                                                <option value="10" <%= limit == 10 ? 'selected' : '' %>>10</option>
+                                                <option value="25" <%= limit == 25 ? 'selected' : '' %>>25</option>
+                                                <option value="50" <%= limit == 50 ? 'selected' : '' %>>50</option>
+                                                <option value="100" <%= limit == 100 ? 'selected' : '' %>>100</option>
+                                            </select>
                                         </div>
                                     </div>
                                     <div class="col-md-6 d-flex justify-content-end">
@@ -203,7 +208,7 @@
                                     <table class="table table-striped table-hover">
                                         <thead>
                                             <tr>
-                                                <th style="width: 15%;">ID Karyawan</th>
+                                                <th style="width: 15%;">NIK</th>
                                                 <th>Nama Karyawan</th>
                                                 <th>Jabatan</th>
                                                 <th style="width: 15%;">Jenis Kelamin</th>
@@ -232,12 +237,12 @@
                                                         </td>
                                                         <td class="px-4 py-3 text-center">
                                                             <div class="btn-group" role="group">
-                                                                <button class="btn btn-white btn-sm"
+                                                     <!--         <button class="btn btn-white btn-sm"
                                                                     data-bs-toggle="modal"
                                                                     data-bs-target="#editKaryawanModal" title="Edit"
                                                                     onclick="getKaryawanDetail('<%= item.id_karyawan %>')">
                                                                     <i class="fas fa-ellipsis-v"></i>
-                                                                </button>
+                                                                </button>-->  
                                                                 <button class="btn btn-danger btn-sm"
                                                                     data-bs-toggle="popup" title="Hapus"
                                                                     onclick="confirmDeleteK('<%= item.id_karyawan %>')">

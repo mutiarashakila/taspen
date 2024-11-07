@@ -44,7 +44,7 @@
                                             <div class="modal-body">
                                                 <div class="row mb-3">
                                                     <div class="col-md-6">
-                                                        <label class="form-label">Kode Barang</label>
+                                                        <label class="form-label">ID Barang</label>
                                                         <input type="text" class="form-control" name="id_barang"
                                                             required>
                                                     </div>
@@ -288,14 +288,13 @@
                                     <div class="row align-items-center">
                                         <div class="col-md-8 text-nowrap d-flex align-items-center">
                                             <div id="dataTable_length" class="d-flex align-items-center" aria-controls="dataTable">
-                                                <span class="me-2">Show</span>
-                                                <select class="form-select form-select-sm me-3" id="entriesSelect" onchange="changeEntries(this.value)" style="width: auto;">
+                                                <select class="form-select-sm me-3" id="entriesSelect" onchange="changeEntries(this.value)" style="width: auto;">
                                                     <option value="10" <%= limit == 10 ? 'selected' : '' %>>10</option>
                                                     <option value="25" <%= limit == 25 ? 'selected' : '' %>>25</option>
                                                     <option value="50" <%= limit == 50 ? 'selected' : '' %>>50</option>
                                                     <option value="100" <%= limit == 100 ? 'selected' : '' %>>100</option>
                                                 </select>
-                                                <select class="form-select form-select-sm" id="sortSelect" onchange="sortByDate(this.value)" style="width: auto;">
+                                                <select class="form-select-sm" id="sortSelect" onchange="sortByDate(this.value)" style="width: auto;">
                                                     <option value="DESC" <%= sortField === 'waktu_masuk' && sortOrder === 'DESC' ? 'selected' : '' %>>Terbaru</option>
                                                     <option value="ASC" <%= sortField === 'waktu_masuk' && sortOrder === 'ASC' ? 'selected' : '' %>>Terlama</option>
                                                 </select>
@@ -322,7 +321,7 @@
                                             <thead>
                                                 <tr class="bg-light">
                                                     <th class="px-4 py-3 text-sm font-semibold tracking-wide text-left">
-                                                        Kode Barang
+                                                        ID Barang
                                                     </th>
                                                     <th class="px-4 py-3 text-sm font-semibold tracking-wide text-left">
                                                         Nama Barang

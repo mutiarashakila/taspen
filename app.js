@@ -10,7 +10,7 @@ const { initNotificationSystem } = require('./public/js/modules/notification-ser
 
 const app = express();
 
-const db = require('./db');
+const db = require('./db')
 const notificationService = initNotificationSystem(db);
 
 
@@ -75,6 +75,7 @@ const search = require('./routes/search');
 const lelang = require('./routes/lelang');
 const profil = require('./routes/profil');
 const laporan = require('./routes/laporan');
+const penjualan = require('./routes/penjualan');
 
 app.use(getAdminData);
 app.use('/login', login);
@@ -88,6 +89,7 @@ app.use('/search', search);
 app.use('/lelang', lelang);
 app.use('/profil', profil);
 app.use('/laporan', laporan);
+app.use('/penjualan', penjualan);
 
 app.post('/logout', (req, res) => {
   req.session.destroy(err => {

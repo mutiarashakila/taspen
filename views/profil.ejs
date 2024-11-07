@@ -29,108 +29,97 @@
             <div id="content-wrapper" class="d-flex flex-column">
                 <div id="content">
                     <%- include('partials/topbar', { searchQuery: locals.searchQuery }) %>
-                        <div class="container-fluid">
-                            <div class="row mb-3">
-                                <div class="col-lg-4">
-                                    <div class="card mb-3">
-                                        <div class="card-body text-center shadow">
-                                            <img class="rounded-circle mb-3 mt-4"
-                                            src="<%= locals.admin && admin.foto ? `profil/photo/${admin.id_admin}` : '/img/avatars/pfp.jpg' %>" width="160" height="160"
-                                                alt="Profile Photo">
-                                            <div class="mb-3">
-                                                <form id="photoForm" enctype="multipart/form-data">
-                                                    <input type="file" id="photoInput" name="photo" class="d-none"
-                                                        accept="image/*">
-                                                    <button class="btn btn-primary btn-sm" type="button"
-                                                        onclick="document.getElementById('photoInput').click()">
-                                                        Change Photo
-                                                    </button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-8">
-                                    <div class="card shadow mb-3">
-                                        <div class="card-header py-3">
-                                            <p class="text-primary m-0 fw-bold">User Settings</p>
-                                        </div>
-                                        <div class="card-body">
-                                            <div class="card-body">
-                                                <form id="profileForm">
-                                                    <div class="row">
-                                                        <div class="col">
-                                                            <div class="mb-3">
-                                                                <label class="form-label" for="username"><strong>Username</strong></label>
-                                                                <input class="form-control" type="text" id="username" name="username" value="<%= admin.username %>" required>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col">
-                                                            <div class="mb-3">
-                                                                <label class="form-label" for="email"><strong>Email Address</strong></label>
-                                                                <input class="form-control" type="email" id="email" name="email" value="<%= admin.email %>" required>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="col">
-                                                            <div class="mb-3">
-                                                                <label class="form-label" for="currentPassword"><strong>Current Password</strong></label>
-                                                                <input class="form-control" type="password" id="currentPassword" name="currentPassword">
-                                                                <small class="text-muted">Required only if changing password</small>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col">
-                                                            <div class="mb-3">
-                                                                <label class="form-label" for="newPassword"><strong>New Password</strong></label>
-                                                                <input class="form-control" type="password" id="newPassword" name="newPassword">
-                                                                <small class="text-muted">Leave blank to keep current password</small>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="mb-3">
-                                                        <button class="btn btn-primary" type="submit">Save Settings</button>
-                                                    </div>
-                                                </form>
-                                            </div>
+                    <div class="container-fluid">
+                        <div class="row mb-3">
+                            <div class="col-lg-4">
+                                <div
+                                    style="background: white; border-radius: 1rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); padding: 5rem; margin-bottom: 1rem;">
+                                    <div class="text-center">
+                                        <img style="width: 180px; height: 180px; object-fit: cover; border-radius: 50%; border: 4px solid #fff; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); margin-bottom: 1.5rem;"
+                                            src="<%= locals.admin && admin.foto ? `profil/photo/${admin.id_admin}` : '/img/avatars/pfp.jpg' %>"
+                                            alt="Foto Profil">
+                                        <div style="margin-bottom: 1rem;">
+                                            <form id="photoForm" enctype="multipart/form-data">
+                                                <input type="file" id="photoInput" name="photo" class="d-none"
+                                                    accept="image/*">
+                                                <button
+                                                    style="background-color: #2563eb; color: white; border: none; padding: 0.5rem 1.5rem; border-radius: 0.5rem; transition: all 0.3s ease; cursor: pointer;"
+                                                    type="button" onmouseover="this.style.backgroundColor='#1d4ed8'"
+                                                    onmouseout="this.style.backgroundColor='#2563eb'"
+                                                    onclick="document.getElementById('photoInput').click()">
+                                                    <i class="fas fa-camera me-2"></i>Ganti Foto
+                                                </button>
+                                            </form>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="card shadow mb-5">
-                                <div class="card-header py-3">
-                                    <p class="text-primary m-0 fw-bold">Recent Activities</p>
-                                </div>
-                                <div class="card-body">
-                                    <div class="table-responsive">
-                                        <table class="table table-hover">
-                                            <thead>
-                                                <tr>
-                                                    <th>Timestamp</th>
-                                                    <th>Activity Type</th>
-                                                    <th>Details</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <% activities.forEach(function(activity) { %>
-                                                    <tr>
-                                                        <td>
-                                                            <%= new Date(activity.timestamp).toLocaleString() %>
-                                                        </td>
-                                                        <td>
-                                                            <%= activity.jenis_aktivitas %>
-                                                        </td>
-                                                        <td>
-                                                            <%= activity.detail_perubahan %>
-                                                        </td>
-                                                    </tr>
-                                                    <% }); %>
-                                            </tbody>
-                                        </table>
+                            <div class="col-lg-8">
+                                <div
+                                    style="background: white; border-radius: 1rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); margin-bottom: 1rem;">
+                                    <div style="padding: 1.5rem; border-bottom: 1px solid #e5e7eb;">
+                                        <h5 style="color: #2563eb; font-weight: 600; margin: 0;">Pengaturan Pengguna
+                                        </h5>
+                                    </div>
+                                    <div style="padding: 2rem;">
+                                        <form id="profileForm">
+                                            <div class="row">
+                                                <div class="col-md-6" style="margin-bottom: 1.5rem;">
+                                                    <label
+                                                        style="font-weight: 500; margin-bottom: 0.5rem; color: #1f2937;">Nama
+                                                        Pengguna</label>
+                                                    <input
+                                                        style="width: 100%; padding: 0.75rem 1rem; border: 1px solid #e5e7eb; border-radius: 0.5rem; transition: all 0.3s ease;"
+                                                        type="text" id="username" name="username"
+                                                        value="<%= admin.username %>" required>
+                                                </div>
+                                                <div class="col-md-6" style="margin-bottom: 1.5rem;">
+                                                    <label
+                                                        style="font-weight: 500; margin-bottom: 0.5rem; color: #1f2937;">Alamat
+                                                        Email</label>
+                                                    <input
+                                                        style="width: 100%; padding: 0.75rem 1rem; border: 1px solid #e5e7eb; border-radius: 0.5rem; transition: all 0.3s ease;"
+                                                        type="email" id="email" name="email"
+                                                        value="<%= admin.email %>" required>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6" style="margin-bottom: 1.5rem;">
+                                                    <label
+                                                        style="font-weight: 500; margin-bottom: 0.5rem; color: #1f2937;">Kata
+                                                        Sandi Saat Ini</label>
+                                                    <input
+                                                        style="width: 100%; padding: 0.75rem 1rem; border: 1px solid #e5e7eb; border-radius: 0.5rem; transition: all 0.3s ease;"
+                                                        type="password" id="currentPassword" name="currentPassword">
+                                                    <small style="color: #6b7280; font-size: 0.875rem;">Diperlukan
+                                                        hanya jika mengubah kata sandi</small>
+                                                </div>
+                                                <div class="col-md-6" style="margin-bottom: 1.5rem;">
+                                                    <label
+                                                        style="font-weight: 500; margin-bottom: 0.5rem; color: #1f2937;">Kata
+                                                        Sandi Baru</label>
+                                                    <input
+                                                        style="width: 100%; padding: 0.75rem 1rem; border: 1px solid #e5e7eb; border-radius: 0.5rem; transition: all 0.3s ease;"
+                                                        type="password" id="newPassword" name="newPassword">
+                                                    <small style="color: #6b7280; font-size: 0.875rem;">Biarkan
+                                                        kosong jika tidak ingin mengubah</small>
+                                                </div>
+                                            </div>
+                                            <div style="display: flex; justify-content: center;">
+                                                <button
+                                                    style="background-color: #2563eb; color: white; border: none; padding: 0.75rem 2rem; border-radius: 0.5rem; font-weight: 500; transition: all 0.3s ease; cursor: pointer;"
+                                                    type="submit" onmouseover="this.style.backgroundColor='#1d4ed8'"
+                                                    onmouseout="this.style.backgroundColor='#2563eb'">
+                                                    Simpan Perubahan
+                                                </button>
+                                            </div>
+                                            
+                                        </form>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                    </div>
                 </div>
                 <%- include('partials/footer') %>
                 <%- include('partials/scripts') %>

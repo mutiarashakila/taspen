@@ -41,7 +41,6 @@ router.get('/', requireLogin, async (req, res) => {
     }
 });
 
-// Profile update endpoint
 router.post('/update-profil', requireLogin, async (req, res) => {
     const conn = await db.getConnection();
     try {
@@ -50,7 +49,6 @@ router.post('/update-profil', requireLogin, async (req, res) => {
         const { username, email, currentPassword, newPassword } = req.body;
         const previousEmail = req.session.email;
 
-        // Verify admin exists
         const [adminRows] = await conn.query(
             'SELECT id_admin, password FROM Admin WHERE email = ?',
             [previousEmail]
@@ -61,7 +59,6 @@ router.post('/update-profil', requireLogin, async (req, res) => {
             return res.status(404).json({ message: 'Admin not found' });
         }
 
-        // If changing password, verify current password
         if (newPassword) {
             if (!currentPassword) {
                 await conn.rollback();
@@ -75,7 +72,6 @@ router.post('/update-profil', requireLogin, async (req, res) => {
             }
         }
 
-        // Check if email already exists (if changing email)
         if (email !== previousEmail) {
             const [existingEmail] = await conn.query(
                 'SELECT id_admin FROM Admin WHERE email = ? AND id_admin != ?',
@@ -88,7 +84,6 @@ router.post('/update-profil', requireLogin, async (req, res) => {
             }
         }
 
-        // Prepare update query
         let updateQuery = 'UPDATE Admin SET username = ?, email = ?';
         let queryParams = [username, email];
 
@@ -127,7 +122,6 @@ router.post('/update-profil', requireLogin, async (req, res) => {
     }
 });
 
-// Photo update endpoint
 router.post('/update-photo', requireLogin, upload.single('photo'), async (req, res) => {
     const conn = await db.getConnection();
     try {

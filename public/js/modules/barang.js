@@ -574,7 +574,7 @@ if (window.location.pathname === "/barang") {
         urlParams.set('page', '1');
         window.location.href = `${window.location.pathname}?${urlParams.toString()}`;
     }
-
+    
     function sortTable(field, order) {
         const urlParams = new URLSearchParams(window.location.search);
         urlParams.set('sort', field);
@@ -582,21 +582,21 @@ if (window.location.pathname === "/barang") {
         urlParams.set('page', '1');
         window.location.href = `${window.location.pathname}?${urlParams.toString()}`;
     }
-
-    document.addEventListener('DOMContentLoaded', function () {
+    
+    document.addEventListener('DOMContentLoaded', function() {
         const paginationLinks = document.querySelectorAll('.pagination .page-link');
         const urlParams = new URLSearchParams(window.location.search);
-
+        
         paginationLinks.forEach(link => {
             if (link.href && !link.href.includes('#')) {
                 const linkUrl = new URL(link.href);
                 const linkParams = new URLSearchParams(linkUrl.search);
-
+                
                 if (urlParams.has('sort')) linkParams.set('sort', urlParams.get('sort'));
                 if (urlParams.has('order')) linkParams.set('order', urlParams.get('order'));
                 if (urlParams.has('limit')) linkParams.set('limit', urlParams.get('limit'));
                 if (urlParams.has('search')) linkParams.set('search', urlParams.get('search'));
-
+                
                 link.href = `${linkUrl.pathname}?${linkParams.toString()}`;
             }
         });
