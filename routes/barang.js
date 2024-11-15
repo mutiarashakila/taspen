@@ -168,6 +168,8 @@ router.post('/edit', requireLogin, upload.single('gambar_barang'), async (req, r
       kondisi_barang,
       id_karyawan
     } = req.body;
+    
+    
 
     if (!id_barang || !nama_barang) {
       return res.status(400).json({
@@ -177,8 +179,8 @@ router.post('/edit', requireLogin, upload.single('gambar_barang'), async (req, r
     }
 
     const [originalItem] = await connection.query(
-      'SELECT * FROM barang WHERE id_barang = ?',
-      [id_barang]
+      'SELECT b.*, k1.*, k2.nama_karyawan FROM barang b JOIN kepemilikan k1 ON b.id_barang = k1.id_barang JOIN karyawan k2 ON k1.id_karyawan = k2.id_karyawan WHERE b.id_barang = ?',
+  [id_barang]
     );
 
     if (!originalItem || originalItem.length === 0) {
@@ -270,8 +272,12 @@ router.post('/edit', requireLogin, upload.single('gambar_barang'), async (req, r
     if (original.kondisi_barang !== kondisi_barang) {
       changes.push(`Kondisi: ${original.kondisi_barang} → ${kondisi_barang}`);
     }
+    
     if (gambar_barang) {
       changes.push('Gambar diperbarui');
+    }
+    if (original.id_karyawan !== id_karyawan) {
+      changes.push(`Pemilik: ${original.id_karyawan} → ${id_karyawan}`);
     }
 
     const changeLog = changes.length > 0
