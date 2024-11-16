@@ -9,10 +9,10 @@ router.get('/', requireLogin, async (req, res) => {
     const [barangLelang] = await db.query('SELECT COUNT(id_barang) as total FROM barang WHERE status_barang = "proses"');
     const [akanLelang] = await db.query('SELECT COUNT(id_barang) as total FROM barang WHERE status_barang = "lelang"');
     const [barangTersedia] = await db.query('SELECT COUNT(id_barang) as total FROM barang WHERE status_barang = "tersedia"');
+    const [barangJual] = await db.query('SELECT COUNT(id_barang) as total FROM barang WHERE status_barang = "jual"');
     
     const [notif] = await db.query('SELECT COUNT(id_notifikasi) as total FROM notifikasi WHERE status_baca = "0"');
     
-    // Get the latest notification message; if there are none, set a default message
     const [peringatanResult] = await db.query('SELECT pesan FROM notifikasi ORDER BY id_notifikasi DESC LIMIT 1');
     const peringatan = peringatanResult.length ? peringatanResult[0].pesan : 'Tidak ada notifikasi';
 
@@ -27,19 +27,20 @@ router.get('/', requireLogin, async (req, res) => {
         barang b
       LEFT JOIN kepemilikan kp ON b.id_barang = kp.id_barang AND kp.status_kepemilikan = 'aktif'
       LEFT JOIN karyawan k ON kp.id_karyawan = k.id_karyawan
-      ORDER BY b.id_barang DESC LIMIT 6
+      ORDER BY b.waktu_masuk DESC LIMIT 6
     `);
 
     const chartData = {
       type: 'doughnut',
       data: {
-        labels: ['Tersedia', 'Akan Lelang', 'Sedang Lelang'],
+        labels: ['Tersedia', 'Akan Lelang', 'Sedang Lelang', 'Jual'],
         datasets: [{
-          data: [barangTersedia[0].total || 0, akanLelang[0].total || 0, barangLelang[0].total || 0],
+          data: [barangTersedia[0].total || 0, akanLelang[0].total || 0, barangLelang[0].total || 0, barangJual[0].total || 0],
           backgroundColor: [
-            'rgb(78, 115, 223)',
-            'rgb(28, 200, 138)',
-            'rgb(54, 185, 204)'
+            'rgb(9, 158, 9)',
+            'rgb(222, 212, 18)',
+            'rgb(11, 22, 230)',
+            'rgb(191,0,0)'
           ]
         }]
       },
@@ -61,6 +62,7 @@ router.get('/', requireLogin, async (req, res) => {
       barangLelang: barangLelang[0].total || 0,
       akanLelang: akanLelang[0].total || 0,
       barangTersedia: barangTersedia[0].total || 0,
+      barangJual: barangJual[0].total || 0,
       notif: notif[0].total || 0,
       peringatan: peringatan,
       latestItems: latestItems,

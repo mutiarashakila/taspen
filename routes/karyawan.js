@@ -64,7 +64,7 @@ router.get('/delete/:id_karyawan', requireLogin, async (req, res) => {
         await db.query('COMMIT');
         res.redirect('/karyawan');
     } catch (error) {
-        console.error("Error saat menghapus karyawan:", error); // Debug log untuk server
+        console.error("Error saat menghapus karyawan:", error);
         await db.query('ROLLBACK');
         res.redirect('/karyawan');
     }

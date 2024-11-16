@@ -113,7 +113,6 @@ router.get('/:id', async (req, res) => {
         if (rows.length > 0) {
             const data = rows[0];
             
-            // Konversi gambar menjadi Base64
             if (data.gambar_barang) {
                 data.gambar_barang = Buffer.from(data.gambar_barang).toString('base64');
             }

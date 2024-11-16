@@ -143,6 +143,15 @@ body {
     border-bottom-right-radius: 8px;
 }
 
+#headerlelang {
+    border-top-left-radius: 1rem !important;
+    border-top-right-radius: 1rem !important;
+}
+
+#tabellelang thead th{
+    border-radius: unset;
+}
+
 @media (max-width: 768px) {
     .table thead th {
         font-size: 0.8125rem;

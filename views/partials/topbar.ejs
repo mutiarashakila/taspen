@@ -8,7 +8,8 @@
                 locals.url.includes('/pemilik') ? 'PEMILIK BARANG' : locals.url.includes('/lelang') ? 'MANAJEMEN LELANG'
                 : locals.url.includes('/mutasi') ? 'MUTASI BARANG' : locals.url.includes('/karyawan')
                 ? 'DAFTAR KARYAWAN' : locals.url.includes('/penjualan')
-                ? 'DATA PENJUALAN' : locals.url.includes('/profil') ? 'PROFIL ADMIN' : locals.url.includes('/logadmin')
+                ? 'DATA PENJUALAN' : locals.url.includes('/jual')
+                ? 'JUAL BARANG' : locals.url.includes('/profil') ? 'PROFIL ADMIN' : locals.url.includes('/logadmin')
                 ? 'LOG AKTIVITAS' : 'DASHBOARD' %>
         </h4>
         <form class=" d-sm--block ms-auto me-3 my-2 my-md-0 mw-100 navbar-search">
@@ -67,6 +68,11 @@
                         href="/logadmin">
                         <i class="fas fa-history fa-sm fa-fw me-2 text-gray-400"></i>
                         Log Aktivitas
+                    </a>
+                    <a class="dropdown-item <%= (locals.url && url.includes('/riwayat_notifikasi')) ? 'active' : '' %>"
+                        href="/r_notif">
+                        <i class="fas fa-history fa-sm fa-fw me-2 text-gray-400"></i>
+                        Riwayat Notifikasi
                     </a>
                     <div class="dropdown-divider"></div>
                     <form action="/logout" method="POST" style="display: inline;">

@@ -80,7 +80,7 @@ function getNotificationIcon(type) {
             return 'fas fa-exclamation-triangle';
         case 'peringatan 3 bulan':
             return 'fas fa-exclamation-circle';
-        case 'auto_auction':
+        case 'lelang otomatis':
             return 'fas fa-gavel';
         default:
             return 'fas fa-bell';
@@ -95,7 +95,7 @@ function getNotificationIconClass(type) {
             return 'bg-warning';
         case 'peringatan 3 bulan':
             return 'bg-danger';
-        case 'auto_auction':
+        case 'lelang otomatis':
             return 'bg-success';
         default:
             return 'bg-primary';

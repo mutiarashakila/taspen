@@ -76,6 +76,8 @@ const lelang = require('./routes/lelang');
 const profil = require('./routes/profil');
 const laporan = require('./routes/laporan');
 const penjualan = require('./routes/penjualan');
+const jual = require('./routes/jual');
+const riwayat_notifikasi = require('./routes/riwayat_notifikasi');
 
 app.use(getAdminData);
 app.use('/login', login);
@@ -90,6 +92,8 @@ app.use('/lelang', lelang);
 app.use('/profil', profil);
 app.use('/laporan', laporan);
 app.use('/penjualan', penjualan);
+app.use('/jual', jual);
+app.use('/r_notif', riwayat_notifikasi);
 
 app.post('/logout', (req, res) => {
   req.session.destroy(err => {

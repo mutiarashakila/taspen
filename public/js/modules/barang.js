@@ -4,7 +4,7 @@ if (window.location.pathname === "/barang") {
         closeButton: true,
         progressBar: true,
         positionClass: "toast-top-right",
-        timeOut: 2000, // Waktu tampil 2 detik
+        timeOut: 1000,
         preventDuplicates: true
     };
 
@@ -441,23 +441,197 @@ if (window.location.pathname === "/barang") {
     }
 
     function updateTable() {
-        const currentPage = new URLSearchParams(window.location.search).get('page') || 1;
+        const urlParams = new URLSearchParams(window.location.search);
+        const currentPage = urlParams.get('page') || 1;
+        const sort = urlParams.get('sort') || '';
+        const order = urlParams.get('order') || '';
+        const limit = urlParams.get('limit') || '';
+        const search = urlParams.get('search') || '';
+
+        const tableBody = document.querySelector('tbody');
+        if (tableBody) {
+            tableBody.style.opacity = '0.5';
+        }
 
         $.ajax({
-            url: `/barang/refresh?page=${currentPage}`,
+            url: '/barang/refresh',
             type: 'GET',
+            data: {
+                page: currentPage,
+                sort: sort,
+                order: order,
+                limit: limit,
+                search: search
+            },
             success: function (response) {
                 if (response.success) {
-                    response.barang.forEach(item => {
-                        updateTableRow(item);
-                    });
+                    if (tableBody) {
+                        tableBody.innerHTML = '';
+                        response.barang.forEach(item => {
+                            tableBody.innerHTML += generateTableRow(item);
+                        });
+                        tableBody.style.opacity = '1';
+                    }
                     initializeTimers();
+                    updateSortingIndicators(sort, order);
+                    if (response.pagination) {
+                        updatePagination(response.pagination);
+                    }
                 }
             },
             error: function (xhr, status, error) {
                 console.error('Error:', error);
                 toastr.error('Gagal memperbarui tabel');
+                if (tableBody) {
+                    tableBody.style.opacity = '1';
+                }
             }
+        });
+    }
+
+    function generateTableRow(item) {
+        const statusClass = getStatusClass(item.status_barang);
+        const statusText = getStatusText(item.status_barang);
+
+        return `
+            <tr data-id="${item.id_barang}">
+                <td class="px-4 py-3 text-center">${item.id_barang}</td>
+                <td class="px-4 py-3 text-sm font-medium">${item.nama_barang}</td>
+                <td class="px-4 py-3 text-sm">${item.kategori}</td>
+                <td class="px-4 py-3 text-sm">${item.lokasi_barang}</td>
+                <td class="px-4 py-3 text-sm">${item.nama_karyawan || '-'}</td>
+                <td class="px-4 py-3 text-sm text-center" 
+                    id="timer-${item.id_barang}"
+                    data-start-time="${item.waktu_mulai || ''}"
+                    data-end-time="${item.waktu_selesai || ''}">
+                    ${formatTimeRemaining(item.waktu_mulai, item.waktu_selesai)}
+                </td>
+                <td class="px-4 py-3 text-center">
+                    <span class="badge ${statusClass} text-white px-3 py-1 rounded-pill">
+                        ${statusText}
+                    </span>
+                </td>
+                <td class="px-4 py-3 text-center">
+                    <div class="btn-group" role="group">
+                        <button class="btn btn-white btn-sm" 
+                            onclick="getBarangDetail('${item.id_barang}')"
+                            title="Edit">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                        <button class="btn btn-danger btn-sm"
+                            onclick="confirmDelete('${item.id_barang}')"
+                            title="Hapus">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        `;
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        function initializeSorting() {
+            const tableHeaders = document.querySelectorAll('th.sortable');
+
+            tableHeaders.forEach(header => {
+                header.removeEventListener('click', handleHeaderClick);
+                header.addEventListener('click', handleHeaderClick);
+                header.style.cursor = 'pointer';
+            });
+        }
+
+        function handleHeaderClick(event) {
+            const header = event.currentTarget;
+            const field = header.dataset.field;
+            const currentSort = header.dataset.currentSort;
+            const currentOrder = header.dataset.currentOrder;
+
+            let newOrder = 'ASC';
+            if (field === currentSort && currentOrder === 'ASC') {
+                newOrder = 'DESC';
+            }
+
+            const urlParams = new URLSearchParams(window.location.search);
+            urlParams.set('sort', field);
+            urlParams.set('order', newOrder);
+            urlParams.set('page', '1');
+
+            const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
+            history.pushState({}, '', newUrl);
+
+            updateSortingIndicators(field, newOrder);
+
+            updateTable();
+        }
+
+        function updateSortingIndicators(sortField, sortOrder) {
+            const headers = document.querySelectorAll('th.sortable');
+
+            headers.forEach(header => {
+                const field = header.dataset.field;
+                const iconElement = header.querySelector('i.fas');
+
+                iconElement?.classList.remove('fa-sort', 'fa-sort-up', 'fa-sort-down');
+
+                if (field === sortField) {
+                    iconElement?.classList.add(sortOrder === 'ASC' ? 'fa-sort-up' : 'fa-sort-down');
+                    header.dataset.currentSort = sortField;
+                    header.dataset.currentOrder = sortOrder;
+                } else {
+                    iconElement?.classList.add('fa-sort');
+                }
+            });
+        }
+        initializeSorting();
+
+        document.addEventListener('tableUpdated', function () {
+            initializeSorting();
+        });
+
+        const originalUpdateTable = window.updateTable;
+        window.updateTable = function () {
+            originalUpdateTable.call(this, ...arguments);
+            document.dispatchEvent(new CustomEvent('tableUpdated'));
+        };
+    });
+
+    function updatePagination(paginationData) {
+        const paginationContainer = document.querySelector('.pagination');
+        if (!paginationContainer) return;
+        let paginationHtml = '';
+
+        paginationHtml += `
+            <li class="page-item ${paginationData.currentPage === 1 ? 'disabled' : ''}">
+                <a class="page-link" href="#" data-page="${paginationData.currentPage - 1}">Previous</a>
+            </li>
+        `;
+
+        for (let i = 1; i <= paginationData.totalPages; i++) {
+            paginationHtml += `
+                <li class="page-item ${i === paginationData.currentPage ? 'active' : ''}">
+                    <a class="page-link" href="#" data-page="${i}">${i}</a>
+                </li>
+            `;
+        }
+
+        paginationHtml += `
+            <li class="page-item ${paginationData.currentPage === paginationData.totalPages ? 'disabled' : ''}">
+                <a class="page-link" href="#" data-page="${paginationData.currentPage + 1}">Next</a>
+            </li>
+        `;
+        paginationContainer.innerHTML = paginationHtml;
+
+        paginationContainer.querySelectorAll('.page-link').forEach(link => {
+            link.addEventListener('click', function (e) {
+                e.preventDefault();
+                const page = this.dataset.page;
+                if (page) {
+                    const urlParams = new URLSearchParams(window.location.search);
+                    urlParams.set('page', page);
+                    history.pushState({}, '', `${window.location.pathname}?${urlParams.toString()}`);
+                    updateTable();
+                }
+            });
         });
     }
 
@@ -572,40 +746,43 @@ if (window.location.pathname === "/barang") {
         const urlParams = new URLSearchParams(window.location.search);
         urlParams.set('limit', value);
         urlParams.set('page', '1');
-        window.location.href = `${window.location.pathname}?${urlParams.toString()}`;
+
+        const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
+        window.location.href = newUrl;
     }
-    
+
+
     function sortTable(field, order) {
         const urlParams = new URLSearchParams(window.location.search);
         urlParams.set('sort', field);
         urlParams.set('order', order);
         urlParams.set('page', '1');
-        window.location.href = `${window.location.pathname}?${urlParams.toString()}`;
+
+        const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
+        window.location.href = newUrl;
     }
-    
-    document.addEventListener('DOMContentLoaded', function() {
-        const paginationLinks = document.querySelectorAll('.pagination .page-link');
-        const urlParams = new URLSearchParams(window.location.search);
-        
-        paginationLinks.forEach(link => {
-            if (link.href && !link.href.includes('#')) {
-                const linkUrl = new URL(link.href);
-                const linkParams = new URLSearchParams(linkUrl.search);
-                
-                if (urlParams.has('sort')) linkParams.set('sort', urlParams.get('sort'));
-                if (urlParams.has('order')) linkParams.set('order', urlParams.get('order'));
-                if (urlParams.has('limit')) linkParams.set('limit', urlParams.get('limit'));
-                if (urlParams.has('search')) linkParams.set('search', urlParams.get('search'));
-                
-                link.href = `${linkUrl.pathname}?${linkParams.toString()}`;
-            }
-        });
-    });
 
     function sortByDate(order) {
-        const currentUrl = new URL(window.location.href);
-        currentUrl.searchParams.set('sort', 'waktu_masuk');
-        currentUrl.searchParams.set('order', order);
-        window.location.href = currentUrl.toString();
+        sortTable('waktu_masuk', order);
     }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const paginationLinks = document.querySelectorAll('.pagination .page-link');
+
+        paginationLinks.forEach(link => {
+            link.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                if (this.href && !this.href.includes('#')) {
+                    const url = new URL(this.href);
+                    const urlParams = new URLSearchParams(url.search);
+
+                    history.pushState({}, '', `${url.pathname}?${urlParams.toString()}`);
+
+                    updateTable();
+                }
+            });
+        });
+
+    });
 }

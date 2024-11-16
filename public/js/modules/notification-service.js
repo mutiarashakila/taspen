@@ -88,32 +88,32 @@ class NotificationService {
 
         console.log(`Checking item ${item.nama_barang}: Age = ${ageInMonths} months`);
         if (ageInMonths >= 36) {
-          const hasAutoAuction = await this.hasExistingNotification(item.id_barang, 'auto_auction');
+          const hasAutoAuction = await this.hasExistingNotification(item.id_barang, 'lelang otomatis');
           if (!hasAutoAuction) {
             await this.autoUpdateToLelang(item.id_barang);
             console.log(`Ubah status lelang: ${item.nama_barang}`);
           }
         }
         else if (ageInMonths >= 33) {
-          const has3MonthWarning = await this.hasExistingNotification(item.id_barang, 'warning_3_months');
+          const has3MonthWarning = await this.hasExistingNotification(item.id_barang, 'sisa 3 bulan');
           if (!has3MonthWarning) {
-            await this.createNotification(item.id_barang, 'warning_3_months',
+            await this.createNotification(item.id_barang, 'sisa 3 bulan',
               `Barang ${item.nama_barang}(${item.id_barang}) akan memasuki masa lelang dalam 3 bulan`);
             console.log(`Buat peringatan 3 bulan: ${item.nama_barang}`);
           }
         }
         else if (ageInMonths >= 30) {
-          const has6MonthWarning = await this.hasExistingNotification(item.id_barang, 'warning_6_months');
+          const has6MonthWarning = await this.hasExistingNotification(item.id_barang, 'sisa 6 bulan');
           if (!has6MonthWarning) {
-            await this.createNotification(item.id_barang, 'warning_6_months',
+            await this.createNotification(item.id_barang, 'sisa 6 bulan',
               `Barang ${item.nama_barang}(${item.id_barang}) akan memasuki masa lelang dalam 6 bulan`);
             console.log(`Buat peringatan 6 bulan: ${item.nama_barang}`);
           }
         }
         else if (ageInMonths >= 24) {
-          const has12MonthWarning = await this.hasExistingNotification(item.id_barang, 'warning_12_months');
+          const has12MonthWarning = await this.hasExistingNotification(item.id_barang, 'sisa 1 tahun');
           if (!has12MonthWarning) {
-            await this.createNotification(item.id_barang, 'warning_12_months',
+            await this.createNotification(item.id_barang, 'sisa 1 tahun',
               `Barang ${item.nama_barang}(${item.id_barang}) akan memasuki masa lelang dalam 1 tahun`);
             console.log(`Buat peringatan 12 bulan: ${item.nama_barang}`);
           }
@@ -142,7 +142,7 @@ class NotificationService {
     try {
       await this.db.query('UPDATE Barang SET status_barang = "lelang" WHERE id_barang = ?', [idBarang]);
       await this.db.query('INSERT INTO Lelang (id_barang, status_lelang) VALUES (?, "akan lelang")', [idBarang]);
-      await this.createNotification(idBarang, 'auto_auction',
+      await this.createNotification(idBarang, 'lelang otomatis',
         'Barang telah otomatis masuk ke status lelang karena telah mencapai usia 3 tahun');
     } catch (error) {
       console.error('Error updating to auction:', error);

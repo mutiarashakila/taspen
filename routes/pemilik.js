@@ -12,13 +12,11 @@ router.get('/', requireLogin, async (req, res) => {
         let sortField = req.query.sort || 'tanggal_perolehan';
         let sortOrder = req.query.order || 'DESC';
 
-        // Validate sort field to prevent SQL injection
         const allowedSortFields = ['tanggal_perolehan', 'id_barang', 'id_karyawan'];
         if (!allowedSortFields.includes(sortField)) {
             sortField = 'tanggal_perolehan';
         }
-
-        // Validate sort order
+        
         if (!['ASC', 'DESC'].includes(sortOrder.toUpperCase())) {
             sortOrder = 'DESC';
         }

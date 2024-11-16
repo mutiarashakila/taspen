@@ -235,7 +235,7 @@ if (window.location.pathname === "/karyawan") {
 
                         // Update info pagination
                         $('#dataTable_info').text(
-                            `Showing ${(currentPage - 1) * response.limit + 1} to ${Math.min(currentPage * response.limit, response.totalData)} of ${response.totalData}`
+                            `Menampilkan ${(currentPage - 1) * response.limit + 1} - ${Math.min(currentPage * response.limit, response.totalData)} dari ${response.totalData}`
                         );
 
                         // Update pagination

@@ -127,16 +127,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
             let bgColor;
             switch (notification.type) {
-                case 'auto_auction':
+                case 'lelang otomatis':
                     bgColor = 'bg-danger';
                     break;
-                case 'warning_3_months':
+                case 'sisa 3 bulan':
                     bgColor = 'bg-warning';
                     break;
-                case 'warning_6_months':
+                case 'sisa 6 bulan':
                     bgColor = 'bg-info';
                     break;
-                case 'warning_12_months':
+                case 'sisa 1 tahun':
                     bgColor = 'bg-primary';
                     break;
             }
