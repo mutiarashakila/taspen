@@ -17,6 +17,7 @@
     "bcryptjs": "^2.4.3",
     "bootstrap": "^5.3.3",
     "chart.js": "^4.4.5",
+    "connect-mysql": "^4.0.0",
     "date-fns": "^4.1.0",
     "ejs": "^3.1.10",
     "exceljs": "^4.4.0",
