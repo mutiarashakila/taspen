@@ -240,7 +240,7 @@ if (window.location.pathname === "/lelang") {
         const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
 
-        return `${days}h ${hours}j ${minutes}m ${seconds}d`;
+        return `${days}h${hours}j${minutes}m${seconds}d`;
     }
 
     initializeTimers();
