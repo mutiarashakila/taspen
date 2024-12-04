@@ -16,7 +16,7 @@ router.post('/', async (req, res) => {
 
   try {
     const [rows] = await db.query(
-        'SELECT * FROM admin WHERE email = ?',
+        'SELECT * FROM admin WHERE email = ?' ,
         [email]
       );
 

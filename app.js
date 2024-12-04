@@ -30,14 +30,6 @@ app.use((req, res, next) => {
   next();
 });
 
-if (process.env.NODE_ENV === 'development') {
-  app.post('/api/dev/speed-up-time', async (req, res) => {
-      const days = req.body.days || 30;
-      await speedUpTime(pool, days);
-      res.json({ message: 'Time accelerated for testing' });
-  });
-}
-
 app.get('/', (req, res) => {
   if (req.session.email) {
     res.redirect('/dashboard');

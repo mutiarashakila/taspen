@@ -495,6 +495,7 @@ if (window.location.pathname === "/barang") {
 
         return `
             <tr data-id="${item.id_barang}">
+            <td class="px-4 py-3 text-center">${item.waktu_masuk}</td>
                 <td class="px-4 py-3 text-center">${item.id_barang}</td>
                 <td class="px-4 py-3 text-sm font-medium">${item.nama_barang}</td>
                 <td class="px-4 py-3 text-sm">${item.kategori}</td>
