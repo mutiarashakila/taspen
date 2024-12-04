@@ -6,15 +6,15 @@ const db = mysql.createConnection({
   host: 'localhost',
   user: 'root',
   password: '',
-  database: 'taspen'
+  database: 'inventas'
 });
 
 // Admin credentials to add
 const newAdmin = {
-  id_admin: 'ms300503',
-    email: 'mutiarashakila300503@gmail.com',
-    password: '12345'
-  };
+  id_admin: 'ad00923',
+    email: 'admin123@gmail.com',
+    password: 'admin123'
+  }; 
 
 // Connect to database
 db.connect(async (err) => {
