@@ -503,7 +503,7 @@ router.get('/', requireLogin, async (req, res) => {
             ) as masa_lelang
         FROM barang b
         LEFT JOIN kepemilikan kp ON b.id_barang = kp.id_barang AND kp.status_kepemilikan = 'aktif'
-        LEFT JOIN karyawan k ON kp.id_karyawan = k.id_karyawan
+        LEFT JOIN karyawan k ON kp.id_karyawan = k.id_karyawan 
         LEFT JOIN lelang l ON b.id_barang = l.id_barang
         ${whereClause}
         ORDER BY b.${sortField} ${sortOrder}
