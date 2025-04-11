@@ -63,7 +63,7 @@
                                                         <label class="form-label">Tanggal Perolehan</label>
                                                         <input type="datetime-local" class="form-control"
                                                             name="waktu_masuk"
-                                                            value="<%= tanggal.formatDateTimeLocal(new Date()) %>"
+                                                            value="<%= tanggal.formatDate(new Date()) %>"
                                                             required>
                                                     </div>
                                                 </div>
@@ -321,7 +321,7 @@
                                             <thead>
                                                 <tr class="bg-light">
                                                     <th class="px-4 py-3 text-sm font-semibold tracking-wide text-left">
-                                                        tgl
+                                                        Tanggal
                                                     </th>
                                                     <th class="px-4 py-3 text-sm font-semibold tracking-wide text-left">
                                                         ID Barang
@@ -379,7 +379,7 @@
                                                         <tr class="hover:bg-gray-50 transition-colors duration-200"
                                                             data-id="<%= item.id_barang %>">
                                                             <td class="px-4 py-3 text-center">
-                                                                <%= item.waktu_masuk %>
+                                                                
                                                             </td>
                                                             <td class="px-4 py-3 text-center">
                                                                 <%= item.id_barang %>
@@ -517,6 +517,7 @@
     <a class="scroll-to-top rounded" href="#page-top">
         <i class="fas fa-angle-up"></i>
     </a>
+    <%- include('partials/chatbot') %>
     <%- include('partials/scripts') %>
 </body>
 

@@ -90,7 +90,9 @@ class NotificationService {
         if (ageInMonths >= 36) {
           const hasAutoAuction = await this.hasExistingNotification(item.id_barang, 'lelang otomatis');
           if (!hasAutoAuction) {
-            await this.autoUpdateToLelang(item.id_barang);
+            await this.autoUpdateToLelang(item.id_barang),
+            await this.createNotification(item.id_barang, 'lelang otomatis',
+              `Barang ${item.nama_barang}(${item.id_barang}) memasuki status akan lelang`);
             console.log(`Ubah status lelang: ${item.nama_barang}`);
           }
         }
@@ -143,7 +145,7 @@ class NotificationService {
       await this.db.query('UPDATE Barang SET status_barang = "lelang" WHERE id_barang = ?', [idBarang]);
       await this.db.query('INSERT INTO Lelang (id_barang, status_lelang) VALUES (?, "akan lelang")', [idBarang]);
       await this.createNotification(idBarang, 'lelang otomatis',
-        'Barang telah otomatis masuk ke status lelang karena telah mencapai usia 3 tahun');
+        'Barang telah otomatis masuk ke status lelang karena berusia usia 3 tahun');
     } catch (error) {
       console.error('Error updating to auction:', error);
     }
@@ -153,11 +155,11 @@ class NotificationService {
     try {
       const [notifications] = await this.db.query(`
         SELECT n.*, b.nama_barang 
-        FROM Notifikasi n
-        JOIN Barang b ON n.id_barang = b.id_barang
-        WHERE n.status_baca = FALSE
-        AND b.status_barang = 'tersedia'
-        ORDER BY n.waktu_dibuat DESC
+FROM Notifikasi n
+JOIN Barang b ON n.id_barang = b.id_barang
+WHERE n.status_baca = FALSE
+AND b.status_barang IN ('tersedia', 'lelang')
+ORDER BY n.waktu_dibuat DESC
       `);
       return notifications;
     } catch (error) {

@@ -42,7 +42,7 @@ const getAdminData = async (req, res, next) => {
   if (req.session.email) {
       try {
           const [adminRows] = await db.query(
-              'SELECT id_admin, username, foto FROM Admin WHERE email = ?', 
+              'SELECT id_user, username, role, foto from users WHERE email = ?', 
               [req.session.email]
           );
           

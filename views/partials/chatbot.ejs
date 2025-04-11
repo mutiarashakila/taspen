@@ -1,0 +1,271 @@
+<div class="floating-chat-container">
+    <button id="floating-chat-button" class="floating-chat-btn">
+      <i class="fas fa-robot mr-2"></i>
+    </button>
+  
+    <div id="chat-panel" class="chat-panel">
+      <div class="chat-header">
+        <div class="chat-title">
+          <span>Chatbot</span>
+        </div>
+        <button id="close-chat-btn" class="close-chat-btn">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      
+      <div class="chat-messages">
+        <div class="message bot">
+          <div class="message-content">
+            Yo whatsupp!!. Ada yang bisa saya bantu?
+          </div>
+          <div class="message-time">Baru saja</div>
+        </div>
+      </div>
+      
+      <div class="chat-input-container">
+        <input type="text" id="chat-input" placeholder="Ketik pesan Anda di sini..." class="chat-input">
+        <button id="send-message-btn" class="send-message-btn">
+          <i class="fas fa-paper-plane"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  <style>
+    .floating-chat-container {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      z-index: 9999;
+    }
+  
+    .floating-chat-btn {
+      width: 75px;
+      height: 75px;
+      border-radius: 50%;
+      background-color: #4e73df;
+      color: white;
+      border: none;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 24px;
+    }
+  
+    .floating-chat-btn:hover {
+      background-color: #3a5ccc;
+      transform: scale(1.05);
+    }
+  
+    .chat-panel {
+      position: absolute;
+      bottom: 80px;
+      right: 0;
+      width: 350px;
+      height: 450px;
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+    }
+  
+    .chat-panel.active {
+      display: flex;
+    }
+  
+    .chat-header {
+      padding: 15px;
+      background-color: #4e73df;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-radius: 12px 12px 0 0;
+    }
+  
+    .chat-title {
+      display: flex;
+      align-items: center;
+      font-weight: 600;
+    }
+  
+    .close-chat-btn {
+      background: transparent;
+      border: none;
+      color: white;
+      cursor: pointer;
+      font-size: 18px;
+    }
+  
+    .chat-messages {
+      flex: 1;
+      padding: 15px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+  
+    .message {
+      max-width: 80%;
+      padding: 12px 15px;
+      border-radius: 18px;
+      position: relative;
+    }
+  
+    .message.bot {
+      align-self: flex-start;
+      background-color: #f0f2f5;
+      border-bottom-left-radius: 5px;
+    }
+  
+    .message.user {
+      align-self: flex-end;
+      background-color: #4e73df;
+      color: white;
+      border-bottom-right-radius: 5px;
+    }
+  
+    .message-time {
+      font-size: 0.7rem;
+      color: #888;
+      margin-top: 5px;
+      text-align: right;
+    }
+  
+    .message.user .message-time {
+      color: rgba(255, 255, 255, 0.8);
+    }
+  
+    .chat-input-container {
+      padding: 12px;
+      display: flex;
+      border-top: 1px solid #e3e6f0;
+    }
+  
+    .chat-input {
+      flex: 1;
+      padding: 12px 15px;
+      border: 1px solid #e3e6f0;
+      border-radius: 24px;
+      outline: none;
+      font-size: 14px;
+    }
+  
+    .chat-input:focus {
+      border-color: #4e73df;
+    }
+  
+    .send-message-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: #4e73df;
+      color: white;
+      border: none;
+      margin-left: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+  
+    .send-message-btn:hover {
+      background-color: #3a5ccc;
+    }
+  
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+  
+    .floating-chat-btn.attention {
+      animation: bounce 1s infinite;
+    }
+  
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  
+    .chat-panel.active {
+      animation: fadeIn 0.3s forwards;
+    }
+  </style>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const floatingBtn = document.getElementById('floating-chat-button');
+      const chatPanel = document.getElementById('chat-panel');
+      const closeBtn = document.getElementById('close-chat-btn');
+      const chatInput = document.getElementById('chat-input');
+      const sendBtn = document.getElementById('send-message-btn');
+      const chatMessages = document.querySelector('.chat-messages');
+  
+      floatingBtn.addEventListener('click', function() {
+        chatPanel.classList.toggle('active');
+        floatingBtn.classList.remove('attention');
+      });
+  
+      closeBtn.addEventListener('click', function() {
+        chatPanel.classList.remove('active');
+      });
+  
+      function addMessage(message, isUser) {
+        const messageDiv = document.createElement('div');
+        messageDiv.classList.add('message');
+        messageDiv.classList.add(isUser ? 'user' : 'bot');
+  
+        const messageContent = document.createElement('div');
+        messageContent.classList.add('message-content');
+        messageContent.textContent = message;
+  
+        const messageTime = document.createElement('div');
+        messageTime.classList.add('message-time');
+        messageTime.textContent = 'Baru saja';
+  
+        messageDiv.appendChild(messageContent);
+        messageDiv.appendChild(messageTime);
+        chatMessages.appendChild(messageDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+  
+      function sendMessage() {
+        const message = chatInput.value.trim();
+        if (message !== '') {
+          addMessage(message, true);
+          chatInput.value = '';
+          setTimeout(function() {
+            let botResponse = "Sayangnya belum tersedia.";
+            
+            if (message.toLowerCase().includes('lelang')) {
+              botResponse = "Kami memiliki beberapa barang yang sedang dalam proses lelang. Apakah Anda ingin melihat daftar barang lelang terkini?";
+            } else if (message.toLowerCase().includes('daftar') || message.toLowerCase().includes('registrasi')) {
+              botResponse = "Untuk mendaftar sebagai peserta lelang, silakan kunjungi halaman Registrasi dan lengkapi formulir yang tersedia.";
+            } else if (message.toLowerCase().includes('bantuan') || message.toLowerCase().includes('help')) {
+              botResponse = "Saya dapat membantu Anda seputar informasi lelang, cara mendaftar, atau status barang lelang. Silakan ajukan pertanyaan Anda.";
+            }
+            
+            addMessage(botResponse, false);
+          }, 1000);
+        }
+      }
+      sendBtn.addEventListener('click', sendMessage);
+      chatInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+          sendMessage();
+        }
+      });
+      setTimeout(function() {
+        if (!chatPanel.classList.contains('active')) {
+          floatingBtn.classList.add('attention');
+        }
+      }, 5000);
+    });
+  </script>

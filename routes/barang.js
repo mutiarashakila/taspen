@@ -17,7 +17,7 @@ async function compressImage(buffer, { format = 'jpeg', quality = 80, width = 50
 async function logAdminActivity(connection, req, jenis_aktivitas, detail_perubahan) {
   try {
     const logQuery = `
-          INSERT INTO Log_Aktivitas(timestamp, id_admin, jenis_aktivitas, detail_perubahan) 
+          INSERT INTO Log_Aktivitas(timestamp, id_user, jenis_aktivitas, detail_perubahan) 
           VALUES (NOW(), ?, ?, ?)
       `;
     await connection.query(logQuery, [req.adminId, jenis_aktivitas, detail_perubahan]);
@@ -427,11 +427,6 @@ router.get('/refresh', requireLogin, async (req, res) => {
 });
 
 const tanggal = {
-  formatDateTimeLocal(dateString) {
-    if (!dateString) return '';
-    return new Date(dateString).toISOString().slice(0, 16);
-  },
-
   formatDate(date) {
     return new Intl.DateTimeFormat('id-ID', {
       weekday: 'long',

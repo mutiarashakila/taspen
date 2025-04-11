@@ -1,7 +1,6 @@
 const mysql = require('mysql2');
 const bcrypt = require('bcryptjs');
 
-// Database connection configuration
 const db = mysql.createConnection({
   host: 'localhost',
   user: 'root',
@@ -9,14 +8,13 @@ const db = mysql.createConnection({
   database: 'inventas'
 });
 
-// Admin credentials to add
 const newAdmin = {
-  id_admin: 'ad00923',
+  id_user: 'ad00923',
     email: 'admin123@gmail.com',
-    password: 'admin123'
+    password: 'admin123',
+    role: 'admin'
   }; 
 
-// Connect to database
 db.connect(async (err) => {
   if (err) {
     console.error('Error connecting to database:', err);
@@ -25,24 +23,21 @@ db.connect(async (err) => {
   console.log('Connected to database');
 
   try {
-    // Generate password hash
     const salt = bcrypt.genSaltSync(10);
     const hashedPassword = bcrypt.hashSync(newAdmin.password, salt);
 
-    // SQL query to insert new admin
-    const sql = 'INSERT INTO admin (id_admin, email, password) VALUES (?, ?, ?)';
+    const sql = 'INSERT into users (id_user, email, password, role) VALUES (?, ?, ?, ?)';
     
-    db.query(sql, [newAdmin.id_admin, newAdmin.email, hashedPassword], (err, result) => {
+    db.query(sql, [newAdmin.id_user, newAdmin.email, hashedPassword, newAdmin.role], (err, result) => {
       if (err) {
         console.error('Error adding admin:', err);
       } else {
         console.log('Admin added successfully!');
-        console.log('id_admin:', newAdmin.id_admin);
+        console.log('id_user:', newAdmin.id_user);
         console.log('Email:', newAdmin.email);
         console.log('Password:', newAdmin.password);
+        console.log('Role:', newAdmin.role);
       }
-      
-      // Close the database connection
       db.end();
     });
 

@@ -16,12 +16,12 @@ router.get('/', requireLogin, async (req, res) => {
     const [log] = await db.query(`
       SELECT 
         l.timestamp,
-        l.id_admin,
+        l.id_user,
         a.username AS nama_admin,
         l.jenis_aktivitas,
         l.detail_perubahan 
       FROM log_aktivitas l
-      LEFT JOIN admin a ON l.id_admin = a.id_admin
+      LEFT JOIN users a ON l.id_user = a.id_user
       ORDER BY l.timestamp DESC 
       LIMIT ? OFFSET ?
     `, [limit, offset]);

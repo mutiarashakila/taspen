@@ -16,7 +16,7 @@ router.post('/', async (req, res) => {
 
   try {
     const [rows] = await db.query(
-        'SELECT * FROM admin WHERE email = ?' ,
+        'SELECT * from users WHERE email = ?' ,
         [email]
       );
 
@@ -32,7 +32,7 @@ router.post('/', async (req, res) => {
     }
 
     req.session.email = email;
-    req.session.userId = rows[0].id_admin;
+    req.session.userId = rows[0].id_user;
     console.log('Login successful for:', email);
     res.json({ success: true, message: 'Login berhasil' });
 

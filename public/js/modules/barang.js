@@ -492,10 +492,12 @@ if (window.location.pathname === "/barang") {
     function generateTableRow(item) {
         const statusClass = getStatusClass(item.status_barang);
         const statusText = getStatusText(item.status_barang);
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        const formattedDate = new Date(item.waktu_masuk).toLocaleDateString('id-ID', options);
 
         return `
             <tr data-id="${item.id_barang}">
-            <td class="px-4 py-3 text-center">${item.waktu_masuk}</td>
+            <td class="px-4 py-3">${formattedDate}</td>
                 <td class="px-4 py-3 text-center">${item.id_barang}</td>
                 <td class="px-4 py-3 text-sm font-medium">${item.nama_barang}</td>
                 <td class="px-4 py-3 text-sm">${item.kategori}</td>

@@ -4,12 +4,12 @@ const requireLogin = async (req, res, next) => {
   if (req.session && req.session.email) {
     try {
       const [adminRows] = await db.query(
-        'SELECT id_admin FROM Admin WHERE email = ?',
+        'SELECT id_user from users WHERE email = ?',
         [req.session.email]
       );
 
       if (adminRows.length > 0) {
-        req.adminId = adminRows[0].id_admin;
+        req.adminId = adminRows[0].id_user;
         next();
       } else {
         console.log('Auth failed: Admin not found');

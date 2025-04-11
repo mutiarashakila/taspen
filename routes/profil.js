@@ -14,7 +14,7 @@ const { requireLogin } = require('../routes/auth.js');
 router.get('/', requireLogin, async (req, res) => {
     try {
         const [adminRows] = await db.query(
-            'SELECT id_admin, username, email, foto FROM Admin WHERE email = ?',
+            'SELECT id_user, username, email, foto from users WHERE email = ?',
             [req.session.email]
         );
 
@@ -24,10 +24,10 @@ router.get('/', requireLogin, async (req, res) => {
 
         const [activities] = await db.query(
             `SELECT * FROM Log_Aktivitas 
-             WHERE id_admin = ? 
+             WHERE id_user = ? 
              ORDER BY timestamp DESC 
              LIMIT 10`,
-            [adminRows[0].id_admin]
+            [adminRows[0].id_user]
         );
 
         res.render('profil', {
@@ -50,7 +50,7 @@ router.post('/update-profil', requireLogin, async (req, res) => {
         const previousEmail = req.session.email;
 
         const [adminRows] = await conn.query(
-            'SELECT id_admin, password FROM Admin WHERE email = ?',
+            'SELECT id_user, password from users WHERE email = ?',
             [previousEmail]
         );
 
@@ -74,8 +74,8 @@ router.post('/update-profil', requireLogin, async (req, res) => {
 
         if (email !== previousEmail) {
             const [existingEmail] = await conn.query(
-                'SELECT id_admin FROM Admin WHERE email = ? AND id_admin != ?',
-                [email, adminRows[0].id_admin]
+                'SELECT id_user from users WHERE email = ? AND id_user != ?',
+                [email, adminRows[0].id_user]
             );
 
             if (existingEmail.length > 0) {
@@ -93,8 +93,8 @@ router.post('/update-profil', requireLogin, async (req, res) => {
             queryParams.push(hashedPassword);
         }
 
-        queryParams.push(adminRows[0].id_admin);
-        updateQuery += ' WHERE id_admin = ?';
+        queryParams.push(adminRows[0].id_user);
+        updateQuery += ' WHERE id_user = ?';
 
         const [updateResult] = await conn.query(updateQuery, queryParams);
 
@@ -138,7 +138,7 @@ router.post('/update-photo', requireLogin, upload.single('photo'), async (req, r
         }
 
         const [adminRows] = await conn.query(
-            'SELECT id_admin FROM Admin WHERE email = ?',
+            'SELECT id_user from users WHERE email = ?',
             [req.session.email]
         );
 
@@ -148,8 +148,8 @@ router.post('/update-photo', requireLogin, upload.single('photo'), async (req, r
         }
 
         const [updateResult] = await conn.query(
-            'UPDATE Admin SET foto = ? WHERE id_admin = ?',
-            [req.file.buffer, adminRows[0].id_admin]
+            'UPDATE Admin SET foto = ? WHERE id_user = ?',
+            [req.file.buffer, adminRows[0].id_user]
         );
 
         if (updateResult.affectedRows === 0) {
@@ -159,7 +159,7 @@ router.post('/update-photo', requireLogin, upload.single('photo'), async (req, r
         await conn.commit();
         res.json({
             message: 'Photo updated successfully',
-            adminId: adminRows[0].id_admin
+            adminId: adminRows[0].id_user
         });
 
     } catch (error) {
@@ -178,7 +178,7 @@ router.post('/update-photo', requireLogin, upload.single('photo'), async (req, r
 router.get('/photo/:id', requireLogin, async (req, res) => {
     try {
         const [rows] = await db.query(
-            'SELECT foto FROM Admin WHERE id_admin = ?',
+            'SELECT foto from users WHERE id_user = ?',
             [req.params.id]
         );
 

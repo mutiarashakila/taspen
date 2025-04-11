@@ -33,7 +33,7 @@ SELECT
   id_karyawan as id,
   nama_karyawan as title,
   CONCAT('/karyawan/', id_karyawan) as url,
-  CONCAT('Jabatan: ', COALESCE(jabatan, '-'), ', Status: ', COALESCE(status_karyawan, '-')) as description
+  jabatan as description
 FROM Karyawan
 WHERE 
   LOWER(nama_karyawan) LIKE LOWER(?) OR

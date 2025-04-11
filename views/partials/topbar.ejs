@@ -52,10 +52,13 @@
                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                     aria-expanded="false">
                     <span class="d-none d-lg-inline text-gray-600 small me-2">
-                        <%= locals.adminData ? adminData.username : 'Admin' %>
+                        <%= locals.adminData ? adminData.username : 'user' %>
+                    </span>
+                    <span class="d-none d-lg-inline text-gray-600 small me-2">
+                        (<%= locals.adminData ? adminData.role : 'user' %>)
                     </span>
                     <img class="img-profile rounded-circle"
-                        src="<%= locals.adminData && adminData.foto ? `profil/photo/${adminData.id_admin}` : '/img/avatars/pfp.jpg' %>"
+                        src="<%= locals.adminData && adminData.foto ? `profil/photo/${adminData.id_user}` : '/img/avatars/pfp.jpg' %>"
                         style="width: 32px; height: 32px; object-fit: cover;">
                 </a>
                 <div class="dropdown-menu dropdown-menu-end custom-dropdown">
